@@ -1,0 +1,111 @@
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+   /* box-sizing: border-box;*/
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f1f1f1; /* Background color for the entire page */
+    margin: 0; /* Remove default body margin */
+}
+
+/* Center the entire content vertically and horizontally */
+.center-content {
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Style the container that holds both the background image and login form */
+.container {
+    position: relative;
+}
+
+/* Style the background image */
+.background-image {
+    width: 100%;
+    max-height: 100vh; /* Ensure the image takes up the full viewport height */
+    object-fit: cover; /* Scale and crop the image to cover the container */
+}
+
+/* Style the login container */
+.center-side {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff; /* Background color for the form container */
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Style the form elements */
+.form-container h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333; /* Form title color */
+}
+
+.form-container input[type="text"],
+.form-container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc; /* Input border color */
+    border-radius: 5px;
+}
+
+.form-container button {
+    width: 100%;
+    padding: 10px;
+    background-color:  #72dd78; /* Button background color */
+    color: #fff; /* Button text color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.forgot-password a {
+    color:  #72dd78; 
+}
+
+.signup a {
+    color:  #72dd78; /* Signup link color */
+}
+
+/* .forgot-password a,
+.signup a {
+    color:  #72dd78; /* Link color 
+    margin-top: 10px; /* Add margin between links 
+    display: block; Make links block-level ele */
+
+
+/* Style the Google login button */
+.google-login-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #dd4b39; /* Google button background color */
+    color: #fff; /* Google button text color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Additional styles can be added based on your design preferences */
+
+/* Your existing CSS styles here */
+
+.input-container input.input-box {
+    width: 100%; /* Make email and phone input boxes the same width as fullname input box */
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc; /* Input border color */
+    border-radius: 5px;
+}
+
+/* Additional styles can be added based on your design preferences */
+
