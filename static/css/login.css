@@ -61,7 +61,7 @@ body {
 .form-container button {
     width: 100%;
     padding: 10px;
-    background-color:  #72dd78; /* Button background color */
+    background-color:  #f7444e; /* Button background color */
     color: #fff; /* Button text color */
     border: none;
     border-radius: 5px;
@@ -69,11 +69,11 @@ body {
 }
 
 .forgot-password a {
-    color:  #72dd78; 
+    color:  #dc3545; 
 }
 
 .signup a {
-    color:  #72dd78; /* Signup link color */
+    color: #f7444e /* Signup link color */
 }
 
 /* .forgot-password a,
@@ -87,7 +87,7 @@ body {
 .google-login-button {
     width: 100%;
     padding: 10px;
-    background-color: #dd4b39; /* Google button background color */
+    background-color: #f7444e; /* Google button background color */
     color: #fff; /* Google button text color */
     border: none;
     border-radius: 5px;
