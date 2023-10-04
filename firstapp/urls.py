@@ -10,6 +10,8 @@ urlpatterns = [
      path('product/',views.product,name="product"),
      path('logout/', views.logout_user,name="logout"),
      path('adminpanel/', views.adminpanel,name="adminpanel"),
+     path('Customer_Profile/', views.Customer_Profile,name="Customer_Profile"),
+
   
 
 

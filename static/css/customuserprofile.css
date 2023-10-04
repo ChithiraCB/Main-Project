@@ -1,0 +1,72 @@
+/* Overall styling for the form container */
+.file-upload {
+    background-color: #e6e6fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for the Personal Details section */
+.b {
+    font-weight: bold;
+}
+
+h2 {
+    margin-bottom: 4px;
+    margin-top: 0;
+}
+/* Styling for the Personal Details section */
+.personal-details {
+    background-color: #e6e6fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px; /* Add spacing between Personal Details sections */
+}
+
+
+/* Styling for form labels */
+.form-label {
+    font-weight: bold;
+}
+
+/* Styling for form inputs */
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+/* Styling for select elements */
+.form-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+/* Styling for error messages */
+.text-danger {
+    color: red;
+}
+
+/* Styling for buttons */
+.btn {
+    margin-top: 10px;
+}
+
+/* Styling for the Back button */
+#go-back-button {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+/* Additional styling can be added as needed to match your design preferences. */

@@ -120,3 +120,18 @@ class UserProfile(models.Model):
             user_role = 'Deliveryteam'
         
         return user_role
+    
+
+
+class CustomerProfile(models.Model):
+
+    customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)
+    name = models.CharField(max_length=100)
+    street_address=models.CharField(max_length=100,null=True,blank=True)
+    country = models.CharField(max_length=15, default="India", blank=True, null=True)
+    state = models.CharField(max_length=50, blank=True, null=True)
+    pincode = models.CharField(max_length=50, blank=True, null=True)
+    phone = models.CharField(max_length=10,blank=True, null=True)
+
+    def str(self):
+        return self.user.email 
