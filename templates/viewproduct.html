@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Products</title>
+    <style>
+        /* Center-align the table */
+        table {
+            margin: 30px auto;
+        }
+
+        .header {
+            background-color: red;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;  
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+</head>
+<body>
+    <div class=header>
+    <h1>View Products</h1>
+    </div>
+    <table border="2px">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Subcategory</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Image</th> <!-- Add a new column for the image -->
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.category.cat_name }}</td>
+                <td>{{ product.subcategory.subcat_name }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.description }}</td>
+                <td>{{ product.status }}</td>
+                <td><img src="{{ product.image.url }}" alt="{{ product.product_name }}" width="100"></td>
+                <td>
+                    {% comment %} <a href="{% url 'edit_product' product.id %}" class="btn btn-primary">Edit</a>
+                    <a href="{% url 'delete_product' product.id %}" class="btn btn-danger">Delete</a> {% endcomment %}
+                    <form method="post" action="{% url 'delete_product' product.id %}">
+                        {% csrf_token %}
+                        <button class="btn btn-danger" type="submit">DELETE</button>
+                        <button class="btn btn-danger" type="submit">EDIT</button>
+                        
+                    </form>
+                                    </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No products available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

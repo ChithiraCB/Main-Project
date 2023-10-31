@@ -11,6 +11,13 @@ urlpatterns = [
      path('logout/', views.logout_user,name="logout"),
      path('adminpanel/', views.adminpanel,name="adminpanel"),
      path('Customer_Profile/', views.Customer_Profile,name="Customer_Profile"),
+     path('addproduct/', views.add_product,name="addproduct"),
+     path('viewproduct/',views.view_product,name='viewproduct'),
+     path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
+
+
+
+
 
   
 

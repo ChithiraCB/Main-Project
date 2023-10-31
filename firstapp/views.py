@@ -3,7 +3,8 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate ,login as auth_login,logout
 from django.contrib import messages
 from . models import CustomUser
-from . models import CustomerProfile
+from . models import CustomerProfile,Product
+
 #from django.contrib.auth.models import User
 
 def index(request):
@@ -149,6 +150,53 @@ def Customer_Profile(request):
     }
     return render(request, 'Customer_Profile.html',context)
 
+# def add_product(request):
+#     return render(request, 'addproduct.html')
+
+def add_product(request):
+    if request.method == 'POST':
+        # Retrieve form data from request.POST
+        product_name = request.POST.get('product_name')
+        subcategory_id = request.POST.get('subcategory_id')
+        category_id = request.POST.get('category_id')
+        price = request.POST.get('price')
+        description = request.POST.get('description')
+        image = request.FILES.get('image')
+        status = request.POST.get('status')
+
+        # Create a new Product object and save it to the database
+        new_product = Product(
+            product_name=product_name,
+            subcategory_id=subcategory_id,
+            category_id=category_id,
+            price=price,
+            description=description,
+            image=image,
+            status=status
+        )
+        new_product.save()
+
+        return redirect('adminpanel')  # Redirect to a product list page or another appropriate page
+
+    return render(request, 'addproduct.html')
+
+# def view_products(request):
+#     products = WatchProduct.objects.all()  # Retrieve all products from the database
+#     return render(request, 'view_products.html', {'products': products})
+def view_product(request):
+    products = Product.objects.all()  # Retrieve all products from the database
+    return render(request, 'viewproduct.html', {'products': products})
+
+def delete_product(request, product_id):
+    if request.method == 'POST':
+        # Delete the product from the database
+        try:
+            product = Product.objects.get(pk=product_id)
+            product.delete()
+            return redirect('viewproduct')
+        except Product.DoesNotExist:
+            pass
+    return redirect('viewproduct')  # Redirect back to the product list view
 
 
 

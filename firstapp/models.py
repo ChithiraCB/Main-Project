@@ -135,3 +135,32 @@ class CustomerProfile(models.Model):
 
     def str(self):
         return self.user.email 
+    
+
+
+class Category(models.Model):
+    cat_id = models.AutoField(primary_key=True)
+    cat_name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.cat_name
+
+class Subcategory(models.Model):
+    subcat_id = models.AutoField(primary_key=True)
+    subcat_name = models.CharField(max_length=100)
+    cat_id= models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.subcat_name
+    
+class Product(models.Model):
+    product_name = models.CharField(max_length=255)
+    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField()
+    image = models.ImageField(upload_to='product_images/')
+    status = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.product_name
