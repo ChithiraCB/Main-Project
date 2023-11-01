@@ -39,20 +39,24 @@
                         <li class="nav-item active">
                            <a class=" nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
                         </li>
-                        <li class="nav-item">
-                           <a class="nav-link" href="{% url 'login' %}">Login</a> 
-                        </li>
+                       
 
                        {% comment %} <li class="nav-item dropdown">
                            <a class="nav-link dropdown-toggle" href="{% static '#' %}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"> <span class="nav-label">User <span class="caret"></span></a>
                            <ul class="dropdown-menu">
                               <li><a href="{% url 'login' %}">login</a></li>
-                               <li><a href="{% url 'logout' %}">logout</a></li>
+                              <li><a href="{% url 'logout' %}">logout</a></li>
                               <li><a href="{% url 'Customer_Profile' %}">Profile</a></li>
                            </ul>
                         </li> {% endcomment %}
                         <li class="nav-item">
                            <a class="nav-link" href="{% url 'product' %}">Products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'Customer_Profile' %}">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">logout</a>
                         </li>
                         <!--<li class="nav-item">
                            <a class="nav-link" href="blog_list.html">Blog</a>
@@ -60,7 +64,7 @@
                         <li class="nav-item">
                            <a class="nav-link" href="contact.html">Contact</a>
                         </li>-->
-                       <!--- <li class="nav-item">
+                        <li class="nav-item">
                            <a class="nav-link" href="#">
                               <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
                                  <g>
@@ -115,7 +119,7 @@
                                  </g>
                               </svg>
                            </a>
-                        </li>-->
+                        </li>
                         <form class="form-inline">
                            <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
                            <i class="fa fa-search" aria-hidden="true"></i>

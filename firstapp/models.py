@@ -126,7 +126,7 @@ class UserProfile(models.Model):
 class CustomerProfile(models.Model):
 
     customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)
-    name = models.CharField(max_length=100)
+    fullName = models.CharField(max_length=100)
     street_address=models.CharField(max_length=100,null=True,blank=True)
     country = models.CharField(max_length=15, default="India", blank=True, null=True)
     state = models.CharField(max_length=50, blank=True, null=True)
@@ -153,14 +153,36 @@ class Subcategory(models.Model):
     def __str__(self):
         return self.subcat_name
     
+# class Product(models.Model):
+#     product_name = models.CharField(max_length=255)
+#     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
+#     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+#     price = models.DecimalField(max_digits=10, decimal_places=2)
+#     description = models.TextField()
+#     image = models.ImageField(upload_to='product_images/')
+#     status = models.CharField(max_length=255)
+
+#     def __str__(self):
+#         return self.product_name
+
 class Product(models.Model):
+    product_id = models.AutoField(primary_key=True)
     product_name = models.CharField(max_length=255)
-    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    category = models.CharField(max_length=100)
+    subcategory = models.CharField(max_length=100)
+    quantity = models.PositiveIntegerField()
     description = models.TextField()
-    image = models.ImageField(upload_to='product_images/')
-    status = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    discount = models.DecimalField(max_digits=5, decimal_places=2, default= 0.0)
+    sale_price = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
+    status = models.CharField(max_length=20, choices=(("active", "Active"), ("inactive", "Inactive")))
+    product_image = models.ImageField(upload_to='product_images/')
+    
+    def save(self, *args, **kwargs):
+    # Convert self.discount to a float and then calculate the sale price
+     self.discount = float(self.discount)
+     self.sale_price = self.price - (self.price * (self.discount / 100))
+     super(Product, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.product_name

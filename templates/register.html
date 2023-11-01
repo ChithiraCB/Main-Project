@@ -8,7 +8,18 @@
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
+
 <body>
+    {% if messages %}
+<div class="messages">
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
     <form method="POST" action="" onsubmit="return validateForm()">
         {% csrf_token %}
         <div class="right-side">
@@ -191,7 +202,7 @@
             }
             enableRegisterButton();
         }
-        function validateEmail() {
+        {% comment %} function validateEmail() {
             var emailInput = document.getElementsByName("email")[0];
             var emailError = document.getElementById("emailError");
             var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -204,7 +215,31 @@
                 emailError.textContent = "";
             }
             enableRegisterButton();
+        } {% endcomment %}
+
+
+        function validateEmail() {
+            var emailInput = document.getElementsByName("email")[0];
+            var emailError = document.getElementById("emailError");
+            var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            var allowedDomains = ["gmail.com", "hotmail.com", "mca.ajce.in", "yahoo.com"];
+            
+            var email = emailInput.value;
+            var domain = email.split("@")[1]; // Get the domain part of the email
+            
+            if (!emailPattern.test(email)) {
+                emailError.textContent = "Invalid email format";
+            } else if (allowedDomains.indexOf(domain) === -1) {
+                emailError.textContent = "Invalid email domain";
+            } else if (email.startsWith("123@")) {
+                emailError.textContent = "Email cannot start with numbers before the @ symbol";
+            } else {
+                emailError.textContent = "";
+            }
+            
+            enableRegisterButton();
         }
+        
         function validatePhone() {
             var phoneInput = document.getElementsByName("phone")[0];
             var phoneError = document.getElementById("phoneError");

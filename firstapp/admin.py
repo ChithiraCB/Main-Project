@@ -7,8 +7,8 @@ from .models import Product
 
 
 # Register your models here.
-admin.site.register(CustomUser),
-admin.site.register(CustomerProfile),
-admin.site.register(Category),
-admin.site.register(Subcategory),
+admin.site.register(CustomUser)
+admin.site.register(CustomerProfile)
+admin.site.register(Category)
+admin.site.register(Subcategory)
 admin.site.register(Product)

@@ -1,62 +1,397 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-	<link rel="stylesheet" href="{% static 'css/admin.css' %}"
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.5.2/dist/css/bootstrap.min.css">
+    <!-- Basic -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE-edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+    <title>fashion finds hub</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+    <!-- Font Awesome styles -->
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+    <!-- jQuery UI CSS for the date picker -->
+    <link rel="stylesheet" type="text css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+    <!-- Responsive style -->
+    <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
+    <style>
+        .left-corner-heading {
+            position: absolute;
+            left: ; /* Align it to the left side of its container */
+            top: 0; /* Align it to the top of its container */
+        }
+        
+            /* Add this style for the Logout button container */
+            .logout-button-container {
+                position: absolute;
+                top: ; /* Align it to the top of the header */
+                right: 0; /* Align it to the right side of the header */
+                margin: 20px; /* Add spacing as needed */
+                color: #ccc;
+            }
+        
+        
+        /* Style for the form container */
+        .form-container {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            width: 80%;
+            margin: 0 auto;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Style for form labels */
+        .form-group label {
+            font-weight: bold;
+        }
+        
+        /* Style for form inputs */
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        
+        /* Style for form buttons */
+        .btn-primary {
+            background-color: #ccc;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .hero_area {
+            /* Your hero area styles go here */
+        }
+        
+        .header_section {
+            /* Your header styles go here */
+        }
+        
+        .custom_nav-container {
+            /* Your navigation styles go here */
+        }
+        
+        .navbar-toggler {
+            /* Your navbar toggler styles go here */
+        }
+        
+        .navbar-nav {
+            /* Your navbar-nav styles go here */
+        }
+        
+        .nav-link {
+            /* Your nav-link styles go here */
+        }
+        
+        .nav_search-btn {
+            /* Your search button styles go here */
+        }
+        
+        .inner_page_head {
+            /* Your inner page head styles go here */
+        }
+        
+        /* Add your sidebar styles here */
+        .sidebar {
+            width: 20%;
+            background-color: #f0f0f0;
+            padding: 20px;
+            position: fixed;
+            height: 100%;
+            overflow: auto;
+        }
+        
+        .sidebar-item {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #ccc;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .sidebar-item:hover {
+            background-color: #ddd;
+        }
+        
+        .account-settings {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 20px;
+        }
+        
+        .account-box {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        
+        /* Additional styles for content on the right side */
+        .content {
+            margin-left: 20%;
+            padding: 20px;
+        }
+    </style>
 </head>
-<body>
-    <!-- Header -->
-    <div class="header">
-        <h1>Admin Dashboard</h1>
-        <!-- Logout button -->
-        <button class="logout-button" onclick="logout()"><a href="{% url 'logout' %}" >Logout</a></button>
-    </div>
 
-    <!-- Sidebar -->
+<body class="sub_page">
+    <div class="hero_area">
+        <header class="header_section">
+            <!-- Your header content goes here -->
+            <div class="logout-button-container">
+                <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
+                
+            </div>
+           
+        </header>
+    </div>
+    <section class="inner_page_head">
+    
+        <div class="container_fuild">
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="full">
+                        <h4 class="left-corner-heading">WELCOME ADMIN</h4>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
     <div class="sidebar">
+        <div class="sidebar-item">ORDERS</div>
+        <div class="sidebar-item">
+            PRODUCT
+            <div class="account-box">
+                <div class="content-item" onclick="loadAddProductForm()">ADD PRODUCT</div>
+            </div>
 
-        <!-- Styling applied to the "ADMIN" heading -->
-        <h2 class="admin-heading">ADMIN</h2>
-	
-        <ul>
-		
-            <li>
-                <div class="dropdown">
-                    <a href="#">Products</a>
-                    <div class="dropdown-content">
-                        <a href="{% url 'addproduct' %}">Add Product</a>
-                        <a href="{% url 'viewproduct' %}">View Product</a>
-                        <a href="#">Edit Product</a>
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="dropdown">
-                    <a href="#">Order</a>
-                    <div class="dropdown-content">
-                        <a href="#">View Orders</a>
-                    </div>
-                </div>
-            </li>
-            <li><a href="#">Delivery Team</a></li>
-        </ul>
+            <!-- Add this HTML to your sidebar -->
+ {% comment %} <div class="account-box">
+    <div class="content-item" >VIEW PRODUCT</div>
+</div>  {% endcomment %}
+
+            {% comment %} <div class="account-box">
+                <div class="content-item" onclick="">VIEW PRODUCT</div>
+            </div> {% endcomment %}
+
+            {% comment %} <div class="account-box">
+                <div class="content-item" id="view-product-button">VIEW PRODUCT</div>
+            </div> {% endcomment %}
+            <div class="account-box">
+                <a class="content-item" href="{% url 'viewproduct' %}">VIEW PRODUCT</a>
+            </div>
+            
+            
+            <div class="account-box">
+                <a class="content-item" href="{% url 'editproduct' %}">VIEW PRODUCT</a>
+            </div>
+        </div>
+        <div class="sidebar-item">DELIVERY TEAM</div>
+   
+        <div class="sidebar-item">USERS</div>
     </div>
 
-    <!-- Content Area -->
-    <div class="content">
-        <!-- Your content goes here -->
+    <!-- Middle Content -->
+    <div class="content" id="middle-content">
+        <!-- Content will be loaded here dynamically using JavaScript -->
+        <div class="content" id="middle-content">
+            <!-- Add the image here with additional styling -->
+            <img src="{% static 'images/dashboard1.png' %}" alt="User Graph" style="width: 50%; max-width: 800px; height: auto;" />
+        </div>
+        
     </div>
+
+
+    {% comment %} <div class="content" id="middle-content">
+        <div id="product-details"></div>
+    </div>
+     {% endcomment %}
+    <!-- JavaScript to load the form for adding a product -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+   
 
     <script>
-        // Example logout function (replace with your actual logout logic)
-        function logout() {
-            alert("Logged out!");
-            // Add your logout logic here, e.g., redirect to a logout page.
+        function loadAddProductForm() {
+            const middleContent = document.getElementById("middle-content");
+            middleContent.innerHTML = `
+                <div class="form-container" id="product-form">
+                    <h2>Add Product</h2>
+                    <form action="{% url 'add_product' %}" method="post" enctype="multipart/form-data" onsubmit="return validateProductForm();">
+                        {% csrf_token %}
+                        
+                    
+                        {% comment %} <div class="form-group">
+                            <label for="product-id">Product ID</label>
+                            <input type="text" id="product-id" name="product-id" class="form-control" required>
+                        </div> {% endcomment %}
+                        <div class="form-group">
+                            <label for="product-name">Product Name</label>
+                            <input type="text" id="product-name" name="product-name" class="form-control" required oninput="validateProductName(this)">
+                            <span id="product-name-error" class="error-text"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="category-name">Category Name</label>
+                            <select id="category-name" name="category-name" class="form-control" required onchange="updateSubcategoryOptions()">
+                                <option value="">Select</option>
+								<option value="ornaments">Ornaments</option>
+                                <option value="bags">Bags</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="subcategory-name">Subcategory Name</label>
+                            <select id="subcategory-name" name="subcategory-name" class="form-control" required>
+                                <!-- Subcategory options will be added dynamically here -->
+								
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">Quantity</label>
+                            <input type="number" id="quantity" name="quantity" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" name="description" class="form-control" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="price">Product Price</label>
+                            <input type="number" id="price" name="price" class="form-control" required oninput="validatePrice(this); calculateSalePrice(document.getElementById('discount'))">
+                            <span id="price-error" class="error-text"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="discount">Discount (%)</label>
+                            <input type="number" id="discount" name="discount" class="form-control" oninput="calculateSalePrice(this)">
+                        </div>
+                        <div class="form-group">
+                            <label for="sale-price">Sale Price</label>
+                            <input type="number" id="sale-price" name="sale-price" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select id="status" name="status" class="form-control" required>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-image">Product Image</label>
+                            <input type="file" id="product-image" name="product-image" class="form-control" accept="image/*" required onchange="validateProductImage(this)">
+                            <span id="product-image-error" class="error-text"></span>
+                        </div>
+                        <button type="submit" id="add-product-button" class="btn btn-primary">Add Product</button>
+                        <button type="reset" class="btn btn-primary">Reset</button>
+                    </form>
+                </div>
+            `;
+        }
+      
+    </script>   
+
+       
+<script>
+        function validateProductName(input) {
+            const productNameError = document.getElementById("product-name-error");
+            const productNameRegex = /^[A-Za-z ]+$/;
+            if (!productNameRegex.test(input.value)) {
+                productNameError.textContent = "Product name should contain only alphabet characters.";
+            } else {
+                productNameError.textContent = "";
+            }
+        }
+
+        function validatePrice(input) {
+            const priceError = document.getElementById("price-error");
+            const priceValue = parseFloat(input.value);
+            if (isNaN(priceValue) || priceValue <= 100) {
+                priceError.textContent = "Price should be greater than 100.";
+            } else {
+                priceError.textContent = "";
+            }
+        }
+
+        function validateProductForm() {
+            // Validation for other fields (if needed)
+
+            // Continue with form submission or other actions if all validations pass
+            // You can add code here to submit the form data using AJAX or perform other actions.
+
+            // Make sure to check for any errors and return false if there are errors.
+            // Example:
+            const productNameError = document.getElementById("product-name-error").textContent;
+            const priceError = document.getElementById("price-error").textContent;
+
+            if (productNameError || priceError) {
+                return false;
+            }
+
+            return true;
+        }
+
+        function calculateSalePrice(discountInput) {
+            const priceInput = document.getElementById("price");
+            const salePriceInput = document.getElementById("sale-price");
+
+            const price = parseFloat(priceInput.value);
+            const discount = parseFloat(discountInput.value);
+
+            if (!isNaN(price) && !isNaN(discount)) {
+                const salePrice = price - (price * (discount / 100));
+                salePriceInput.value = salePrice.toFixed(2);
+            } else {
+                salePriceInput.value = "";
+            }
+        }
+
+        function updateSubcategoryOptions() {
+            const categoryDropdown = document.getElementById("category-name");
+            const subcategoryDropdown = document.getElementById("subcategory-name");
+            const selectedCategory = categoryDropdown.value;
+            const subcategoryOptions = {
+                ornaments: ["Neckpieces", "Earrings", "Rings"],
+                bags: ["Clutches", "Handbags"],
+            };
+
+            // Clear existing options
+            subcategoryDropdown.innerHTML = "";
+
+            // Add new options based on the selected category
+            for (const option of subcategoryOptions[selectedCategory]) {
+                const optionElement = document.createElement("option");
+                optionElement.value = option;
+                optionElement.textContent = option;
+                subcategoryDropdown.appendChild(optionElement);
+            }
         }
     </script>
 </body>
+
 </html>

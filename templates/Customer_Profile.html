@@ -1,186 +1,344 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
-    <title>Your Page Title</title>
-    <script>
-        // JavaScript function to navigate to the index page
-        function goToIndex() {
-            window.location.href = '/'; // Replace '/' with the actual URL of your index page
+    <!-- Basic -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE-edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="">
+    <title>fashion finds hub</title>
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+    <!-- font awesome style -->
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+    <!-- jQuery UI CSS for the date picker -->
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
+    <style>
+        /* Style for the form container */
+        .form-container {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            width: 80%;
+            margin: 0 auto;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
-        
-        
-    </script>
+
+        /* Style for form labels */
+        .form-group label {
+            font-weight: bold;
+        }
+
+        /* Style for form inputs */
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        /* Style for form buttons */
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero_area {
+            /* Your hero area styles go here */
+        }
+
+        .header_section {
+            /* Your header styles go here */
+        }
+
+        .custom_nav-container {
+            /* Your navigation styles go here */
+        }
+
+        .navbar-toggler {
+            /* Your navbar toggler styles go here */
+        }
+
+        .navbar-nav {
+            /* Your navbar-nav styles go here */
+        }
+
+        .nav-link {
+            /* Your nav-link styles go here */
+        }
+
+        .nav_search-btn {
+            /* Your search button styles go here */
+        }
+
+        .inner_page_head {
+            /* Your inner page head styles go here */
+        }
+
+        /* Add your sidebar styles here */
+        .sidebar {
+            width: 20%;
+            background-color: #f0f0f0;
+            padding: 20px;
+            position: fixed;
+            height: 100%;
+            overflow: auto;
+        }
+
+        .sidebar-item {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #ccc;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar-item:hover {
+            background-color: #ddd;
+        }
+
+        .account-settings {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 20px;
+        }
+
+        .account-box {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        /* Additional styles for content on the right side */
+        .content {
+            margin-left: 20%;
+            padding: 20px;
+        }
+    </style>
 </head>
-<body>
-    {% comment %} <div class="header">
-        <h2>User Profile</h2>
-    </div> {% endcomment %}
 
-<!-- <form method="POST" class="file-upload mt-1" style="background-color: white;" action="">
-    {% csrf_token %}
-    <div class="row mb-5 gx-5"> -->
-        <div class="container">
-            <div class="row justify-content-center align-items-center vh-100">
-                <form method="POST" class="file-upload" style="background-color: #e6e6fa; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);">
-                    {% csrf_token %}
-        <!-- Contact detail -->
-        <div class="col-xxl-8 mb-5 mb-xxl-0">
-            <div class="bg-secondary-soft px-4 py-5 rounded">
-                <div class="row g-3">
-                    <!-- ... Your existing HTML ... -->
-
-
-                    <b><h2 class="mb-4 mt-0">Personal Details</h2></b>
-
-                    <!-- Name -->
-                    <div class="col-md-6">
-                        <label class="form-label">Name *</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter your Name" value="{% if request.user.is_authenticated %}{{ user_profile.customer.fullname }}{% endif %}" required>
-                        <div id="name_error" class="text-danger"></div>
+<body class="sub_page">
+    <div class="hero_area">
+        <header class="header_section">
+            <!-- Your header content goes here -->
+        </header>
+    </div>
+    <section class="inner_page_head">
+        <div class="container_fuild">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="full">
+                        <h3></h3>
                     </div>
-                    <!-- Street Address -->
-                    <div class="col-md-6">
-                        <label class="form-label">Street Address *</label>
-                        <input type="text" class="form-control" id="street_address" name="street_address" placeholder="Enter your Street Address" value="{% if form_submitted %}{{ request.POST.street_address }}{% else %}{{ user_profile.street_address }}{% endif %}" required>
-                        <div id="street_address_error" class="text-danger"></div>
-                    </div>
-<br>
-                    <!-- Country Dropdown -->
-                    <div class="col-md-6">
-                        <label class="form-label">Country *</label>
-                        <select class="form-select" id="country" name="country" >
-                            <option value="India">India</option>
-                            <!-- Add other country options as needed -->
-                        </select>
-                        <br><br>
-                    </div>
-
-                    <!-- State Dropdown -->
-                    <!-- State Dropdown -->
-<div class="col-md-6">
-    <label class="form-label">State *</label>
-    <select class="form-select" id="state" name="state">
-        <option value="Select State">Select State</option>
-        <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
-        <option value="Andhra Pradesh">Andhra Pradesh</option>
-        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-        <option value="Assam">Assam</option>
-        <option value="Bihar">Bihar</option>
-        <option value="Chandigarh">Chandigarh</option>
-        <option value="Chhattisgarh">Chhattisgarh</option>
-        <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
-        <option value="Daman and Diu">Daman and Diu</option>
-        <option value="Delhi">Delhi</option>
-        <option value="Goa">Goa</option>
-        <option value="Gujarat">Gujarat</option>
-        <option value="Haryana">Haryana</option>
-        <option value="Himachal Pradesh">Himachal Pradesh</option>
-        <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-        <option value="Jharkhand">Jharkhand</option>
-        <option value="Karnataka">Karnataka</option>
-        <option value="Kerala">Kerala</option>
-        <option value="Lakshadweep">Lakshadweep</option>
-        <option value="Madhya Pradesh">Madhya Pradesh</option>
-        <option value="Maharashtra">Maharashtra</option>
-        <option value="Manipur">Manipur</option>
-        <option value="Meghalaya">Meghalaya</option>
-        <option value="Mizoram">Mizoram</option>
-        <option value="Nagaland">Nagaland</option>
-        <option value="Odisha">Odisha</option>
-        <option value="Puducherry">Puducherry</option>
-        <option value="Punjab">Punjab</option>
-        <option value="Rajasthan">Rajasthan</option>
-        <option value="Sikkim">Sikkim</option>
-        <option value="Tamil Nadu">Tamil Nadu</option>
-        <option value="Telangana">Telangana</option>
-        <option value="Tripura">Tripura</option>
-        <option value="Uttar Pradesh">Uttar Pradesh</option>
-        <option value="Uttarakhand">Uttarakhand</option>
-        <option value="West Bengal">West Bengal</option>
-    </select>
-</div>
-
-<br><br>
-<!-- Pincode -->
-<div class="col-md-6">
-    <label class="form-label">Pincode *</label>
-    <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Enter your Pincode" value="{% if form_submitted %}{{ request.POST.pincode }}{% else %}{{ user_profile.pincode }}{% endif %}" required
-           onchange="validatePincode(this.value)">
-    <div id="pincode_error" class="text-danger"></div>
-</div>
-
-<script>
-    // JavaScript function to validate the pincode field
-    function validatePincode(pincode) {
-        // Remove any non-digit characters (e.g., spaces, hyphens)
-        pincode = pincode.replace(/\D/g, '');
-
-        if (pincode.length !== 6) {
-            document.getElementById('pincode_error').textContent = 'Pincode must have exactly 6 digits';
-        } else {
-            document.getElementById('pincode_error').textContent = ''; // Clear error message
-        }
-    }
-</script>
-
-                            <!-- Mobile number -->
-                <div class="col-md-6">
-                    <label class="form-label">Mobile number *</label>
-                    <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter your mobile no." value="{% if request.user.is_authenticated %}{{ user_profile.customer.phone }}{% endif %}" required onchange="validateMobileNumber(this.value)">
-                    <div id="mobile_number_error" class="text-danger"></div>
                 </div>
-                
-                
-                
-                
-                
-                
-
-<script>
-    // JavaScript function to validate the Mobile number field
-    function validateMobileNumber(mobileNumber) {
-        // Remove any non-digit characters (e.g., spaces, hyphens)
-        mobileNumber = mobileNumber.replace(/\D/g, '');
-
-        if (mobileNumber.length !== 10) {
-            document.getElementById('mobile_number_error').textContent = 'Mobile number must have exactly 10 digits';
-        } else if (!/^[6-9]\d{9}$/.test(mobileNumber)) {
-            document.getElementById('mobile_number_error').textContent = 'Mobile number must start with a digit between 6 and 9';
-        } else {
-            document.getElementById('mobile_number_error').textContent = ''; // Clear error message
-        }
-    }
-</script>
-
-
-                
-
-                <!-- Email -->
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label for="inputEmail4" class="form-label">Email *</label>
-                        <input type="email" class="form-control" id="inputEmail4" name="email" value="{% if request.user.is_authenticated %}{{ request.user.email }}{% endif %}" disabled>
-                    </div>
-                </div> <!-- Row 3 END -->
-
-                <!-- Add margin to move buttons up -->
-                <div class="mt-3"></div>
-
-                <div class="gap-3 d-md-flex justify-content-md-center text-center">
-                    <button type="submit" class="btn btn-danger btn" id="save_button">Save</button>
-                    <button type="submit" class="btn btn-primary btn" id="update_button">Update</button>
-                    <!-- <a href="{% url 'index' %}" class="btn btn-secondary btn">Back</a> -->
-                    
-                    <button type="button" onclick="goToIndex()" style="background-color: #007BFF; color: #fff; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">Back</button>
-                </body>                </div>
-                
             </div>
         </div>
-    </div> <!-- Row END -->
-</form>
+    </section>
+    <div class="sidebar">
+        <div class="sidebar-item">MY ORDERS</div>
+        <div class="sidebar-item">
+            ACCOUNT SETTINGS
+            <div class="account-box">
+                <div class="content-item" onclick="loadProfileForm()">Profile Information</div>
+            </div>
+            <div class="account-box">
+                <div class="content-item" onclick="loadManageAddressesForm()">Manage Address</div>
+            </div>
+        </div>
+        <div class="sidebar-item">PAYMENT</div>
+    </div>
+
+    <!-- Middle Content -->
+    <div class="content" id="middle-content">
+        <!-- Content will be loaded here dynamically using JavaScript -->
+    </div>
+
+    <!-- JavaScript to load the form and initialize the date picker -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        function loadProfileForm() {
+            // You can load your form content here
+            const middleContent = document.getElementById("middle-content");
+            middleContent.innerHTML = `
+                <div class="form-container">
+                    <h2>Profile Information Form</h2>
+                    <form onsubmit="return validateProfileForm();">
+                        <div class="form-group">
+                            <label for="full-name">Full Name</label>
+                            <input type="text" id="fullname" name="fullname" class="form-control" required>
+                        </div>
+
+                        <!-- Add the Gender field here as radio buttons with labels -->
+                        <!-- Add the Gender field here as radio buttons -->
+                        <div class="form-group">
+                            <label>Your Gender</label><br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="male" name="gender" class="form-check-input" value="male" required>
+                                <label for="male" class="form-check-label">Male</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="female" name="gender" class="form-check-input" value="female" required>
+                                <label for="female" class="form-check-label">Female</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="date-of-birth">Date of Birth</label>
+                            <div class="input-group">
+                                <input type="text" id="date-of-birth" name="date-of-birth" class="form-control" placeholder="mm/dd/yyyy" required>
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" name="phone" class="form-control" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="reset" class="btn btn-primary">Reset</button>
+                    </form>
+                </div>
+            `;
+
+            // Initialize the date picker
+            $("#date-of-birth").datepicker();
+        }
+
+        function loadManageAddressesForm() {
+            const middleContent = document.getElementById("middle-content");
+            middleContent.innerHTML = `
+                <div class="form-container" id="address-form">
+                    <h2>Manage Addresses</h2>
+                    <form onsubmit="return validateAddressForm();">
+                        <div class="form-group">
+                            <label for="fullname">Full Name</label>
+                            <input type="text" id="fullname" name="fullname" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pincode">PIN Code</label>
+                            <input type="text" id="pincode" name="pincode" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input type="text" id="address" name="address" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="landmark">Landmark (Optional)</label>
+                            <input type="text" id="landmark" name="landmark" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="city" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State</label>
+                            <input type="text" id="state" name="state" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="address-type">Address Type</label>
+                            <select id="address-type" name="address-type" class="form-control" required>
+                                <option value="home">Home</option>
+                                <option value="work">Work</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Address</button>
+                        <button type="reset" class="btn btn-primary">Reset</button>
+                        <button type="update" class="btn btn-primary">Update</button>
+
+                    </form>
+                </div>
+            `;
+        }
+
+        function validateFullName() {
+            const fullNameInput = document.getElementById('fullname');
+            const fullNameValue = fullNameInput.value.trim();
+            const fullNameRegex = /^[a-zA-Z\s]+$/; // Regular expression to match alphabets and spaces
+
+            if (!fullNameRegex.test(fullNameValue)) {
+                alert('Please enter a valid full name containing only alphabets and spaces.');
+                fullNameInput.focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        function validatePhoneNumber() {
+            const phoneInput = document.getElementById('phone');
+            const phoneValue = phoneInput.value.trim();
+            const phoneRegex = /^\d{10}$/; // Regular expression to match 10-digit phone number
+
+            if (!phoneRegex.test(phoneValue)) {
+                alert('Please enter a valid 10-digit phone number.');
+                phoneInput.focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        function validateProfileForm() {
+            const isFullNameValid = validateFullName();
+            const isPhoneNumberValid = validatePhoneNumber();
+
+            if (isFullNameValid && isPhoneNumberValid) {
+                // Form is valid, you can submit it or perform other actions here
+                return true;
+            } else {
+                // Form is not valid, prevent submission
+                return false;
+            }
+        }
+
+        function validateAddressForm() {
+            // Add any additional validation for the address form here if needed
+        }
+    </script>
 </body>
+
 </html>

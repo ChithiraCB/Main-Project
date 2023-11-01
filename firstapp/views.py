@@ -2,15 +2,18 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate ,login as auth_login,logout
 from django.contrib import messages
+from django.http import JsonResponse
+from django.shortcuts import render,get_object_or_404
 from . models import CustomUser
 from . models import CustomerProfile,Product
+
 
 #from django.contrib.auth.models import User
 
 def index(request):
     # if request.user.is_authenticated:
      return render(request, 'index.html')
-
+ 
 
 def register_user(request):
     if request.method == "POST":
@@ -72,7 +75,7 @@ def login_user(request):
             
                 if request.user.user_types==CustomUser.CUSTOMER:
                     request.session["username"]=user.username
-                    return redirect('/')
+                    return redirect('userhome')
                 # elif request.user.user_typ == CustomUser.VENDOR:
                 #     print("user is therapist")
                 #     return redirect(reverse('therapist'))
@@ -93,8 +96,10 @@ def login_user(request):
         
     return render(request, 'login.html')
 
-def product(request):
-    return render(request,'product.html')
+def product_grid(request):
+    products = Product.objects.all()  # Fetch all products
+    return render(request, 'product.html', {'products': products})
+
 
 def adminpanel(request):
     return render(request, 'adminpanel.html')
@@ -106,7 +111,7 @@ def logout_user(request):
     #     request.session.flush()
     logout(request)
     messages.success(request,("logged out"))
-    return render(request, 'logout.html')
+    return render(request, 'index.html')
 
 # def logout_page(request):
 #     return render(request, 'logout.html')
@@ -122,7 +127,7 @@ def Customer_Profile(request):
 
     if request.method == 'POST':
         # Handle the POST request for updating user profile fields
-        name = request.POST.get('name')
+        FullName = request.POST.get('fullName')
         street_address=request.POST.get('street_address')
         country=request.POST.get('country')
         state=request.POST.get('state')
@@ -131,7 +136,7 @@ def Customer_Profile(request):
         phone = request.POST.get('phone')
 
         # Update the user profile fields
-        user_profile.name = name
+        user_profile.fullName = FullName
         user_profile.street_address=street_address
         user_profile.country=country
         user_profile.state=state
@@ -150,35 +155,84 @@ def Customer_Profile(request):
     }
     return render(request, 'Customer_Profile.html',context)
 
-# def add_product(request):
-#     return render(request, 'addproduct.html')
+def user_home(request):
+     return render(request, 'userhome.html')
+
+from django.shortcuts import render, redirect
+from .models import Product
 
 def add_product(request):
     if request.method == 'POST':
-        # Retrieve form data from request.POST
-        product_name = request.POST.get('product_name')
-        subcategory_id = request.POST.get('subcategory_id')
-        category_id = request.POST.get('category_id')
-        price = request.POST.get('price')
+        # Handle the form submission
+        product_id = request.POST.get('product-id')
+        product_name = request.POST.get('product-name')
+        category = request.POST.get('category-name')
+        subcategory = request.POST.get('subcategory-name')
+        quantity = request.POST.get('quantity')
         description = request.POST.get('description')
-        image = request.FILES.get('image')
+        price = request.POST.get('price')
+        discount = request.POST.get('discount')  # Retrieve as a string
         status = request.POST.get('status')
+        product_image = request.FILES.get('product-image')
+
+        price = float(price)
+
+        # Convert discount to a float
+        discount = float(discount)
+
+        
+        
+
+        # Calculate sale_price
+        sale_price = price - (price * (discount / 100))
 
         # Create a new Product object and save it to the database
-        new_product = Product(
+        product = Product(
+            product_id=product_id,
             product_name=product_name,
-            subcategory_id=subcategory_id,
-            category_id=category_id,
-            price=price,
+            category=category,
+            subcategory=subcategory,
+            quantity=quantity,
             description=description,
-            image=image,
-            status=status
+            price=price,
+            discount=discount,
+            sale_price=sale_price,  # Assign the calculated sale price
+            status=status,
+            product_image=product_image
         )
-        new_product.save()
+        product.save()
 
-        return redirect('adminpanel')  # Redirect to a product list page or another appropriate page
+        # Redirect to a success page or any other desired action
+        return redirect('adminpanel')
 
-    return render(request, 'addproduct.html')
+    return render(request, 'adminpanel.html')
+
+# def add_product(request):
+#     if request.method == 'POST':
+#         # Retrieve form data from request.POST
+#         product_name = request.POST.get('product_name')
+#         category_id = request.POST.get('category_id')
+#         subcategory_id = request.POST.get('subcategory_id')
+#         price = request.POST.get('price')
+#         description = request.POST.get('description')
+#         image = request.FILES.get('image')
+#         status = request.POST.get('status')
+
+#         # Create a new Product object and save it to the database
+#         new_product = Product(
+#             product_name=product_name,
+#             category_id=category_id,
+#             subcategory_id=subcategory_id,
+#             price=price,
+#             description=description,
+#             image=image,
+#             status=status
+#         )
+#         new_product.save()
+
+#         return redirect('adminpanel')  # Redirect to a product list page or another appropriate page
+
+#     return render(request, 'addproduct.html')
 
 # def view_products(request):
 #     products = WatchProduct.objects.all()  # Retrieve all products from the database
@@ -200,5 +254,61 @@ def delete_product(request, product_id):
 
 
 
+
+def add_to_cart(request):
+    # Fetch the product details from your Product model
+    products = Product.objects.all()  # This fetches all products; adjust as needed
+
+    # You can pass these products to your template
+    return render(request, 'addtocart.html', {'products': products})
+
+
+
+# def get_product_details(request):
+#     # Retrieve the product details (you can modify this based on your requirements)
+#     products = Product.objects.all()
+#     product_data = []
+
+#     for product in products:
+#         product_data.append({
+#             'product_id': product.product_id,
+#             'product_name': product.product_name,
+#             'category': product.category,
+#             'subcategory': product.subcategory,
+#             'quantity': product.quantity,
+#             'description': product.description,
+#             'price': product.price,
+#             'discount': product.discount,
+#             'sale_price': product.sale_price,
+#             'status': product.status,
+#             'product_image': product.product_image.url,
+#         })
+
+#     return render(request, 'product_details.html', {'products': product_data})
+
     
 
+
+def product_details(request, product_id):
+    # Retrieve the product details from the database
+    product = get_object_or_404(Product, product_id=product_id)
+
+    # Render the product details template with the product data
+    return render(request, 'details.html', {'product': product})
+
+
+def edit_product(request, product_id):
+    try:
+        product = Product.objects.get(pk=product_id)
+    except Product.DoesNotExist:
+        # Handle the case where the product doesn't exist
+        # You may want to redirect to an error page or take appropriate action
+        pass
+
+    if request.method == 'POST':
+        # Handle form submission and update the product
+        # You can access form data using request.POST and request.FILES
+        # Perform validation and update the product data in the database
+        # Redirect to a product detail page or a success page
+
+     return render(request, 'edit_product.html', context={'product': product})

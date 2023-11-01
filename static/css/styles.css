@@ -87,4 +87,13 @@ h2 {
     color: white; /* White text color */
     padding: 20px; /* Padding around the header */
     text-align: center; /* Center-align the header text */
-} */
+
+
+.header {
+    background-color: red; /* Red background color */
+    /*color: white; /* White text color */
+    padding: 20px; /* Padding around the header */
+    text-align: center; /* Center-align the header text */
+    border-radius: 10px 10px 0 0; /* Rounded corners only on top */
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2); /* Add a shadow below the header */
+}

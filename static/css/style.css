@@ -1124,3 +1124,21 @@ http://kute-themes.com/html/boutique/html/index.html
 https://template.hasthemes.com/noraure/noraure/index.html
 https://preview.hasthemes.com/xoss-preview/xoss/index.html
 
+/* Set a specific width and height for the product images */
+.product-image {
+  width: 10px; /* Adjust the width as needed */
+  height: 10px; /* Adjust the height as needed */
+  object-fit: cover; /* This property controls how the image fits within the specified dimensions */
+}
+
+/* Style for the product cards, adjust as needed */
+.product-card {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Add styles for the "Add to Cart" and "View Details" buttons */
+.product-card .btn {
+  margin: 5px;
+}
