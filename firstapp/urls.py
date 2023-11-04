@@ -15,11 +15,16 @@ urlpatterns = [
       path('viewproduct/', views.view_product, name='viewproduct'),
      path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
      path('userhome/',views.user_home,name='userhome'),
-     path('addtocart/',views.add_to_cart,name='addtocart'),
+     #path('addtocart/',views.add_to_cart,name='addtocart'),
      path('product/<int:product_id>/', views.product_details, name='product_details'),
      path('edit_product/<int:product_id>/', views.edit_product, name='edit_product'),
-
-
+     path('change_password/', views.change_password, name='change_password'),
+     path('view_cart/', views.view_cart, name='view_cart'),
+     path('add_to_cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+     path('remove_from_cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
+     path('user_r', views.user_r, name='user_r'),
+     path('delete_user/<int:user_id>/', views.delete_user, name='delete_user'),
+    path('product/<str:subcategory>/', views.products_by_subcategory, name='products_by_subcategory'),
 
      path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),
      path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),

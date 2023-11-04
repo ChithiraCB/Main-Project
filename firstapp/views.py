@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render,get_object_or_404
 from . models import CustomUser
-from . models import CustomerProfile,Product
+from . models import CustomerProfile,Product,AddToCart
 
 
 #from django.contrib.auth.models import User
@@ -25,6 +25,8 @@ def register_user(request):
         phone = request.POST.get('phone')
         #address = request.POST.get('address')
         email = request.POST.get('email')
+
+        
         
 
         if CustomUser.objects.filter(email=email).exists():
@@ -168,7 +170,7 @@ def add_product(request):
         product_name = request.POST.get('product-name')
         category = request.POST.get('category-name')
         subcategory = request.POST.get('subcategory-name')
-        quantity = request.POST.get('quantity')
+        stock = request.POST.get('stock')
         description = request.POST.get('description')
         price = request.POST.get('price')
         discount = request.POST.get('discount')  # Retrieve as a string
@@ -180,9 +182,6 @@ def add_product(request):
         # Convert discount to a float
         discount = float(discount)
 
-        
-        
-
         # Calculate sale_price
         sale_price = price - (price * (discount / 100))
 
@@ -192,7 +191,7 @@ def add_product(request):
             product_name=product_name,
             category=category,
             subcategory=subcategory,
-            quantity=quantity,
+            stock=stock,
             description=description,
             price=price,
             discount=discount,
@@ -207,36 +206,8 @@ def add_product(request):
 
     return render(request, 'adminpanel.html')
 
-# def add_product(request):
-#     if request.method == 'POST':
-#         # Retrieve form data from request.POST
-#         product_name = request.POST.get('product_name')
-#         category_id = request.POST.get('category_id')
-#         subcategory_id = request.POST.get('subcategory_id')
-#         price = request.POST.get('price')
-#         description = request.POST.get('description')
-#         image = request.FILES.get('image')
-#         status = request.POST.get('status')
 
-#         # Create a new Product object and save it to the database
-#         new_product = Product(
-#             product_name=product_name,
-#             category_id=category_id,
-#             subcategory_id=subcategory_id,
-#             price=price,
-#             description=description,
-#             image=image,
-#             status=status
-#         )
-#         new_product.save()
 
-#         return redirect('adminpanel')  # Redirect to a product list page or another appropriate page
-
-#     return render(request, 'addproduct.html')
-
-# def view_products(request):
-#     products = WatchProduct.objects.all()  # Retrieve all products from the database
-#     return render(request, 'view_products.html', {'products': products})
 def view_product(request):
     products = Product.objects.all()  # Retrieve all products from the database
     return render(request, 'viewproduct.html', {'products': products})
@@ -252,15 +223,27 @@ def delete_product(request, product_id):
             pass
     return redirect('viewproduct')  # Redirect back to the product list view
 
+def delete_user(request, user_id):
+    if request.method == 'POST':
+        try:
+            user = CustomUser.objects.get(id=user_id)
+            user.delete()
+        except CustomUser.DoesNotExist:
+            # Handle the case where the user does not exist
+            pass
+        # Redirect to a success page or any other desired action
+        return redirect('view_users')  # Redirect to the user listing page
+    return render(request, 'user.html')
 
 
 
-def add_to_cart(request):
-    # Fetch the product details from your Product model
-    products = Product.objects.all()  # This fetches all products; adjust as needed
 
-    # You can pass these products to your template
-    return render(request, 'addtocart.html', {'products': products})
+# def add_to_cart(request):
+#     # Fetch the product details from your Product model
+#     products = Product.objects.all()  # This fetches all products; adjust as needed
+
+#     # You can pass these products to your template
+#     return render(request, 'addtocart.html', {'products': products})
 
 
 
@@ -297,18 +280,173 @@ def product_details(request, product_id):
     return render(request, 'details.html', {'product': product})
 
 
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
+from .models import Product  # Import your Product model
+
 def edit_product(request, product_id):
-    try:
-        product = Product.objects.get(pk=product_id)
-    except Product.DoesNotExist:
-        # Handle the case where the product doesn't exist
-        # You may want to redirect to an error page or take appropriate action
-        pass
+    # Retrieve the product using get_object_or_404 to handle cases where the product doesn't exist
+    product = get_object_or_404(Product, pk=product_id)
 
     if request.method == 'POST':
         # Handle form submission and update the product
         # You can access form data using request.POST and request.FILES
         # Perform validation and update the product data in the database
-        # Redirect to a product detail page or a success page
 
-     return render(request, 'edit_product.html', context={'product': product})
+        # Example:
+        product.product_name = request.POST['product-name']
+        product.category = request.POST['category-name']
+        product.subcategory = request.POST['subcategory-name']
+        product.stock = request.POST['stock']
+        product.description = request.POST['description']
+        product.price = request.POST['price']
+        product.discount = request.POST['discount']
+        product.sale_price = request.POST['sale-price']
+        
+        # Save the updated product
+        product.save()
+
+        # Redirect to a product detail page or a success page
+        #return HttpResponseRedirect('/product_detail/{0}/'.format(product.product_id))
+       # return HttpResponseRedirect('adminpanel')
+
+    # If the request method is GET, render the edit product form
+    return render(request, 'editproduct.html', {'product': product})
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
+from django.http import JsonResponse
+
+
+def change_password(request):
+    if request.method == 'POST':
+        old_password = request.POST.get('old_password')  # Get the old password from the form
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        user = request.user  # Get the currently logged-in user
+
+        # Check if the entered old password matches the user's current password
+        if not user.check_password(old_password):
+            return JsonResponse({'error': 'Incorrect old password'}, status=400)
+
+        if new_password == confirm_password:
+            # Change the user's password and save it to the database
+            user.set_password(new_password)
+            user.save()
+
+            # Update the session to keep the user logged in
+            update_session_auth_hash(request, user)
+
+            return JsonResponse({'message': 'Password changed successfully'})
+        else:
+            return JsonResponse({'error': 'Passwords do not match'}, status=400)
+
+    return render(request, 'change_password.html')
+
+
+
+
+
+
+def view_cart(request):
+    cart_items = AddToCart.objects.filter(user=request.user, is_active=True)
+
+    # Calculate order summary
+    subtotal = sum(item.product.sale_price * item.quantity for item in cart_items)
+    shipping = 10  # Adjust this value as needed
+    total = subtotal + shipping
+    
+    context = {
+        'cart_items': cart_items,
+        'subtotal': subtotal,
+        'shipping': shipping,
+        'total': total,
+    }
+    return render(request, 'view_cart.html', context)
+
+def remove_from_cart(request, item_id):
+    item = get_object_or_404(AddToCart, pk=item_id)
+
+    if item.user == request.user:
+        # Remove the item from the cart and the database
+        item.delete()
+
+    # Recalculate order summary after item removal
+    cart_items = AddToCart.objects.filter(user=request.user, is_active=True)
+    subtotal = sum(item.product.sale_price * item.quantity for item in cart_items)
+    shipping = 10  # Adjust this value as needed
+    total = subtotal + shipping
+
+    context = {
+        'cart_items': cart_items,
+        'subtotal': subtotal,
+        'shipping': shipping,
+        'total': total,
+    }
+    return render(request, 'view_cart.html', context)
+
+@login_required
+def add_to_cart(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    
+    # Check if the product is in stock
+    if product.stock <= 0:
+        messages.warning(request, f"{product.product_name} is out of stock.")
+    else:
+        # Get or create a cart item for the user and the selected product
+        cart_item, created = AddToCart.objects.get_or_create(user=request.user, product=product)
+        
+        if not created:
+            # If the cart item already exists, update its quantity and set it as active
+            cart_item.is_active = True
+            cart_item.quantity += 1
+            cart_item.save()
+        else:
+            # If it's a new item, set it as active
+            cart_item.is_active = True
+            cart_item.save()
+    
+    return redirect('view_cart')  
+
+# def remove_from_cart(request, item_id):
+#     cart_item = get_object_or_404(AddToCart, id=item_id)
+    
+#     # Check if the item belongs to the current user
+#     if cart_item.user == request.user:
+#         cart_item.is_active = False
+#         cart_item.save()
+#         messages.success(request, f"{cart_item.product.product_name} has been removed from your cart.")
+#     else:
+#         messages.error(request, "You don't have permission to remove this item from your cart.")
+    
+#     return redirect('view_cart')
+
+def user_r(request):
+    user_s = CustomUser.objects.all()  # Fetch all products
+    return render(request, 'user.html', {'user_s': user_s})
+
+def delete_user(request, user_id):
+    if request.method == 'POST':
+        try:
+            user = CustomUser.objects.get(id=user_id)
+            user.delete()
+        except CustomUser.DoesNotExist:
+            # Handle the case where the user does not exist
+            pass
+        # Redirect to a success page or any other desired action
+        return redirect('user_r')  # Redirect to the user listing page
+    return render(request, 'user.html')
+
+
+# def subcategory_products(request, category_name, subcategory_name):
+#     products = Product.objects.filter(category=category_name, subcategory=subcategory_name)
+#     return render(request, 'subcategory_products.html', {'category_name': category_name, 'subcategory_name': subcategory_name, 'products': products})
+
+
+def products_by_subcategory(request, subcategory):
+    # Retrieve products based on the provided subcategory
+    products = Product.objects.filter(subcategory=subcategory)  # Replace 'subcategory' with your actual field name
+
+    return render(request, 'product.html', {'products': products})

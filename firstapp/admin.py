@@ -4,6 +4,7 @@ from .models import CustomerProfile
 from .models import Category
 from .models import Subcategory
 from .models import Product
+from .models import AddToCart
 
 
 # Register your models here.
@@ -12,3 +13,4 @@ admin.site.register(CustomerProfile)
 admin.site.register(Category)
 admin.site.register(Subcategory)
 admin.site.register(Product)
+admin.site.register(AddToCart)

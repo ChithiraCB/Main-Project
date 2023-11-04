@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ category_name }} - {{ subcategory_name }}</title>
+</head>
+<body>
+    <h1>{{ category_name }} - {{ subcategory_name }}</h1>
+
+    <ul>
+        {% for product in products %}
+            <li>
+                <h2>{{ product.product_name }}</h2>
+                <p>Price: ${{ product.price }}</p>
+                <p>Description: {{ product.description }}</p>
+                <!-- Add more product details as needed -->
+            </li>
+        {% empty %}
+            <p>No products in this subcategory.</p>
+        {% endfor %}
+    </ul>
+</body>
+</html>

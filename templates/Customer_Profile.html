@@ -115,7 +115,8 @@
         }
 
         .sidebar-item {
-            margin-bottom: 20px;
+            margin-top:5px;
+            margin-bottom: 20px; 
             padding: 10px;
             background-color: #ccc;
             cursor: pointer;
@@ -144,15 +145,53 @@
             margin-left: 20%;
             padding: 20px;
         }
+        /* Additional styles for the user profile box */
+        .user-profile-box {
+            padding: 2px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            margin-top: 2px;
+        }
+
+        /* Style for the user profile */
+        .user-profile {
+            text-align: center;
+        }
+
+        .user-profile img {
+            width: 80px; /* Adjust the width as needed */
+            height: 80px; /* Adjust the height as needed */
+            border-radius: 50%;
+        }
+
+        .user-profile p {
+            font-size: 18px;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #003300; /* Adjust the color as needed */
+        }
+
+        /* Additional styles for the sidebar items */
+        .sidebar-item {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #ccc;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            bottom: 0.5;
+            margin-top: 40px;
+        }
+
+        .sidebar-item:hover {
+            background-color: #ddd;
+            bottom: 0.5;
+        }
+
     </style>
 </head>
 
 <body class="sub_page">
-    <div class="hero_area">
-        <header class="header_section">
-            <!-- Your header content goes here -->
-        </header>
-    </div>
+    
     <section class="inner_page_head">
         <div class="container_fuild">
             <div class="row">
@@ -165,6 +204,20 @@
         </div>
     </section>
     <div class="sidebar">
+        <div class="sidebar-item">
+        <div class="user-profile-box">
+            <div class="user-profile">
+                <img src="{% static 'images/profile.jpeg' %}" alt="User Avatar">
+                <p>
+                    {% if user.is_authenticated %}
+                        Hello {{ user.fullName }}
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+        
+
         <div class="sidebar-item">MY ORDERS</div>
         <div class="sidebar-item">
             ACCOUNT SETTINGS
@@ -174,6 +227,14 @@
             <div class="account-box">
                 <div class="content-item" onclick="loadManageAddressesForm()">Manage Address</div>
             </div>
+            <div class="account-box">
+                {% comment %} <a href="{% url 'change_password' %}"> {% endcomment %}
+                    <div class="content-item">Reset Password</div>
+                </a> 
+
+                
+            </div>
+            
         </div>
         <div class="sidebar-item">PAYMENT</div>
     </div>
@@ -190,7 +251,9 @@
         function loadProfileForm() {
             // You can load your form content here
             const middleContent = document.getElementById("middle-content");
-            middleContent.innerHTML = `
+            middleContent.innerHTML = 
+            {% comment %} const middleContent = document.getElementById("middle-content");
+            middleContent.innerHTML = ` {% endcomment %}
                 <div class="form-container">
                     <h2>Profile Information Form</h2>
                     <form onsubmit="return validateProfileForm();">
@@ -294,32 +357,34 @@
             `;
         }
 
-        function validateFullName() {
-            const fullNameInput = document.getElementById('fullname');
-            const fullNameValue = fullNameInput.value.trim();
-            const fullNameRegex = /^[a-zA-Z\s]+$/; // Regular expression to match alphabets and spaces
-
-            if (!fullNameRegex.test(fullNameValue)) {
-                alert('Please enter a valid full name containing only alphabets and spaces.');
-                fullNameInput.focus();
-                return false;
+        function validateFullNameInput(inputElement) {
+            const fullNameRegex = /^[A-Za-z ]+$/;
+            if (!fullNameRegex.test(inputElement.value)) {
+                inputElement.setCustomValidity("Full Name should only contain alphabets and spaces.");
+            } else {
+                inputElement.setCustomValidity("");
             }
-
-            return true;
         }
 
-        function validatePhoneNumber() {
-            const phoneInput = document.getElementById('phone');
-            const phoneValue = phoneInput.value.trim();
-            const phoneRegex = /^\d{10}$/; // Regular expression to match 10-digit phone number
-
-            if (!phoneRegex.test(phoneValue)) {
-                alert('Please enter a valid 10-digit phone number.');
-                phoneInput.focus();
-                return false;
+        function validatePhoneNumberInput(inputElement) {
+            const phoneRegex = /^\d{10}$/;
+            if (!phoneRegex.test(inputElement.value)) {
+                inputElement.setCustomValidity("Phone number should be numeric and have exactly 10 digits.");
+            } else {
+                inputElement.setCustomValidity("");
             }
-
-            return true;
+        }
+        function validateDateOfBirthInput(inputElement) {
+            const selectedDate = new Date(inputElement.value);
+            const currentDate = new Date();
+            if (
+                selectedDate.getFullYear() >= currentDate.getFullYear() ||
+                selectedDate.getFullYear() > 2023
+            ) {
+                inputElement.setCustomValidity("Invalid date of birth. Year should be less than 2023.");
+            } else {
+                inputElement.setCustomValidity("");
+            }
         }
 
         function validateProfileForm() {

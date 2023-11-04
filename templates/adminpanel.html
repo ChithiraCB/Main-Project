@@ -211,14 +211,19 @@
             </div>
             
             
-            <div class="account-box">
+            {% comment %} <div class="account-box">
                 <a class="content-item" href="{% url 'editproduct' %}">VIEW PRODUCT</a>
-            </div>
+            </div> {% endcomment %}
         </div>
         <div class="sidebar-item">DELIVERY TEAM</div>
    
-        <div class="sidebar-item">USERS</div>
+        {% comment %} <div class="sidebar-item">USERS</div>
+    </div> {% endcomment %}
+
+    <div class="sidebar-item">
+        <a href="{% url 'user_r' %}">USERS</a>
     </div>
+    
 
     <!-- Middle Content -->
     <div class="content" id="middle-content">
@@ -275,13 +280,15 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="quantity">Quantity</label>
-                            <input type="number" id="quantity" name="quantity" class="form-control" required>
+                            <label for="stock">Stock</label>
+                            <input type="number" id="stock" name="stock" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea id="description" name="description" class="form-control" required></textarea>
+                            <textarea id="description" name="description" class="form-control" oninput="validateDescription(this)" required></textarea>
+                            <span id="description-error" class="error-text"></span>
                         </div>
+                        
                         <div class="form-group">
                             <label for="price">Product Price</label>
                             <input type="number" id="price" name="price" class="form-control" required oninput="validatePrice(this); calculateSalePrice(document.getElementById('discount'))">
@@ -289,8 +296,10 @@
                         </div>
                         <div class="form-group">
                             <label for="discount">Discount (%)</label>
-                            <input type="number" id="discount" name="discount" class="form-control" oninput="calculateSalePrice(this)">
+                            <input type="number" id="discount" name="discount" class="form-control" oninput="validateDiscount(this); calculateSalePrice(document.getElementById('discount'))">
+                            <span id="discount-error" class="error-text"></span>
                         </div>
+                        
                         <div class="form-group">
                             <label for="sale-price">Sale Price</label>
                             <input type="number" id="sale-price" name="sale-price" class="form-control" readonly>
@@ -298,8 +307,8 @@
                         <div class="form-group">
                             <label for="status">Status</label>
                             <select id="status" name="status" class="form-control" required>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
+                                <option value="In stock">In Stock</option>
+                                <option value="Out of Stock">Out of Stock</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -391,6 +400,29 @@
                 subcategoryDropdown.appendChild(optionElement);
             }
         }
+        function validateDiscount(input) {
+            const discountError = document.getElementById("discount-error");
+            const discountValue = parseFloat(input.value);
+        
+            if (isNaN(discountValue) || discountValue < 0 || discountValue >= 100) {
+                discountError.textContent = "Discount should be between 0 and 99.";
+            } else {
+                discountError.textContent = "";
+            }
+        }
+        function validateDescription(input) {
+            const descriptionError = document.getElementById("description-error");
+            const descriptionValue = input.value;
+            const wordCount = descriptionValue.trim().split(/\s+/).length;
+        
+            if (wordCount > 30) {
+                descriptionError.textContent = "Description should not exceed 30 words.";
+            } else {
+                descriptionError.textContent = "";
+            }
+        }
+        
+        
     </script>
 </body>
 

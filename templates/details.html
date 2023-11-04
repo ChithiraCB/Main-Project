@@ -257,22 +257,29 @@
                 <p class="product-description">Product Description:{{ product.description }}</p>
                  {% comment %} <button class="add-to-cart">Add to Cart</button> 
                 <button class="add-to-cart">Buy Now</button> {% endcomment %}
-                <a href="{% url 'addtocart' %}" class="btn btn-primary">Add to Cart</a>
+                {% comment %} <a href="{% url 'view_cart' %}" class="btn btn-primary">Add to Cart</a> {% endcomment %}
+                <form method="post" action="{% url 'add_to_cart' product.product_id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Add to Cart</button>
+                  </form>
+                  
                 <a href="" class="btn btn-primary">Buy Now</a>
                 
             </div>
             <section class="product-specs">
                 <h2><strong>Product Specifications</strong></h2>
-                <ul>
-                    <li><strong>Brand:</strong> {{ product.brand }}</li>
+                {% comment %} <ul>
+                    
+
+                    <li><strong>:</strong> {{ product.brand }}</li>
                     <li><strong>Category:</strong> {{ product.category }}</li>
                     <li><strong>Subcategory:</strong> {{ product.subcategory }}</li>
-                    <li><strong>Color:</strong> {{ product.color }}</li>
+                    <li><strong>Color:</strong> {{ product.color }}</li> 
                     <!-- Add more specifications as needed -->
-                </ul>
+                </ul> {% endcomment %}
             </section>
             
-        </section>
+        </section> 
         
     </main>
     <footer>

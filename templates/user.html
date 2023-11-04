@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>user details</title>
+    <style>
+        /* Add your CSS styles for the View Product page here */
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('/static/images/background.jpg'); /* Add your background image URL here */
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 0;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border: 1px solid #ccc;
+            background-color: #0056b3;
+            color: #fff;
+            border-radius: 4px;
+        }
+
+        .edit-btn {
+            background-color: #569c5f; /* Green color for Edit button */
+        }
+        .delete-button {
+            background-color: #2b5c32; /* Red color */
+            color: #fff; /* Text color */
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    
+        .delete-button:hover {
+            background-color: #569c5f; /* Darker red color on hover */
+        }
+
+        /* Header and Footer Styles */
+        .header {
+            background-color: #003300; /* Dark green color for header */
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .footer {
+            background-color: #003300; /* Dark green color for footer */
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+        .b1{
+            float:right;
+            font-weight: bold;
+            background-color:#003300;
+            color: #ffffff;
+            border: none;
+            font-weight: bold;
+        }
+        .Cart-icon{
+            position: absolute;
+            right: 0;
+            top:70px;
+
+        }
+        .user_no {
+            position: absolute;
+            left: 0;
+            top:50px;
+            color:white;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <h1>User Detail</h1>
+            <a href="{% url 'adminpanel' %}"><img src="{% static 'images/log4.png' %}" alt="Cart" class="Cart-icon" style="margin-right: 10px;"></a>
+            <div class="user_no">
+                <p>Total Users: {{ user_s|length }}</p>
+            </div>
+        
+        
+        {% comment %} <a href="{% url 'adminpanel' %}"><img src="{% static 'images/log4.png' %}" alt="Cart" class="Cart" style="margin-right: 10px;"></a> {% endcomment %}
+    </div>
+   
+    <div class="container">
+        {% comment %} <h1>View Products</h1> {% endcomment %}
+        <table>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Role</th>
+            </tr>
+
+            {% for user in user_s %}
+            <tr>
+                <td>{{ user.fullName }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.password }}</td>
+                <td>{{ user.role }}</td>
+                <td>
+                    <form action="{% url 'delete_user' user.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="user_id" value="{{ user.id }}">
+                        <button type="submit" class="delete-button">Delete</button>
+                    </form>
+                    
+                </td>
+            </tr>
+            {% endfor %}
+            <div class="user_no">
+                <p>Total Users: {{ user_s|length }}</p>
+            </div>
+        </table>
+    </div>
+<br><br><br><br><br><br><br><br><br>
+    <!-- Footer Section -->
+    <div class="footer">
+        &copy; 2023 PlantPulse
+    </div>
+</body>
+</html>

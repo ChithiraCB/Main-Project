@@ -153,36 +153,50 @@ class Subcategory(models.Model):
     def __str__(self):
         return self.subcat_name
     
-# class Product(models.Model):
-#     product_name = models.CharField(max_length=255)
-#     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
-#     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-#     price = models.DecimalField(max_digits=10, decimal_places=2)
-#     description = models.TextField()
-#     image = models.ImageField(upload_to='product_images/')
-#     status = models.CharField(max_length=255)
-
-#     def __str__(self):
-#         return self.product_name
 
 class Product(models.Model):
     product_id = models.AutoField(primary_key=True)
     product_name = models.CharField(max_length=255)
     category = models.CharField(max_length=100)
     subcategory = models.CharField(max_length=100)
-    quantity = models.PositiveIntegerField()
+    stock = models.PositiveIntegerField(default=1, null=True)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     discount = models.DecimalField(max_digits=5, decimal_places=2, default= 0.0)
     sale_price = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
-    status = models.CharField(max_length=20, choices=(("active", "Active"), ("inactive", "Inactive")))
     product_image = models.ImageField(upload_to='product_images/')
-    
+    STATUS_CHOICES = [
+        ('In Stock', 'In Stock'),
+        ('Out of Stock', 'Out of Stock'),
+    ]
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='In Stock')
+
     def save(self, *args, **kwargs):
-    # Convert self.discount to a float and then calculate the sale price
-     self.discount = float(self.discount)
-     self.sale_price = self.price - (self.price * (self.discount / 100))
-     super(Product, self).save(*args, **kwargs)
+        # Update the status based on the quantity value
+        if self.stock == 0:                                                                                                                                                                 
+            self.status = 'Out of Stock'
+        else:
+            self.status = 'In Stock'
+
+        # Convert self.discount to a float and then calculate the sale price
+        self.discount = float(self.discount)  # Convert to float
+        self.price = float(self.price)  # Convert to float
+        self.sale_price = self.price - (self.price * (self.discount / 100))
+
+        super(Product, self).save(*args, **kwargs)
+
+
+    def _str_(self):
+        return self.product_name
+
+class AddToCart(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    date_added = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.product_name
+     return f"{self.quantity} x {self.product.product_name} in {self.user.username}'s cart"
+

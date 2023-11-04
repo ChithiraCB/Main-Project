@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}My Website{% endblock %}</title>
+    <!-- Add your common CSS and JS includes here -->
+</head>
+<body>
+    <header>
+        <!-- Add your header content here -->
+    </header>
+
+    <nav>
+        <!-- Add your navigation menu here -->
+    </nav>
+
+    <div class="content">
+        {% block content %}
+        <!-- This is where content from child templates will be inserted -->
+        {% endblock %}
+    </div>
+
+    <footer>
+        <!-- Add your footer content here -->
+    </footer>
+</body>
+</html>
