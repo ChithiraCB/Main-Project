@@ -64,18 +64,21 @@
                         
                        
                        <!-- Your HTML code for the navigation menu -->
-                       li class="nav-item dropdown">
+                       <li class="nav-item dropdown">
                        <a class="nav-link dropdown-toggle" href="#" id="ornamentsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                            Ornaments
                        </a>
                        <div class="dropdown-menu" aria-labelledby="ornamentsDropdown">
-                           <a class="dropdown-item" href="{% url 'products_by_subcategory' 'bangles' %}">Bangles</a>
-                           <a class="dropdown-item" href="{% url 'products_by_subcategory' 'earrings' %}">Earrings</a>
-                           <a class a="dropdown-item" href="{% url 'products_by_subcategory' 'neckpieces' %}">Neckpieces</a>
-                           <a class="dropdown-item" href="{% url 'products_by_subcategory' 'ring' %}">Ring</a>
+                        <a class="dropdown-item" href="{% url 'products_by_subcategory' 'Bangles' %}">Bangles</a>
+                         <a class="dropdown-item" href="{% url 'products_by_subcategory' 'Earrings' %}">Earrings</a>
+                           <a class="dropdown-item" href="{% url 'products_by_subcategory' 'Neckpieces' %}">Neckpieces</a>
+                           <!--<a class="dropdown-item" href="{% url 'products_by_subcategory' 'Ring' %}">Ring</a>
+       <!-- Add other dropdown items here -->
+
+                          
                        </div>
                     </li>
-<li class="nav-item dropdown">
+{% comment %} <li class="nav-item dropdown">
    <a class="nav-link dropdown-toggle" href="#" id="bagsDropdown" role- button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
        Bags
    </a>
@@ -83,7 +86,7 @@
        <a class="dropdown-item" href="#" id="clutches-link">Clutches</a>
        <a class="dropdown-item" href="#" id="handbags-link">Handbags</a>
    </div>
-</li>
+</li> {% endcomment %}
 <li class="nav-item">
    <a class="nav-link" href="{% url 'Customer_Profile' %}">Profile</a>
 </li>

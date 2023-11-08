@@ -1,0 +1,126 @@
+/* Style for the container */
+.container {
+    margin-top: 20px;
+}
+
+/* Style for the product cards */
+.card {
+    margin-bottom: 20px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card img {
+    max-width: 100%;
+    height: auto;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.card-text {
+    font-size: 16px;
+}
+
+/* Style for the "Remove from Cart" button */
+.btn-danger {
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+}
+
+/* Style for the order summary section */
+.order-summary {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.order-summary h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.order-summary p {
+    font-size: 16px;
+    margin: 0;
+    margin-top: 10px;
+}
+
+/* Style for the "Place Order" button */
+.btn-success {
+    background-color: #0077ff;
+    color: #fff;
+    border: none;
+    margin-top: 20px;
+}
+/* Style for the product details container */
+.product-details-container {
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+/* Style for the product card container */
+.container {
+    background-color: #f9f9f9; /* Background color for the entire container */
+    padding: 20px; /* Add padding to create some spacing around the cards */
+    width: 700px; /* Limit the container's width */
+     
+}
+
+
+/* Style for individual product cards */
+.card {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    margin: 20px 0; /* Add margin to separate the cards */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for the product image */
+.card img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Style for the product details */
+.card-body {
+    padding: 10px;
+}
+
+.card-title {
+    font-size: 18px;
+    margin: 0;
+}
+
+.card-text {
+    margin-top: 10px;
+}
+
+/* Style for the "Remove from Cart" button */
+.btn-danger {
+    background-color: #ff0000; /* Button background color */
+    color: #fff; /* Button text color */
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+/* Additional styles can be added to achieve the desired design */
+.order-summary-container {
+    background-color: #f0f0f0; /* Custom background color */
+    padding: 20px; /* Custom padding */
+    width: 300px; /* Ideal width for the container */
+    height: auto;
+    
+}

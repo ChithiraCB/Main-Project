@@ -217,13 +217,8 @@
         </div>
         <div class="sidebar-item">DELIVERY TEAM</div>
    
-        {% comment %} <div class="sidebar-item">USERS</div>
-    </div> {% endcomment %}
-
-    <div class="sidebar-item">
-        <a href="{% url 'user_r' %}">USERS</a>
+        <div class="sidebar-item">USERS</div>
     </div>
-    
 
     <!-- Middle Content -->
     <div class="content" id="middle-content">
@@ -268,7 +263,7 @@
                             <label for="category-name">Category Name</label>
                             <select id="category-name" name="category-name" class="form-control" required onchange="updateSubcategoryOptions()">
                                 <option value="">Select</option>
-								<option value="ornaments">Ornaments</option>
+                                <option value="Ornaments">Ornaments</option>
                                 <option value="bags">Bags</option>
                             </select>
                         </div>
@@ -276,19 +271,17 @@
                             <label for="subcategory-name">Subcategory Name</label>
                             <select id="subcategory-name" name="subcategory-name" class="form-control" required>
                                 <!-- Subcategory options will be added dynamically here -->
-								
+                                
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="stock">Stock</label>
-                            <input type="number" id="stock" name="stock" class="form-control" required>
+                            <label for="quantity">Quantity</label>
+                            <input type="number" id="quantity" name="quantity" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea id="description" name="description" class="form-control" oninput="validateDescription(this)" required></textarea>
-                            <span id="description-error" class="error-text"></span>
+                            <textarea id="description" name="description" class="form-control" required></textarea>
                         </div>
-                        
                         <div class="form-group">
                             <label for="price">Product Price</label>
                             <input type="number" id="price" name="price" class="form-control" required oninput="validatePrice(this); calculateSalePrice(document.getElementById('discount'))">
@@ -296,10 +289,8 @@
                         </div>
                         <div class="form-group">
                             <label for="discount">Discount (%)</label>
-                            <input type="number" id="discount" name="discount" class="form-control" oninput="validateDiscount(this); calculateSalePrice(document.getElementById('discount'))">
-                            <span id="discount-error" class="error-text"></span>
+                            <input type="number" id="discount" name="discount" class="form-control" oninput="calculateSalePrice(this)">
                         </div>
-                        
                         <div class="form-group">
                             <label for="sale-price">Sale Price</label>
                             <input type="number" id="sale-price" name="sale-price" class="form-control" readonly>
@@ -307,8 +298,8 @@
                         <div class="form-group">
                             <label for="status">Status</label>
                             <select id="status" name="status" class="form-control" required>
-                                <option value="In stock">In Stock</option>
-                                <option value="Out of Stock">Out of Stock</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -380,50 +371,30 @@
             }
         }
 
-        function updateSubcategoryOptions() {
-            const categoryDropdown = document.getElementById("category-name");
-            const subcategoryDropdown = document.getElementById("subcategory-name");
-            const selectedCategory = categoryDropdown.value;
-            const subcategoryOptions = {
-                ornaments: ["Neckpieces", "Earrings", "Rings"],
-                bags: ["Clutches", "Handbags"],
-            };
-
-            // Clear existing options
-            subcategoryDropdown.innerHTML = "";
-
-            // Add new options based on the selected category
-            for (const option of subcategoryOptions[selectedCategory]) {
-                const optionElement = document.createElement("option");
-                optionElement.value = option;
-                optionElement.textContent = option;
-                subcategoryDropdown.appendChild(optionElement);
+     
+            function updateSubcategoryOptions() {
+                const categoryDropdown = document.getElementById("category-name");
+                const subcategoryDropdown = document.getElementById("subcategory-name");
+                const selectedCategory = categoryDropdown.value.toLowerCase(); // Convert to lowercase
+        
+                const subcategoryOptions = {
+                    ornaments: ["Neckpieces", "Earrings", "Rings", "Bangles"],
+                    bags: ["Clutches", "Handbags"],
+                };
+        
+                // Clear existing options
+                subcategoryDropdown.innerHTML = "";
+        
+                // Add new options based on the selected category
+                for (const option of subcategoryOptions[selectedCategory]) {
+                    const optionElement = document.createElement("option");
+                    optionElement.value = option;
+                    optionElement.textContent = option;
+                    subcategoryDropdown.appendChild(optionElement);
+                }
             }
-        }
-        function validateDiscount(input) {
-            const discountError = document.getElementById("discount-error");
-            const discountValue = parseFloat(input.value);
         
-            if (isNaN(discountValue) || discountValue < 0 || discountValue >= 100) {
-                discountError.textContent = "Discount should be between 0 and 99.";
-            } else {
-                discountError.textContent = "";
-            }
-        }
-        function validateDescription(input) {
-            const descriptionError = document.getElementById("description-error");
-            const descriptionValue = input.value;
-            const wordCount = descriptionValue.trim().split(/\s+/).length;
-        
-            if (wordCount > 30) {
-                descriptionError.textContent = "Description should not exceed 30 words.";
-            } else {
-                descriptionError.textContent = "";
-            }
-        }
-        
-        
-    </script>
+            </script>
 </body>
 
 </html>

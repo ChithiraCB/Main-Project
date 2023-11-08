@@ -1,16 +1,20 @@
 from django.contrib import admin
 from .models import CustomUser
-from .models import CustomerProfile
-from .models import Category
-from .models import Subcategory
-from .models import Product
-from .models import AddToCart
+#from .models import CustomerProfile1
+from .models import Category1
+from .models import Subcategory1
+from .models import Product1
+from .models import WishlistItem
+from .models import AddToCart2
+from .models import Profile
 
 
 # Register your models here.
 admin.site.register(CustomUser)
-admin.site.register(CustomerProfile)
-admin.site.register(Category)
-admin.site.register(Subcategory)
-admin.site.register(Product)
-admin.site.register(AddToCart)
+#admin.site.register(CustomerProfile1)
+admin.site.register(Category1)
+admin.site.register(Subcategory1)
+admin.site.register(Product1)
+admin.site.register(WishlistItem)
+admin.site.register(AddToCart2)
+admin.site.register(Profile)

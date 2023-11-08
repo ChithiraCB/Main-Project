@@ -1,0 +1,98 @@
+/* Style for the product card container */
+.product-card {
+    display: flex;
+    background-color: #e0e0e0;
+    border: 1px solid #e0e0e0;
+    padding: 80px;
+    margin: 50px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for the product image */
+.product-image {
+    width: 50%;
+    padding: 10px;
+}
+
+.product-image img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Style for the product details */
+.product-details {
+    width: 50%;
+    padding: 10px;
+}
+
+.product-details h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.product-price {
+    margin-top: 10px;
+}
+
+.sale-price {
+    font-size: 20px;
+    color: #ff0000; /* Sale price color */
+}
+
+.original-price {
+    font-size: 16px;
+    color: #999; /* Original price color */
+    text-decoration: line-through;
+}
+
+.product-discount {
+    margin-top: 10px;
+    color: #007700; /* Discount color */
+}
+
+.product-description {
+    margin-top: 10px;
+}
+
+/* Style for the Add to Cart and Buy Now buttons */
+button.btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #0077ff; /* Button background color */
+    color: #fff; /* Button text color */
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+/* Style for the product specifications */
+.product-specs {
+    margin-top: 20px;
+}
+
+.product-specs h2 {
+    font-size: 18px;
+    margin: 0;
+}
+
+.product-specs ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.product-specs li {
+    margin-top: 5px;
+    font-size: 16px;
+}
+
+/* Additional styles can be added to achieve the desired design */
+.button-container {
+    display: flex;
+    align-items: center; /* Vertically center the buttons */
+}
+
+.button-container form, .button-container a {
+    margin-right: 10px; /* Add spacing between the buttons */
+    width: 150px;
+}

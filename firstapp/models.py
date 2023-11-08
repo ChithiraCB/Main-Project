@@ -1,8 +1,8 @@
 from django.db import models
 from datetime import date
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser,BaseUserManager
 
-# Create your models here.
+# # Create your models here.
 
 class UserManager(BaseUserManager):
       def create_user(self, fullName, phone, email, password=None):
@@ -123,7 +123,7 @@ class UserProfile(models.Model):
     
 
 
-class CustomerProfile(models.Model):
+class CustomerProfile1(models.Model):
 
     customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)
     fullName = models.CharField(max_length=100)
@@ -138,31 +138,84 @@ class CustomerProfile(models.Model):
     
 
 
-class Category(models.Model):
-    cat_id = models.AutoField(primary_key=True)
-    cat_name = models.CharField(max_length=100, unique=True)
+# class Category(models.Model):
+#     #cat_id = models.AutoField(primary_key=True)
+#     cat_name = models.CharField(max_length=100, primary_key=True, unique=True)
 
-    def __str__(self):
-        return self.cat_name
+#     def __str__(self):
+#         return self.cat_name
 
-class Subcategory(models.Model):
-    subcat_id = models.AutoField(primary_key=True)
-    subcat_name = models.CharField(max_length=100)
-    cat_id= models.ForeignKey(Category, on_delete=models.CASCADE)
+# class Subcategory(models.Model):
+#     # subcat_id = models.AutoField(primary_key=True)
+#      subcat_name = models.CharField(max_length=100, primary_key=True, unique=True)
+#      cat_name= models.ForeignKey(Category, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.subcat_name
+#      def __str__(self):
+#         return self.subcat_name
     
 
-class Product(models.Model):
-    product_id = models.AutoField(primary_key=True)
+# class Product(models.Model):
+    
+#     product_id = models.AutoField(primary_key=True)
+#     product_name = models.CharField(max_length=255)
+#     #category = models.ForeignKey(Category, on_delete=models.CASCADE)  # Use ForeignKey to relate to Category
+#     #subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)  # Use ForeignKey to relate to Subcategory
+#     stock = models.PositiveIntegerField(default=1, null=True)
+#     description = models.TextField()
+#     price = models.DecimalField(max_digits=10, decimal_places=2)
+#     discount = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
+#     sale_price = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
+#     product_image = models.ImageField(upload_to='product_images/')
+#     STATUS_CHOICES = [
+#         ('In Stock', 'In Stock'),
+#         ('Out of Stock', 'Out of Stock'),
+#     ]
+
+#     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='In Stock')
+
+#     def save(self, *args, **kwargs):
+#         # Update the status based on the quantity value
+#         if self.stock == 0:                                                                                                                                                                 
+#             self.status = 'Out of Stock'
+#         else:
+#             self.status = 'In Stock'
+
+#         # Convert self.discount to a float and then calculate the sale price
+#         self.discount = float(self.discount)  # Convert to float
+#         self.price = float(self.price)  # Convert to float
+#         self.sale_price = self.price - (self.price * (self.discount / 100))
+
+#         super(Product, self).save(*args, **kwargs)
+
+
+#     def _str_(self):
+#         return self.product_name
+
+
+
+
+class Category1(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+    
+class Subcategory1(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    category = models.ForeignKey(Category1, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+    
+class Product1(models.Model):
+    
     product_name = models.CharField(max_length=255)
-    category = models.CharField(max_length=100)
-    subcategory = models.CharField(max_length=100)
+    category = models.ForeignKey(Category1, on_delete=models.CASCADE)  # Use ForeignKey to relate to Category
+    subcategory = models.ForeignKey(Subcategory1, on_delete=models.CASCADE)  # Use ForeignKey to relate to Subcategory
     stock = models.PositiveIntegerField(default=1, null=True)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    discount = models.DecimalField(max_digits=5, decimal_places=2, default= 0.0)
+    discount = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
     sale_price = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
     product_image = models.ImageField(upload_to='product_images/')
     STATUS_CHOICES = [
@@ -184,19 +237,36 @@ class Product(models.Model):
         self.price = float(self.price)  # Convert to float
         self.sale_price = self.price - (self.price * (self.discount / 100))
 
-        super(Product, self).save(*args, **kwargs)
+        super(Product1, self).save(*args, **kwargs)
 
 
     def _str_(self):
         return self.product_name
-
-class AddToCart(models.Model):
+    
+class WishlistItem(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey('Product1', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.product.product_name
+    
+class AddToCart2(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product1, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     date_added = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
      return f"{self.quantity} x {self.product.product_name} in {self.user.username}'s cart"
+    
+class Profile(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)
+    full_name = models.CharField(max_length=255)
+    gender = models.CharField(max_length=10, choices=[("male", "Male"), ("female", "Female")])
+    date_of_birth = models.DateField()
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
 
+    def __str__(self):
+        return self.email

@@ -134,14 +134,14 @@
 </td> {% endcomment %}
 
 <td>
-    <form action="{% url 'delete_product' product.product_id %}" method="post">
+    <form action="{% url 'delete_product' product.id %}" method="post">
         {% csrf_token %}
-        <input type="hidden" name="product_id" value="{{ product.product_id }}">
+        <input type="hidden" name="product_id" value="{{ product.id }}">
         <button type="submit" class="delete-button">Delete</button>
     </form>
 </td>
     <!-- Edit button --><td>
-    <a class="edit-button" href="{% url 'edit_product' product.product_id %}">Edit</a>
+    <a class="edit-button" href="{% url 'edit_product' product.id %}">Edit</a>
 </td>
 
 
