@@ -4,8 +4,10 @@ from django.contrib.auth import authenticate ,login as auth_login,logout
 from django.contrib import messages
 from django.http import JsonResponse,HttpResponseNotFound
 from django.shortcuts import render,get_object_or_404
+from django.core.mail import send_mail
 from . models import *
-
+from django.contrib.auth.decorators import *
+from django.views.decorators.cache import *
 
 
 #from django.contrib.auth.models import User
@@ -51,7 +53,8 @@ def register_user(request):
         # else:
         #     form = SignupForm()
     return render(request, "register.html")
-    
+
+
 def login_user(request):
     if 'username' in request.session:
         return redirect('/')
@@ -102,10 +105,10 @@ def login_user(request):
 #     products = Product.objects.all()  # Fetch all products
 #     return render(request, 'product.html', {'products': products})
 
-
+@never_cache
+@login_required(login_url='login')
 def adminpanel(request):
     return render(request, 'adminpanel.html')
-
 
 def logout_user(request):
     # if request.user.is_authenticated:
@@ -117,7 +120,8 @@ def logout_user(request):
 
 # def logout_page(request):
 #     return render(request, 'logout.html')
-
+@never_cache
+@login_required(login_url='login')
 def Customer_Profile(request):
     # Ensure that the user is authenticated
     if not request.user.is_authenticated:
@@ -157,6 +161,8 @@ def Customer_Profile(request):
     }
     return render(request, 'Customer_Profile.html',context)
 
+@never_cache
+@login_required(login_url='login')
 def user_home(request):
      return render(request, 'userhome.html')
 
@@ -259,7 +265,7 @@ def add_product(request):
     return render(request, 'adminpanel.html')
 
 
-
+@login_required
 def view_product(request):
     products = Product1.objects.all()  # Retrieve all products from the database
     return render(request, 'viewproduct.html', {'products': products})
@@ -335,7 +341,7 @@ def product_details(request, id):
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 # from .models import Product  # Import your Product model
-
+@login_required
 def edit_product(request, id):
     # Retrieve the product using get_object_or_404 to handle cases where the product doesn't exist
     product = get_object_or_404(Product1, pk=id)
@@ -347,13 +353,15 @@ def edit_product(request, id):
 
         # Example:
         product.product_name = request.POST['product-name']
-        product.category = request.POST['category-name']
-        product.subcategory = request.POST['subcategory-name']
+        product.category1 = request.POST['category-name']
+        product.subcategory1 = request.POST['subcategory-name']
         product.stock = request.POST['stock']
         product.description = request.POST['description']
         product.price = request.POST['price']
         product.discount = request.POST['discount']
         product.sale_price = request.POST['sale-price']
+        product.product_image = request.POST['product_image']
+        #product.product_image = request.FILES.get('product-image')
         
         # Save the updated product
         product.save()
@@ -439,7 +447,8 @@ def remove_from_cart(request, item_id):
     }
     return render(request, 'view_cart.html', context)
 
-@login_required
+@never_cache
+@login_required(login_url='login')
 def add_to_cart(request, id):
     product = get_object_or_404(Product1, pk=id)
     
@@ -476,7 +485,8 @@ def add_to_cart(request, id):
 #     return redirect('view_cart')
 
 def user_r(request):
-    user_s = CustomUser.objects.all()  # Fetch all products
+    user_s = CustomUser.objects.exclude(user_types=1)
+  # Fetch all products
     return render(request, 'user.html', {'user_s': user_s})
 
 def delete_user(request, user_id):
@@ -543,7 +553,8 @@ def add_to_wishlist(request, id):
     return redirect('wishlist')
 
 
-
+@never_cache
+@login_required(login_url='login')
 def wishlist(request):
     if request.user.is_authenticated:
         wishlist_items = WishlistItem.objects.filter(user=request.user)
@@ -572,7 +583,7 @@ def wishlist(request):
 
 from django.shortcuts import get_object_or_404
 from .models import WishlistItem
-
+@login_required
 def remove_from_wishlist(request, wishlist_item_id):
     try:
         wishlist_item = get_object_or_404(WishlistItem, id=wishlist_item_id)
@@ -585,16 +596,24 @@ def remove_from_wishlist(request, wishlist_item_id):
         return HttpResponseNotFound("Wishlist item not found")
 
 
+# def remove_from_wishlist(request, product_id):
+#     product = get_object_or_404(Product, id=product_id)
+#     # Remove the product from the user's wishlist
+#     WishlistItem.objects.filter(user=request.user, product=product).delete()
+#     return redirect('wishlist')
+
 def profile_view(request):
+    user_profile = request.user.profile
+
     if request.method == 'POST':
-        user_profile = Profile.objects.get(user=request.user)
-        full_name = request.POST['fullname']
+        # Handle the form submission
+        fullName = request.POST['fullName']
         gender = request.POST['gender']
         date_of_birth = request.POST['date-of-birth']
         email = request.POST['email']
         phone = request.POST['phone']
 
-        user_profile.full_name = full_name
+        user_profile.fullName = fullName
         user_profile.gender = gender
         user_profile.date_of_birth = date_of_birth
         user_profile.email = email
@@ -602,5 +621,31 @@ def profile_view(request):
 
         user_profile.save()
         messages.success(request, 'Profile information updated successfully.')
-    
-    return render(request, 'Customer_Profile.html')  # Replace 'your_template.html' with your actual template
+        return redirect('Customer_Profile')  # Redirect to the profile page after the update
+
+    context = {
+        'user_profile': user_profile,
+    }
+
+    return render(request, 'Customer_Profile.html', context)
+
+
+
+def total_users(request):
+    total_users_count = CustomUser.objects.count()
+    print(total_users_count)  # Add this line for debugging
+    return render(request, 'adminpanel.html', {'total_users_count': total_users_count})
+
+# def block_unblock_user(request, user_id):
+#     user = CustomUser.objects.get(pk=user_id)
+#     if user.is_active:
+#         user.is_active = False  # Block the user
+#         subject = 'Account Blocked'
+#         message = 'Your account has been blocked by the admin.'
+#         from_email = 'chithiracb2024a@mca.ajce.in'  # Use your admin's email address
+#         recipient_list = [user.email]
+#         send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+#     else:
+#         user.is_active = True  # Unblock the user
+#     user.save()
+#     return redirect('adminpanel')

@@ -336,8 +336,7 @@
             ACCOUNT SETTINGS
             <div class="account-box">
                 {% comment %} <div class="content-item" onclick="loadProfileForm()">Profile Information</div> {% endcomment %}
-                {% comment %} <div class="content-item" onclick="loadProfileForm()" id="profile-info">Profile Information</div> {% endcomment %}
-                <div class="content-item" onclick="loadProfileForm({{ user_profile|safe }})" id="profile-info">Profile Information</div>
+                <div class="content-item" onclick="loadProfileForm()" id="profile-info">Profile Information</div>
 
             </div>
             <div class="account-box">
@@ -366,60 +365,66 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
-        function loadProfileForm(userProfile) {
+        function loadProfileForm() {
+            // You can load your form content here
+             
             const middleContent = document.getElementById("middle-content");
-            middleContent.innerHTML = `
+            middleContent.innerHTML = ` 
                 <div class="form-container">
                     <h2>Profile Information Form</h2>
-                    <form onsubmit="return validateProfileForm();">
+                    <form id="profileForm" method="POST" onsubmit="return validateProfileForm();">
+                        
                         <div class="form-group">
-                            <label for="full-name">Full Name</label>
-                            <input type="text" id="fullname" name="fullname" class="form-control" required value="${userProfile.full_name}">
+                            <label for="fullName">Full Name</label>
+                            
+                            <input id="fullName" type="text" name="fullName" placeholder="Full Name" required value="{{ user_profile.fullName|default:'' }}" />
+
                         </div>
-        
+
                         <!-- Add the Gender field here as radio buttons with labels -->
+                        <!-- Add the Gender field here as radio buttons -->
                         <div class="form-group">
                             <label>Your Gender</label><br>
                             <div class="form-check form-check-inline">
-                                <input type="radio" id="male" name="gender" class="form-check-input" value="male" required ${userProfile.gender === 'male' ? 'checked' : ''}>
+                                <input type="radio" id="male" name="gender" class="form-check-input" value="male" required>
                                 <label for="male" class="form-check-label">Male</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input type="radio" id="female" name="gender" class="form-check-input" value="female" required ${userProfile.gender === 'female' ? 'checked' : ''}>
+                                <input type="radio" id="female" name="gender" class="form-check-input" value="female" required>
                                 <label for="female" class="form-check-label">Female</label>
                             </div>
                         </div>
-        
+
                         <div class="form-group">
                             <label for="date-of-birth">Date of Birth</label>
                             <div class="input-group">
-                                <input type="text" id="date-of-birth" name="date-of-birth" class="form-control" placeholder="mm/dd/yyyy" required value="${userProfile.date_of_birth}">
+                                <input type="text" id="date-of-birth" name="date-of-birth" class="form-control" placeholder="mm/dd/yyyy" required>
                                 <span class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
                         </div>
-        
+
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" id="email" name="email" class="form-control" required value="${userProfile.email}">
+                            <input type="email" id="email" name="email" class="form-control" required>
                         </div>
-        
+
                         <div class="form-group">
                             <label for="phone">Phone</label>
-                            <input type="tel" id="phone" name="phone" class="form-control" required value="${userProfile.phone}">
+                            <input type="tel" id="phone" name="phone" class="form-control" required>
                         </div>
-        
+
                         <button type="submit" class="btn btn-primary">Save</button>
                         <button type="reset" class="btn btn-primary">Reset</button>
                     </form>
                 </div>
             `;
-        
+
             // Initialize the date picker
             $("#date-of-birth").datepicker();
         }
-        
+
         function loadManageAddressesForm() {
             const middleContent = document.getElementById("middle-content");
             middleContent.innerHTML = `
@@ -427,8 +432,10 @@
                     <h2>Manage Addresses</h2>
                     <form onsubmit="return validateAddressForm();">
                         <div class="form-group">
-                            <label for="fullname">Full Name</label>
-                            <input type="text" id="fullname" name="fullname" class="form-control" required>
+                            <label for="fullName">Full Name</label>
+                            {% comment %}  value="{{ user_profile.fullName }}" required> {% endcomment %}
+                            <input type="text" id="fullName" name="fullName" class="form-control" value = "{% if request.user.is_authenticated %}{{ user_profile.user.fullName }}{% endif %}" required>
+
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone Number</label>

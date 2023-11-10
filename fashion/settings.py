@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',
+    # 'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -137,10 +137,10 @@ LOGIN_REDIRECT_URL = ''
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-JAZZMIN_SETTINGS = {
-    "show_ui_builder": True,
-    # Other Jazzmin settings...
-}
+# JAZZMIN_SETTINGS = {
+#     "show_ui_builder": True,
+#     # Other Jazzmin settings...
+# }
 
 
 # AUTHENTICATION_BACKENDS = [

@@ -262,7 +262,7 @@ class AddToCart2(models.Model):
     
 class Profile(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)
-    full_name = models.CharField(max_length=255)
+    fullName = models.CharField(max_length=255)
     gender = models.CharField(max_length=10, choices=[("male", "Male"), ("female", "Female")])
     date_of_birth = models.DateField()
     email = models.EmailField()

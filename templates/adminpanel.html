@@ -217,18 +217,19 @@
         </div>
         <div class="sidebar-item">DELIVERY TEAM</div>
    
-        <div class="sidebar-item">USERS</div>
+        <div class="sidebar-item"> <a href="{% url 'user_r' %}">USERS</a></div>
     </div>
 
     <!-- Middle Content -->
-    <div class="content" id="middle-content">
-        <!-- Content will be loaded here dynamically using JavaScript -->
-        <div class="content" id="middle-content">
-            <!-- Add the image here with additional styling -->
-            <img src="{% static 'images/dashboard1.png' %}" alt="User Graph" style="width: 50%; max-width: 800px; height: auto;" />
-        </div>
-        
-    </div>
+    
+<div class="content" id="middle-content">
+    {% comment %} <div class="user-count-container">
+        <h4>Total Users</h4>
+        <p id="total-users">{{ total_users_count }}</p>
+    </div> {% endcomment %}
+</div>
+
+       
 
 
     {% comment %} <div class="content" id="middle-content">
@@ -378,7 +379,7 @@
                 const selectedCategory = categoryDropdown.value.toLowerCase(); // Convert to lowercase
         
                 const subcategoryOptions = {
-                    ornaments: ["Neckpieces", "Earrings", "Rings", "Bangles"],
+                    ornaments: ["Neckpieces", "Earrings",  "Bangles"],
                     bags: ["Clutches", "Handbags"],
                 };
         

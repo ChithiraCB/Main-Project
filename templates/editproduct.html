@@ -21,6 +21,17 @@
     <!-- Responsive style -->
     <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
     <style>
+        .back-button {
+            text-decoration: none;
+            color: #333; /* Set the color you prefer */
+            margin-left: 1200px; /* Add margin to the right of the icon */
+        }
+        /* Add custom CSS styles here */
+#product-image-preview {
+    max-width: 200px; /* Set the maximum width for the image */
+    max-height: 200px; /* Set the maximum height for the image */
+}
+
         /* Add custom CSS styles here */
         .container {
             max-width: 800px;
@@ -67,6 +78,8 @@
             background-color: #cc0000;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
 
 </head>
 
@@ -98,6 +111,16 @@
                         </div>
                     </div>
                 </div>
+                <div >
+                    <!-- Add a back button with the icon -->
+                    <a href="{% url 'adminpanel' %}" class="back-button">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                
+                    <!-- Rest of your form and content -->
+                    <!-- ... -->
+                </div>
+                
             </section>
     <div class="container">
        
@@ -141,10 +164,13 @@
            
 
             <!-- Add this block of code below your form fields to display the product image -->
-<label for="product-image">Product Image</label>
-<img src="{{ product.product_image.url }}" alt="Product Image">
-
-
+            
+            {% comment %} <label for="product-image">Product Image</label>
+            {% if product.product_image %}
+            <img  src="{{ product.product_image.url }}" alt="{{ product.product_name }}" style="max-width: 200px; max-height: 200px;">
+            {% endif %}
+            <input type="file" id="product_image" name="product_image" accept=".jpeg,.jpg,.png">
+             {% endcomment %}
 
             <button type="submit">Update Product</button>
         </form>
@@ -157,7 +183,7 @@
             const subcategoryDropdown = document.getElementById("subcategory-name");
             const selectedCategory = categoryDropdown.value;
             const subcategoryOptions = {
-                ornaments: ["Neckpieces", "Earrings", "Rings"],
+                ornaments: ["Neckpieces", "Earrings", "Bangles"],
                 bags: ["Clutches", "Handbags"],
             };
 
@@ -182,7 +208,7 @@
                 function calculateSalePrice() {
                     const priceInput = document.querySelector('input[name="price"]');
                     const discountInput = document.querySelector('input[name="discount"]');
-                    const salePriceInput = document.querySelector('input[name="sale-price"]'); 
+                    const salePriceInput = document.querySelector('input[name="sale-price"]');
                     
                     const price = parseFloat(priceInput.value);
                     const discount = parseFloat(discountInput.value);

@@ -118,9 +118,13 @@
                     <td>{{ product.discount }}%</td>
                     <td>{{ product.sale_price }}</td>
                     <td>{{ product.status }}</td>
-                    <td>
+                    {% comment %} <td>
                         <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}" width="100">
-                    </td>
+                    </td> {% endcomment %}
+                    <td>
+                    {% if product.product_image %}
+    <img src="{{ product.product_image.url }}" width="100">
+{% endif %}</td>
                     <!-- Add the following code inside the <td> element where you have the delete button -->
 {% comment %} <td>
     <form action="{% url 'delete_product' product.product_id %}" method="post">

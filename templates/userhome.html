@@ -78,15 +78,15 @@
                           
                        </div>
                     </li>
-{% comment %} <li class="nav-item dropdown">
+ <li class="nav-item dropdown">
    <a class="nav-link dropdown-toggle" href="#" id="bagsDropdown" role- button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
        Bags
    </a>
    <div class="dropdown-menu" aria-labelledby="bagsDropdown">
-       <a class="dropdown-item" href="#" id="clutches-link">Clutches</a>
-       <a class="dropdown-item" href="#" id="handbags-link">Handbags</a>
+       <a class="dropdown-item" href="{% url 'products_by_subcategory' 'Clutches' %}" id="clutches-link">Clutches</a>
+       <a class="dropdown-item" href="{% url 'products_by_subcategory' 'Hand Bags' %}" id="handbags-link">Handbags</a>
    </div>
-</li> {% endcomment %}
+</li> 
 <li class="nav-item">
    <a class="nav-link" href="{% url 'Customer_Profile' %}">Profile</a>
 </li>

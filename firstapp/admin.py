@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.contrib.auth import get_user_model
+
 from .models import CustomUser
 #from .models import CustomerProfile1
 from .models import Category1
@@ -10,11 +12,12 @@ from .models import Profile
 
 
 # Register your models here.
-admin.site.register(CustomUser)
-#admin.site.register(CustomerProfile1)
-admin.site.register(Category1)
-admin.site.register(Subcategory1)
-admin.site.register(Product1)
-admin.site.register(WishlistItem)
-admin.site.register(AddToCart2)
-admin.site.register(Profile)
+
+User = get_user_model()
+
+class SuperuserAdmin(admin.ModelAdmin):
+    def get_queryset(self, request):
+        return User.objects.filter(is_superuser=True)
+
+# Register the custom admin class
+admin.site.register(User,SuperuserAdmin)

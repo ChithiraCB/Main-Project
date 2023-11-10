@@ -3,6 +3,29 @@
 <html lang="en">
 <head>
     <title>user details</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <link rel="stylesheet" href="{% static 'css/product_list.css' %}">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE-edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+    <title>fashion finds hub</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+    <!-- Font Awesome styles -->
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+    <!-- jQuery UI CSS for the date picker -->
+    <link rel="stylesheet" type="text css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+    <!-- Responsive style -->
+    <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
+  
     <style>
         /* Add your CSS styles for the View Product page here */
         body {
@@ -59,91 +82,112 @@
             background-color: #569c5f; /* Darker red color on hover */
         }
 
-        /* Header and Footer Styles */
-        .header {
-            background-color: #003300; /* Dark green color for header */
-            color: #fff;
-            text-align: center;
-            padding: 10px;
-        }
-
-        .footer {
-            background-color: #003300; /* Dark green color for footer */
-            color: #fff;
-            text-align: center;
-            padding: 10px;
-        }
-        .b1{
-            float:right;
-            font-weight: bold;
-            background-color:#003300;
-            color: #ffffff;
-            border: none;
-            font-weight: bold;
-        }
-        .Cart-icon{
-            position: absolute;
-            right: 0;
-            top:70px;
-
-        }
+       
         .user_no {
             position: absolute;
             left: 0;
             top:50px;
             color:white;
         }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f7444e; /* Adjust the color as needed */
+            padding: 20px 20px;
+            color: #fff; /* Text color */
+        }
+
+        /* Style the logo */
+        .logo img {
+            width: 100px; /* Adjust the logo size */
+        }
+
+        /* Style the navigation menu */
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #fff; /* Link color */
+        }
+
+        /* Style the search bar */
+        .search input[type="text"] {
+            padding: 5px;
+            border: none;
+        }
+
+        .search button {
+            background-color: #ff0000; /* Button background color */
+            color: #fff; /* Button text color */
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+        }
         
     </style>
 </head>
 <body>
     <!-- Header Section -->
-    <div class="header">
-        <h1>User Detail</h1>
-            <a href="{% url 'adminpanel' %}"><img src="{% static 'images/log4.png' %}" alt="Cart" class="Cart-icon" style="margin-right: 10px;"></a>
-            <div class="user_no">
-                <p>Total Users: {{ user_s|length }}</p>
-            </div>
-        
-        
-        {% comment %} <a href="{% url 'adminpanel' %}"><img src="{% static 'images/log4.png' %}" alt="Cart" class="Cart" style="margin-right: 10px;"></a> {% endcomment %}
-    </div>
-   
+    <header>
+        {% comment %} <div class="user_no">
+            <p>Total Users: {{ user_s|length }}</p>
+        </div> {% endcomment %}
+    </header>
     <div class="container">
         {% comment %} <h1>View Products</h1> {% endcomment %}
         <table>
             <tr>
                 <th>Username</th>
                 <th>Email</th>
-                <th>Password</th>
-                <th>Role</th>
+                <th>Phone</th>
+                <th>Status</th>
+                {% comment %} <th>Action</th> {% endcomment %}
+                
             </tr>
 
             {% for user in user_s %}
             <tr>
                 <td>{{ user.fullName }}</td>
                 <td>{{ user.email }}</td>
-                <td>{{ user.password }}</td>
-                <td>{{ user.role }}</td>
+                <td>{{ user.phone }}</td>
+                
+               
                 <td>
-                    <form action="{% url 'delete_user' user.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="user_id" value="{{ user.id }}">
-                        <button type="submit" class="delete-button">Delete</button>
-                    </form>
-                    
+                    {% if user.is_active %}
+                        Active
+                    {% else %}
+                        Blocked
+                    {% endif %}</td>
                 </td>
-            </tr>
-            {% endfor %}
-            <div class="user_no">
-                <p>Total Users: {{ user_s|length }}</p>
-            </div>
+            
+           {% comment %} <td>
+                {% if user.is_active %}
+                    <a href="{% url 'block_unblock_user' user.id %}" class="btn btn-danger">Block</a>
+                {% else %}
+                    <a href="{% url 'block_unblock_user' user.id %}" class="btn btn-success">Unblock</a>
+                {% endif %}
+            </td> {% endcomment %}
+        </tr>
+        
+        
+        {% endfor %}
+    </tbody>
+            
+
+                
+            
         </table>
     </div>
 <br><br><br><br><br><br><br><br><br>
     <!-- Footer Section -->
-    <div class="footer">
-        &copy; 2023 PlantPulse
-    </div>
+   
 </body>
 </html>

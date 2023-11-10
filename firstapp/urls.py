@@ -7,7 +7,7 @@ urlpatterns = [
      path('', views.index,name="index"),
      path('login/', views.login_user,name="login"),
      path('register/', views.register_user,name="register"),
-    #  path('product/',views.product_grid,name="product"),
+    # path('product/',views.product_grid,name="product"),
      path('logout/', views.logout_user,name="logout"),
      path('adminpanel/', views.adminpanel,name="adminpanel"),
      path('Customer_Profile/', views.Customer_Profile,name="Customer_Profile"),
@@ -30,7 +30,9 @@ urlpatterns = [
     path('add_to_wishlist/<int:id>/', views.add_to_wishlist, name='add_to_wishlist'),
     path('remove_from_wishlist/<int:wishlist_item_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
     path('profile/', views.profile_view, name='profile_view'),
-
+    path('total_users/', views.total_users, name='total_users'),
+    
+    #path('block-unblock-user/<int:user_id>/', views.block_unblock_user, name='block_unblock_user'),
 
 
      path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),

@@ -258,7 +258,7 @@ main {
         </div>
         <nav>
             <ul>
-                <li><a href="#"><strong>HOME</strong></a></li>
+                <li><a href="{% url 'userhome' %}"><strong>HOME</strong></a></li>
                 <li class="dropdown">
                     <a href="#"><strong>ORNAMENTS</strong></a>
                     <div class="dropdown-content">
@@ -272,14 +272,14 @@ main {
                 
                 <!--<li><a href="#">Home & Living</a></li>
                 <li><a href="#">Brands</a></li>-->
-                {% comment %} <li class="dropdown">
+                <li class="dropdown">
                     <a href="#"><strong>BAGS</strong></a>
                     <div class="dropdown-content">
-                        <a href="#">CLUTCHES</a>
-                        <a href="#">HAND BAGS</a>
+                        <a href="{% url 'products_by_subcategory' 'Clutches' %}">CLUTCHES</a>
+                        <a href="{% url 'products_by_subcategory' 'Hand Bags' %}">HAND BAGS</a>
                         
                     </div>
-                </li> {% endcomment %}
+                </li> 
             </ul>
         </nav>
         {% comment %} <div class="search">
@@ -327,7 +327,9 @@ main {
             <div class="product-card">
                 <!-- Your product listings will go here -->
                 <a href="{% url 'product_details' product.id %}">
-                <img src="{{ product.product_image.url }}" alt="{{ product.name }}"></a>
+                    {% if product.product_image %}
+                <img src="{{ product.product_image.url }}" alt="{{ product.name }}">{% endif %}
+            </a>
             <div class="product-details">
                 {% comment %} <h2>{{ product.name }}</h2>
                 <p>{{ product.description }}</p> {% endcomment %}
