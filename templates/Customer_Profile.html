@@ -252,7 +252,7 @@
         </div>
         <nav>
             <ul>
-                <li><a href="#"><strong>HOME</strong></a></li>
+                <li><a href="{% url 'userhome' %}"><strong>HOME</strong></a></li>
                 <li class="dropdown">
                     <a href="#"><strong>ORNAMENTS</strong></a>
                     <div class="dropdown-content">
@@ -262,7 +262,6 @@
                         {% comment %} <a href="#">RING</a> {% endcomment %}
                     </div>
                 </li>
-                
                 
                 <!--<li><a href="#">Home & Living</a></li>
                 <li><a href="#">Brands</a></li>-->
@@ -362,8 +361,7 @@
     </div>
 
     <!-- JavaScript to load the form and initialize the date picker -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    
     <script>
         function loadProfileForm() {
             // You can load your form content here
@@ -373,11 +371,11 @@
                 <div class="form-container">
                     <h2>Profile Information Form</h2>
                     <form id="profileForm" method="POST" onsubmit="return validateProfileForm();">
-                        
+                        {% csrf_token %}
                         <div class="form-group">
                             <label for="fullName">Full Name</label>
                             
-                            <input id="fullName" type="text" name="fullName" placeholder="Full Name" required value="{{ user_profile.fullName|default:'' }}" />
+                            <input id="fullName" type="text" name="fullName"  required value="{% if request.user.is_authenticated %}{{ user_profile.customer.fullName }}{% endif %}" />
 
                         </div>
 
@@ -396,23 +394,19 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="date-of-birth">Date of Birth</label>
-                            <div class="input-group">
-                                <input type="text" id="date-of-birth" name="date-of-birth" class="form-control" placeholder="mm/dd/yyyy" required>
-                                <span class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
-                                </span>
-                            </div>
+                            <label for="date_of_birth">Date of Birth</label>
+                            <input type="text" id="date_of_birth" name="date_of_birth" class="form-control" placeholder="YYYY-MM-DD" required value="">
                         </div>
+                        
 
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" id="email" name="email" class="form-control" required>
+                            <input type="email" id="email" name="email" class="form-control" required value="{% if request.user.is_authenticated %}{{ user_profile.customer.username }}{% endif %}">
                         </div>
 
                         <div class="form-group">
                             <label for="phone">Phone</label>
-                            <input type="tel" id="phone" name="phone" class="form-control" required>
+                            <input type="tel" id="phone" name="phone" class="form-control"  required  value= "{% if request.user.is_authenticated %}{{ user_profile.customer.phone }}{% endif %}">
                         </div>
 
                         <button type="submit" class="btn btn-primary">Save</button>
@@ -422,7 +416,7 @@
             `;
 
             // Initialize the date picker
-            $("#date-of-birth").datepicker();
+            
         }
 
         function loadManageAddressesForm() {
@@ -430,40 +424,42 @@
             middleContent.innerHTML = `
                 <div class="form-container" id="address-form">
                     <h2>Manage Addresses</h2>
-                    <form onsubmit="return validateAddressForm();">
+                    <form method="POST" action="{% url 'address' %}" onsubmit="return validateAddressForm();">
+
+                        {% csrf_token %}
                         <div class="form-group">
                             <label for="fullName">Full Name</label>
                             {% comment %}  value="{{ user_profile.fullName }}" required> {% endcomment %}
-                            <input type="text" id="fullName" name="fullName" class="form-control" value = "{% if request.user.is_authenticated %}{{ user_profile.user.fullName }}{% endif %}" required>
+                            <input type="text" id="fullName" name="fullName" class="form-control" value = "{% if request.user.is_authenticated %}{{ user_profile.customer.fullName }}{% endif %}" required>
 
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" class="form-control" required>
+                            <input type="tel" id="phone" name="phone" class="form-control" required value="{% if request.user.is_authenticated %}{{ user_profile.customer.phone }}{% endif %}">
                         </div>
                         <div class="form-group">
                             <label for="pincode">PIN Code</label>
-                            <input type="text" id="pincode" name="pincode" class="form-control" required>
+                            <input type="text" id="pincode" name="pincode" class="form-control" required  value="{% if user_profile %}{{ user_profile.customer.pincode }}{% endif %}">
                         </div>
                         <div class="form-group">
                             <label for="address">Address</label>
-                            <input type="text" id="address" name="address" class="form-control" required>
+                            <input type="text" id="address" name="address" class="form-control" required oninput="validateAddress(this);">
                         </div>
                         <div class="form-group">
                             <label for="landmark">Landmark (Optional)</label>
-                            <input type="text" id="landmark" name="landmark" class="form-control">
+                            <input type="text" id="landmark" name="landmark" class="form-control" oninput="validateLandmark(this);">
                         </div>
                         <div class="form-group">
                             <label for="city">City</label>
-                            <input type="text" id="city" name="city" class="form-control" required>
+                            <input type="text" id="city" name="city" class="form-control" required oninput="validateCity(this);">
                         </div>
                         <div class="form-group">
                             <label for="state">State</label>
-                            <input type="text" id="state" name="state" class="form-control" required>
+                            <input type="text" id="state" name="state" class="form-control" required oninput="validateState(this);">
                         </div>
                         <div class="form-group">
                             <label for="address-type">Address Type</label>
-                            <select id="address-type" name="address-type" class="form-control" required>
+                            <select id="address-type" name="address-type" class="form-control" required oninput="validateAddressType(this);">
                                 <option value="home">Home</option>
                                 <option value="work">Work</option>
                                 <option value="other">Other</option>
@@ -508,7 +504,8 @@
             }
         }
 
-        function validateProfileForm() {
+        function validateProfileForm()
+         {
             const isFullNameValid = validateFullName();
             const isPhoneNumberValid = validatePhoneNumber();
 
@@ -519,13 +516,21 @@
                 // Form is not valid, prevent submission
                 return false;
             }
+            $("#date_of_birth").datepicker({
+                dateFormat: 'yy-mm-dd', // Set the desired date format
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "1900:+nn", // You can adjust the range as needed
+            });
         }
+        
 
         function validateAddressForm() {
             // Add any additional validation for the address form here if needed
         }
        
             // Add this JavaScript code to your existing script
+            var form = document.getElementById('address-form');
             document.addEventListener("DOMContentLoaded", function () {
                 const profileInfoItem = document.getElementById("profile-info");
         
@@ -547,9 +552,82 @@
                     loadManageAddressesForm();
                 });
             });
+         
+            function validatePincode(input) {
+                var pincode = input.value.trim();
+                var pincodeRegex = /^\d{6}$/;
+                if (!pincodeRegex.test(pincode)) {
+                    input.setCustomValidity('PIN Code must be 6 digits.');
+                } else {
+                    input.setCustomValidity('');
+                }
+            }
+                function validateAddress(input) {
+                    var address = input.value.trim();
+                    var addressRegex = /^[a-zA-Z ,]+$/;
+                    if (!addressRegex.test(address)) {
+                        input.setCustomValidity('Address should not contain numbers and should only contain alphabets. Comma is allowed.');
+                    } else {
+                        input.setCustomValidity('');
+                    }
+                }
+            
+                function validateLandmark(input) {
+                    // No specific validation for landmark, as it is optional
+                    input.setCustomValidity('');
+                }
+            
+                function validateAddressType(input) {
+                    var addressType = input.value.trim();
+                    if (addressType === '') {
+                        input.setCustomValidity('Please select an Address Type.');
+                    } else {
+                        input.setCustomValidity('');
+                    }
+                }
+            
+                
+                function validateCity(input) {
+                    var city = input.value.trim();
+                    var cityRegex = /^[a-zA-Z\s,.'-]+$/; // Adjust the regex as needed
+                    if (!cityRegex.test(city)) {
+                        input.setCustomValidity('City should contain only alphabets. Special characters like ,.\'- are allowed.');
+                    } else {
+                        input.setCustomValidity('');
+                    }
+                }
+            
+                function validateState(input) {
+                    var state = input.value.trim();
+                    var stateRegex = /^[a-zA-Z\s,.'-]+$/; // Adjust the regex as needed
+                    if (!stateRegex.test(state)) {
+                        input.setCustomValidity('State should contain only alphabets. Special characters like ,.\'- are allowed.');
+                    } else {
+                        input.setCustomValidity('');
+                    }
+                }
+            
+                function validateAddressForm() {
+                    var form = document.getElementById('addressForm');
+                    var inputs = form.querySelectorAll('input, select');
+            
+                    // Check the validity of each input field
+                    for (var i = 0; i < inputs.length; i++) {
+                        if (!inputs[i].checkValidity()) {
+                            // If any field is invalid, prevent form submission
+                            return false;
+                        }
+                    }
+            
+                    // If all fields are valid, allow form submission
+                    return true;
+                }
+            
+            </script>
+            
             
         
-    </script>
+  
 </body>
 
 </html>

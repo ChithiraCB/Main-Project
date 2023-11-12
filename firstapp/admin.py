@@ -9,15 +9,24 @@ from .models import Product1
 from .models import WishlistItem
 from .models import AddToCart2
 from .models import Profile
+from .models import Address
 
 
 # Register your models here.
 
-User = get_user_model()
+# User = get_user_model()
 
-class SuperuserAdmin(admin.ModelAdmin):
-    def get_queryset(self, request):
-        return User.objects.filter(is_superuser=True)
+# class SuperuserAdmin(admin.ModelAdmin):
+#     def get_queryset(self, request):
+#         return User.objects.filter(is_superuser=True)
 
 # Register the custom admin class
-admin.site.register(User,SuperuserAdmin)
+#admin.site.register(User,SuperuserAdmin)
+admin.site.register(Category1)
+admin.site.register(Subcategory1)
+admin.site.register(CustomUser)
+admin.site.register(Product1)
+admin.site.register(AddToCart2)
+admin.site.register(WishlistItem)
+admin.site.register(Profile)
+admin.site.register(Address)

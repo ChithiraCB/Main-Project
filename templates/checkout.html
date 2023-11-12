@@ -219,6 +219,24 @@ a[href*="wishlist"] i.fa-heart {
 .step-label {
     font-size: 12px;
 }
+/* Add these styles to your existing styles */
+.shipping-address-box {
+    background-color:#f0f0f0 ;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    width:500px;
+}
+
+.address-details {
+    margin-top: 10px;
+}
+/* Add these styles to your existing styles */
+
+
+
+/* You can further customize these styles as needed */
+
 
 
 </style>
@@ -233,11 +251,11 @@ a[href*="wishlist"] i.fa-heart {
         </div>
         <nav>
             <div class="checkout-steps">
-                <div class="step completed">
+                <div class="step">
                     
                     <span class="step-label">Cart</span>
                 </div> 
-                <div class="step">
+                <div class="step completed">
                   
                     <span class="step-label">Address</span>
                 </div>
@@ -305,102 +323,34 @@ a[href*="wishlist"] i.fa-heart {
 
     
     <main>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="product-details-container">
-                        {% for item in cart_items %}
-                        <div class="product-container card mb-3">
-                            <div class="row g-0">
-                                <div class="col-md-4">
-                                    <img src="{{ item.product.product_image.url }}" alt="{{ item.product.product_name }}" style="max-width: 250px; height:210px;border: 2px solid #ddd;">
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ item.product.product_name }}</h5>
-                                        <p class="card-text">Discount: {{ item.product.discount }}%</p>
-                                        {% comment %} <p class="card-text">Sale Price: Rs.{{ item.product.sale_price }}</p> {% endcomment %}
-                                        <p class="card-text" id="total-price-{{ item.id }}">Total: Rs.{{ item.product.sale_price }}</p>
-                                        <!-- Plus-Minus quantity input -->
-                                        <div class="quantity-input">
-                                            <button class="minus-btn" type="button" data-item-id="{{ item.id }}">-</button>
-                                            <!--<input type="text" name="quantity" value="1" data-item-id="{{ item.id }}" data-sale-price="{{ item.product.sale_price }}" readonly>-->
-                                            <input type="text" name="quantity" value="1" data-item-id="{{ item.id }}" data-sale-price="{{ item.product.sale_price }}" data-max-quantity="{{ item.product.stock }}" readonly>
-
-                                            <button class="plus-btn" type="button" data-item-id="{{ item.id }}">+</button>
-                                        </div>
-    
-                                         <form method="post" action="{% url 'remove_from_cart' item.id %}">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger">Remove</button> 
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="price-details-container">
-                        <div class="order-summary">
-                            <h3>Price Details</h3>
-                            {% comment %} <p>Price: Rs.{{ subtotal }}</p> {% endcomment %}
-                            {% comment %} <p>Shipping: Rs.{{ shipping }}</p> {% endcomment %}
-                            {% comment %} <p>Total Amount: Rs.{{ total }}</p> {% endcomment %}
-                            
-                            <p id="total-amount">Total Amount: Rs.{{ total }}</p>
-
-                            <form method="post" action="">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-success">Place Order</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+        <!-- Inside the checkout form, add a section for displaying the user's address -->
+<!-- Inside the checkout form, add a section for displaying the user's address -->
+<div class="user-address-container">
+    {% if user_address %}
+        <div class="shipping-address-box">
+            <h3>Shipping Address</h3>
+            <div class="address-details">
+                <p><strong></strong> {{ user_address.fullName }}</p>
+                
+                <p><strong>Address:</strong> {{ user_address.address }}, {{ user_address.state }},{{ user_address.landmark }} - {{ user_address.pincode }} </p>
+                <!--<p><strong>Landmark:</strong> {{ user_address.landmark }}</p>-->
+                <!--<p><strong>City:</strong> {{ user_address.city }}</p>-->
+                <!--<p><strong>State:</strong> {{ user_address.state }}</p>-->
+                <!--<p><strong>Pincode:</strong> {{ user_address.pincode }}</p>-->
+                <p><strong>Mobile:</strong> {{ user_address.phone }}</p>
+                <p><strong>Address Type:</strong> {{ user_address.address_type }}</p>
+                
             </div>
         </div>
+    {% else %}
+        <p>No address found. Please add an address <a href="{% url 'address' %}">here</a>.</p>
+    {% endif %}
+</div>
+
+
+<!-- Your existing checkout form goes here -->
+
     </main>
-    
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
- 
-<script>
-    $(document).ready(function() {
-        $('.plus-btn, .minus-btn').on('click', function() {
-            var itemID = $(this).data('item-id');
-            var inputField = $('input[data-item-id="' + itemID + '"]');
-            var currentQuantity = parseInt(inputField.val());
-            var maxQuantity = parseInt(inputField.data('max-quantity'));
-            var salePrice = parseFloat(inputField.data('sale-price'));
-            var totalPriceField = $('#total-price-' + itemID);
-
-            if ($(this).hasClass('plus-btn') && currentQuantity < maxQuantity) {
-                inputField.val(currentQuantity + 1);
-            } else if ($(this).hasClass('minus-btn') && currentQuantity > 1) {
-                inputField.val(currentQuantity - 1);
-            }
-
-            var newQuantity = parseInt(inputField.val());
-            var newTotalPrice = newQuantity * salePrice;
-            totalPriceField.text('Total: Rs.' + newTotalPrice.toFixed(2));
-            updateTotalAmount();
-        });
-
-        function updateTotalAmount() {
-            var totalAmount = 0;
-            $('.quantity-input input').each(function() {
-                var quantity = parseInt($(this).val());
-                var salePrice = parseFloat($(this).data('sale-price'));
-                totalAmount += quantity * salePrice;
-            });
-            $('#total-amount').text('Total Amount: Rs.' + totalAmount.toFixed(2));
-        }
-
-        // Initial calculation of total amount
-        updateTotalAmount();
-    });
-</script>
-
 
 
 </body>

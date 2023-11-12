@@ -195,13 +195,13 @@ class CustomerProfile1(models.Model):
 
 
 class Category1(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
     
 class Subcategory1(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     category = models.ForeignKey(Category1, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -261,12 +261,28 @@ class AddToCart2(models.Model):
      return f"{self.quantity} x {self.product.product_name} in {self.user.username}'s cart"
     
 class Profile(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)
+    customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)
     fullName = models.CharField(max_length=255)
     gender = models.CharField(max_length=10, choices=[("male", "Male"), ("female", "Female")])
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateField(null=True, blank=True)
     email = models.EmailField()
     phone = models.CharField(max_length=20)
 
     def __str__(self):
         return self.email
+    
+class Address(models.Model):
+    customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE,default=None)
+    fullName = models.CharField(max_length=255)
+    phone = models.CharField(max_length=15)
+    pincode = models.CharField(max_length=10)
+    address = models.TextField()
+    landmark = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=255)
+    state = models.CharField(max_length=255)
+    address_type = models.CharField(
+        max_length=10,
+        choices=[('home', 'Home'), ('work', 'Work'), ('other', 'Other')]
+    )
+    def __str__(self):
+        return self.fullName

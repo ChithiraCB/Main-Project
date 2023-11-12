@@ -11,6 +11,7 @@ urlpatterns = [
      path('logout/', views.logout_user,name="logout"),
      path('adminpanel/', views.adminpanel,name="adminpanel"),
      path('Customer_Profile/', views.Customer_Profile,name="Customer_Profile"),
+     path('address/', views.address,name="address"),
      path('add_product/', views.add_product,name="add_product"),
      path('viewproduct/', views.view_product, name='viewproduct'),
      path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
@@ -29,9 +30,10 @@ urlpatterns = [
     path('wishlist/', views.wishlist, name='wishlist'),
     path('add_to_wishlist/<int:id>/', views.add_to_wishlist, name='add_to_wishlist'),
     path('remove_from_wishlist/<int:wishlist_item_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
-    path('profile/', views.profile_view, name='profile_view'),
+    #path('profile/', views.profile_view, name='profile_view'),
     path('total_users/', views.total_users, name='total_users'),
-    
+    #path('placeorder/', views.placeorder, name='placeorder'),
+    path('checkout/', views.checkout, name='checkout'),
     #path('block-unblock-user/<int:user_id>/', views.block_unblock_user, name='block_unblock_user'),
 
 
