@@ -162,12 +162,15 @@ def Customer_Profile(request):
     context = {
         'user_profile': user_profile,
         'form_submitted': False,
-         'date_of_birth': user_profile.date_of_birth,
+        'date_of_birth': user_profile.date_of_birth,
     }
     return render(request, 'Customer_Profile.html',context)
 
-
 def address(request):
+
+    user_profile = None
+    if request.user.is_authenticated:
+        user_profile = Address.objects.get_or_create(customer=request.user)
     if request.method == 'POST':
         full_name = request.POST.get('fullName')
         phone = request.POST.get('phone')
@@ -189,9 +192,9 @@ def address(request):
         user_profile.address_type = address_type
         user_profile.save()
 
-        user_profile = None
-    if request.user.is_authenticated:
-        user_profile = Address.objects.get_or_create(customer=request.user)
+        if request.user.is_authenticated:
+           user_profile = Address.objects.get(customer=request.user)
+
 
     return render(request, 'Customer_Profile.html', {'user_profile': user_profile})
 
@@ -851,8 +854,78 @@ def total_users(request):
 #     return redirect('adminpanel')
 
 
-def checkout(request):
+# def checkout(request):
+#     user_address = Address.objects.filter(customer=request.user).first()
+
+#     return render(request, 'checkout.html', {'user_address': user_address})
+# def checkout(request):   
+#     user_address = Address.objects.filter(customer=request.user).first()
+
+#     # Retrieve cart items
+#     cart_items = AddToCart2.objects.filter(user=request.user)
+
+#     total_price = sum(item.product.sale_price * item.quantity for item in cart_items)
+
+#     # Calculate total amount
+#     total = sum(item.product.sale_price * item.quantity for item in cart_items)
+
+#     return render(request, 'checkout.html', {
+#         'user_address': user_address,
+#         'cart_items': cart_items,
+#         'total': total,
+#         'total_price':total_price,
+#     })
+
+def checkout(request):   
     user_address = Address.objects.filter(customer=request.user).first()
 
-    return render(request, 'checkout.html', {'user_address': user_address})
+    # Retrieve cart items
+    cart_items = AddToCart2.objects.filter(user=request.user)
+
+    # Calculate total amount and total price for each item
+    total = sum(item.product.sale_price * item.quantity for item in cart_items)
     
+    # Calculate total price for all items
+    total_price = sum(item.product.sale_price * item.quantity for item in cart_items)
+
+    # Add total_price to each cart item
+    for item in cart_items:
+        item.total_price = item.product.sale_price * item.quantity
+
+    return render(request, 'checkout.html', {
+        'user_address': user_address,
+        'cart_items': cart_items,
+        'total': total,
+        'total_price': total_price,
+    })
+
+def edit_address(request):
+    user_profile, created = Address.objects.get_or_create(customer=request.user)
+
+    if request.method == 'POST':
+        full_name = request.POST.get('fullName')
+        phone = request.POST.get('phone')
+        pincode = request.POST.get('pincode')
+        address = request.POST.get('address')
+        landmark = request.POST.get('landmark')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        address_type = request.POST.get('address-type')
+
+        # Check if the Address object exists
+        if not created:
+            # Update the user profile with form data
+            user_profile.fullName = full_name
+            user_profile.phone = phone
+            user_profile.pincode = pincode
+            user_profile.address = address
+            user_profile.landmark = landmark
+            user_profile.city = city
+            user_profile.state = state
+            user_profile.address_type = address_type
+            user_profile.save()
+
+            messages.success(request, 'Address updated successfully.')
+            return redirect('profile')  # Redirect to the profile page or another appropriate page after editing
+
+    return render(request, 'edit_address.html', {'user_profile': user_profile})

@@ -25,7 +25,7 @@
     <link href="{% static 'css/style.css' %}" rel="stylesheet" />
     <!-- Responsive style -->
     <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
-    <!--<link href="{% static 'css/cart.css' %}" rel="stylesheet">-->
+    <link href="{% static 'css/modal.css' %}" rel="stylesheet">
     <style>
         header {
             display: flex;
@@ -76,173 +76,251 @@
             text-decoration: none;
             margin-left: 20px;
         }
-        /* Style the dropdown container */
-.profile-dropdown {
-    position: relative;
-    display: inline-block;
-}
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
 
-/* Style the dropdown content (hidden by default) */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f0f0f0; /* Background color for the dropdown */
-    min-width: 160px;
-    z-index: 1;
-}
+        .checkout-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
-/* Style the dropdown links */
-.dropdown-content a {
-    color: #f7444e;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
+        .shipping-address-container,
+        .price-details-container {
+            flex: 1;
+            padding: 20px;
+        }
 
-/* Change the link color on hover */
-.dropdown-content a:hover {
-    background-color: ; /* Background color on hover */
-}
+        .shipping-address-container {
+            border-right: 1px solid #ddd;
+        }
 
- /*Display the dropdown content when hovering over the profile icon */
-.profile-dropdown:hover .dropdown-content {
-    display: block;
-}
-/* Styles for the main content */
-main {
-  padding: 20px;
-}
+        h2 {
+            color: #333;
+        }
 
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
 
-    .card-body {
-        background-color: #f0f0f0; /* Background color for the card body */
-        padding: 15px;
-        border: 2px solid #ddd; /* Border around the card body */
-       
-    }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
 
-    .btn-danger {
-        background-color: ; /* Button background color */
-        color: #fff; /* Button text color */
-        border: none;
-        padding: 2px;
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+        a[href*="view_cart"] i.fa-shopping-cart {
+            color: white; /* Red color for the shopping cart icon */
+            font-size: 22px; /* Adjust the font size as needed */
+            margin-right: 10px; /* Adjust the right margin as needed */
+            
+        }
         
-    }
-
-    .quantity-input {
-        display: flex;
-        align-items: center;
-    }
-
-    .quantity-input button {
-        background-color: #ff0000; /* Button background color */
-        color: #fff; /* Button text color */
-        border: none;
-        padding: 5px 10px;
-        cursor: pointer;
-        margin-right: 10px
-    }
-
-    .quantity-input input {
-        width: 40px;
-        text-align: center;
-    }
-    /* CSS for the product details container */
-    .product-details-container {
-        margin-right: 20px; /* Add some spacing between containers if needed */
-    }
-    
-    /* CSS for the price details container */
-    .price-details-container {
-        background-color: #f0f0f0; /* Background color for the price details container */
-        padding: 15px;
-        border: 1px solid #ddd; /* Border around the price details container */
-        width:400px;
-        height:300px;
-
-    }
-    
-    /* Ensure both containers are displayed inline */
-    .container {
-        display: flex;
-        justify-content: space-between;
-    }
-    /* Styling for the shopping cart icon */
-a[href*="view_cart"] i.fa-shopping-cart {
-    color: white; /* Red color for the shopping cart icon */
-    font-size: 22px; /* Adjust the font size as needed */
-    margin-right: 10px; /* Adjust the right margin as needed */
-    
+        /* Styling for the heart icon */
+        a[href*="wishlist"] i.fa-heart {
+            color: white; /* Red color for the heart icon */
+            font-size: 22px; /* Adjust the font size as needed */
+            margin-right: 10px; /* Adjust the right margin as needed */
+            
+        }
+        .checkout-steps {
+            display: flex;
+            align-items: center;
+            color: #333;
+        }
+        
+        .step {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .step:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .step.completed {
+            background-color: #f7444e;
+            color: #fff;
+        }
+        
+        .step-number {
+            font-size: 18px;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .step-label {
+            font-size: 12px;
+        }
+        .profile-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        /* Style the dropdown content (hidden by default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f0f0f0; /* Background color for the dropdown */
+            min-width: 160px;
+            z-index: 1;
+        }
+        
+        /* Style the dropdown links */
+        .dropdown-content a {
+            color: #f7444e;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        
+        /* Change the link color on hover */
+        .dropdown-content a:hover {
+            background-color: ; /* Background color on hover */
+        }
+        
+         /*Display the dropdown content when hovering over the profile icon */
+        .profile-dropdown:hover .dropdown-content {
+            display: block;
+        }
+        /* Styles for the main content */
+        main {
+          padding: 20px;
+        }
+        
+        
+            .card-body {
+                background-color: #f0f0f0; /* Background color for the card body */
+                padding: 15px;
+                border: 2px solid #ddd; /* Border around the card body */
+               
+            }
+        
+            .btn-danger {
+                background-color: ; /* Button background color */
+                color: #fff; /* Button text color */
+                border: none;
+                padding: 2px;
+                
+            }
+        
+            .quantity-input {
+                display: flex;
+                align-items: center;
+            }
+        
+            .quantity-input button {
+                background-color: #ff0000; /* Button background color */
+                color: #fff; /* Button text color */
+                border: none;
+                padding: 5px 10px;
+                cursor: pointer;
+                margin-right: 10px
+            }
+        
+            .quantity-input input {
+                width: 40px;
+                text-align: center;
+            }
+            .product-info {
+                display: flex;
+                align-items: center;
+            }
+            
+            .product-image {
+                width: 50px; /* Adjust the image size as needed */
+                height: 50px;
+                margin-right: 10px; /* Adjust the margin as needed */
+            }
+            
+            
+            
+            .product-name {
+                margin: ;
+                font-weight:normal;
+                
+            }
+            .product-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 10px;
+            }
+            
+            .product-table th, .product-table td {
+                 border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left; 
+            }
+            
+            .product-table th {
+                background-color: #f2f2f2;
+            }
+            
+           
+            .product-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 10px;
+            }
+            
+            .product-table th, .product-table td {
+                border:  ;
+                padding: 8px;
+                text-align: left;
+            }
+            
+            .product-table th {
+                background-color: #f2f2f2;
+            }
+            
+            .product-image img {
+                width: 200px;
+                height: 100px;
+                border: 2px solid #ddd;
+            }
+            
+            .product-name {
+                margin: 0;
+                font-weight: normal;
+            }
+            .product-details {
+                display: flex;
+    flex-direction: column-reverse;
+    align-content: space-between;
+    align-items: flex-end;
+    margin-top:0;
 }
-
-/* Styling for the heart icon */
-a[href*="wishlist"] i.fa-heart {
-    color: white; /* Red color for the heart icon */
-    font-size: 22px; /* Adjust the font size as needed */
-    margin-right: 10px; /* Adjust the right margin as needed */
-    
-}
-.checkout-steps {
-    display: flex;
-    align-items: center;
-    color: #333;
-}
-
-.step {
-    position: relative;
-    display: flex;
-    align-items: center;
-    margin-right: 20px;
-    padding: 10px;
-    background-color: #f8f8f8;
-    border: 1px solid #e0e0e0;
-    border-radius: 2px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.step:hover {
-    background-color: #e0e0e0;
-}
-
-.step.completed {
-    background-color: #f7444e;
-    color: #fff;
-}
-
-.step-number {
-    font-size: 18px;
-    font-weight: bold;
-    margin-right: 5px;
-}
-
-.step-label {
-    font-size: 12px;
-}
-/* Add these styles to your existing styles */
-.shipping-address-box {
-    background-color:#f0f0f0 ;
-    border: 1px solid #ddd;
-    padding: 20px;
-    margin-bottom: 20px;
-    width:500px;
-}
-
-.address-details {
-    margin-top: 10px;
-}
-/* Add these styles to your existing styles */
-
-
-
-/* You can further customize these styles as needed */
-
-
-
-</style>
-
-  
-
+            
+            
+    </style>
 </head>
 <body>
     <header>
@@ -321,37 +399,207 @@ a[href*="wishlist"] i.fa-heart {
     </header>
 
 
-    
-    <main>
-        <!-- Inside the checkout form, add a section for displaying the user's address -->
-<!-- Inside the checkout form, add a section for displaying the user's address -->
-<div class="user-address-container">
-    {% if user_address %}
-        <div class="shipping-address-box">
-            <h3>Shipping Address</h3>
-            <div class="address-details">
-                <p><strong></strong> {{ user_address.fullName }}</p>
+    <body>
+
+<div class="checkout-container">
+    <div class="shipping-address-container">
+        
+        
+            {% if user_address %}
+                <div class="shipping-address-box">
+                    <h3>Shipping Address</h3>
+                    <div class="address-details">
+                        <p><strong></strong> {{ user_address.fullName }}</p>
+                        
+                        <p><strong>Address:</strong> {{ user_address.address }}, {{ user_address.state }},{{ user_address.landmark }} - {{ user_address.pincode }} </p>
+                        <!--<p><strong>Landmark:</strong> {{ user_address.landmark }}</p>-->
+                        <!--<p><strong>City:</strong> {{ user_address.city }}</p>-->
+                        <!--<p><strong>State:</strong> {{ user_address.state }}</p>-->
+                        <!--<p><strong>Pincode:</strong> {{ user_address.pincode }}</p>-->
+                        <p><strong>Mobile:</strong> {{ user_address.phone }}</p>
+                        <p><strong>Address Type:</strong> {{ user_address.address_type }}</p>
+                        
+                    </div>
+                    <div class="address-actions">
+                        {% comment %} <button onclick="editAddress">Edit</button> {% endcomment %}
+                        <button id="editButton" onclick="openEditModal()">Edit</button>
+
+
+                        <button onclick="removeAddress">Remove</button>
+                    </div>
+                </div>
+            {% else %}
+                <p>No address found. Please add an address <a href="{% url 'address' %}">here</a>.</p>
+            {% endif %}
+        
+    </div>
+
+    <div class="price-details-container">
+        <h2>Price Details</h2>
+        
+       
+        
+            {% comment %} <div class="order-summary">
+                <p id="total-items">Total Items: {{ cart_items.count }}</p>
+                {% for item in cart_items %}
+                <div class="product-summary">
+                    <div class="product-image">
+                        <img src="{{ item.product.product_image.url }}" alt="{{ item.product.product_name }}" style="max-width: 100px; height: 80px; border: 2px solid #ddd;">
+                    </div>
+                    <div class="product-details">
+                        
+                        <h4>{{ item.product.product_name }}</h4>
+                        <p>Quantity: {{ item.quantity }}</p>
+                        <p>Price: Rs.{{ item.product.sale_price }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+         
+                <p id="total-amount">Total Amount: Rs.{{ total }}</p>
                 
-                <p><strong>Address:</strong> {{ user_address.address }}, {{ user_address.state }},{{ user_address.landmark }} - {{ user_address.pincode }} </p>
-                <!--<p><strong>Landmark:</strong> {{ user_address.landmark }}</p>-->
-                <!--<p><strong>City:</strong> {{ user_address.city }}</p>-->
-                <!--<p><strong>State:</strong> {{ user_address.state }}</p>-->
-                <!--<p><strong>Pincode:</strong> {{ user_address.pincode }}</p>-->
-                <p><strong>Mobile:</strong> {{ user_address.phone }}</p>
-                <p><strong>Address Type:</strong> {{ user_address.address_type }}</p>
-                
+        
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Place Order</button>
+                </form>
             </div>
         </div>
-    {% else %}
-        <p>No address found. Please add an address <a href="{% url 'address' %}">here</a>.</p>
-    {% endif %}
+         {% endcomment %}
+
+         <div class="order-summary">
+            <table class="product-table">
+                <thead>
+                    <tr>
+                        <th>Product  ({{ cart_items.count }})</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                        <tr>
+                            <td class="product-summary">
+                                <div class="product-image">
+                                    <img src="{{ item.product.product_image.url }}"  style="max-width: 100px; height: 80px; border: 2px solid #ddd;">
+                                </div>
+                                 <div class="product-details">
+                                    {{ item.product.product_name }}
+                                </div> 
+                            </td>
+                            <td>{{ item.quantity }}</td>
+                            <td>Rs.{{ item.total_price }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% comment %} <p id="total-items">Total Items: {{ cart_items.count }}</p> {% endcomment %}
+            <p id="total-amount">Total Amount: Rs.{{ total }}</p>
+            <form method="post" action="">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Place Order</button>
+            </form>
+        </div>
+    </div>
+        </div>
+        
+            
+        
+                  
+        
+    </div>
 </div>
+<div id="editAddressModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <form id="editAddressForm" method="post" action="{% url 'edit_address' %}">
+            <!-- Your form fields go here -->
+            {% csrf_token %}
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            {% comment %}  value="{{ user_profile.fullName }}" required> {% endcomment %}
+                            <input type="text" id="fullName" name="fullName" class="form-control" value = ""required>
 
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" class="form-control" required value="{{ user_profile.phone }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="pincode">PIN Code</label>
+                            <input type="text" id="pincode" name="pincode" class="form-control" required  value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input type="text" id="address" name="address" class="form-control" required value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="landmark">Landmark (Optional)</label>
+                            <input type="text" id="landmark" name="landmark" class="form-control" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="city" class="form-control" required value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State</label>
+                            <input type="text" id="state" name="state" class="form-control" required value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="address-type">Address Type</label>
+                            <select id="address-type" name="address-type" class="form-control" required value="">
+                                <option value="home">Home</option>
+                                <option value="work">Work</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Address</button>
+                        <button type="reset" class="btn btn-primary">Reset</button>
+                        <button type="update" class="btn btn-primary">Update</button>
 
-<!-- Your existing checkout form goes here -->
+        </form>
+    </div>
+</div>
+<script>
+    // Declare modal globally so that it is accessible to all functions
+    var modal = document.getElementById("editAddressModal");
+    
 
-    </main>
+    function openEditModal() {
+        // Populate the modal with the current user profile data
+        // (you may need to adjust this part based on your specific template structure)
 
+        // Display the modal
+        modal.style.display = "block";
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get the modal
+        
+        // Get the button that opens the modal
+        var editButton = document.getElementById("editButton");  // Add id="editButton" to your Edit button
+    
+        // Get the close button in the modal
+        var closeButton = document.querySelector("#editAddressModal .close");
+    
+        // When the user clicks the button, open the modal
+        editButton.onclick = function () {
+            modal.style.display = "block";
+        };
+    
+        // When the user clicks on the close button, close the modal
+        closeButton.onclick = function () {
+            modal.style.display = "none";
+        };
+    
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        };
+    });
+    
+</script>
 
 </body>
 </html>

@@ -384,7 +384,7 @@
                         <div class="form-group">
                             <label>Your Gender</label><br>
                             <div class="form-check form-check-inline">
-                                <input type="radio" id="male" name="gender" class="form-check-input" value="male" required>
+                                <input type="radio" id="male" name="gender" class="form-check-input" value="{% if request.user.is_authenticated %}{{ user_profile.gender }}{% endif %}" required>
                                 <label for="male" class="form-check-label">Male</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -395,7 +395,8 @@
 
                         <div class="form-group">
                             <label for="date_of_birth">Date of Birth</label>
-                            <input type="text" id="date_of_birth" name="date_of_birth" class="form-control" placeholder="YYYY-MM-DD" required value="">
+                            <input type="text" id="date_of_birth" name="date_of_birth" class="form-control" placeholder="YYYY-MM-DD" required value="{% if request.method == 'POST' %}{{ request.POST.date_of_birth }}{% elif request.user.is_authenticated %}{{ user_profile.date_of_birth }}{% endif %}">
+
                         </div>
                         
 
@@ -430,36 +431,36 @@
                         <div class="form-group">
                             <label for="fullName">Full Name</label>
                             {% comment %}  value="{{ user_profile.fullName }}" required> {% endcomment %}
-                            <input type="text" id="fullName" name="fullName" class="form-control" value = "{% if request.user.is_authenticated %}{{ user_profile.customer.fullName }}{% endif %}" required>
+                            <input type="text" id="fullName" name="fullName" class="form-control" value = "{% if user_profile %}{{ user_profile.fullName }}{% endif %}" required>
 
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" class="form-control" required value="{% if request.user.is_authenticated %}{{ user_profile.customer.phone }}{% endif %}">
+                            <input type="tel" id="phone" name="phone" class="form-control" required value="{% if user_profile %}{{ user_profile.phone }}{% endif %}">
                         </div>
                         <div class="form-group">
                             <label for="pincode">PIN Code</label>
-                            <input type="text" id="pincode" name="pincode" class="form-control" required  value="{% if user_profile %}{{ user_profile.customer.pincode }}{% endif %}">
+                            <input type="text" id="pincode" name="pincode" class="form-control" required  value="{% if user_profile %}{{ user_profile.pincode }}{% endif %}">
                         </div>
                         <div class="form-group">
                             <label for="address">Address</label>
-                            <input type="text" id="address" name="address" class="form-control" required oninput="validateAddress(this);">
+                            <input type="text" id="address" name="address" class="form-control" required value="{% if user_profile %}{{ user_profile.address }}{% endif %} ">
                         </div>
                         <div class="form-group">
                             <label for="landmark">Landmark (Optional)</label>
-                            <input type="text" id="landmark" name="landmark" class="form-control" oninput="validateLandmark(this);">
+                            <input type="text" id="landmark" name="landmark" class="form-control" value="{% if user_profile %}{{ user_profile.landmark }}{% endif %}">
                         </div>
                         <div class="form-group">
                             <label for="city">City</label>
-                            <input type="text" id="city" name="city" class="form-control" required oninput="validateCity(this);">
+                            <input type="text" id="city" name="city" class="form-control" required value="{% if user_profile %}{{ user_profile.city }}{% endif %}";">
                         </div>
                         <div class="form-group">
                             <label for="state">State</label>
-                            <input type="text" id="state" name="state" class="form-control" required oninput="validateState(this);">
+                            <input type="text" id="state" name="state" class="form-control" required value="{% if user_profile %}{{ user_profile.state }}{% endif %}">
                         </div>
                         <div class="form-group">
                             <label for="address-type">Address Type</label>
-                            <select id="address-type" name="address-type" class="form-control" required oninput="validateAddressType(this);">
+                            <select id="address-type" name="address-type" class="form-control" required value="{% if user_profile %}{{ user_profile.address_type }}{% endif %}"">
                                 <option value="home">Home</option>
                                 <option value="work">Work</option>
                                 <option value="other">Other</option>
@@ -553,7 +554,7 @@
                 });
             });
          
-            function validatePincode(input) {
+            {% comment %} function validatePincode(input) {
                 var pincode = input.value.trim();
                 var pincodeRegex = /^\d{6}$/;
                 if (!pincodeRegex.test(pincode)) {
@@ -570,7 +571,7 @@
                     } else {
                         input.setCustomValidity('');
                     }
-                }
+                } {% endcomment %}
             
                 function validateLandmark(input) {
                     // No specific validation for landmark, as it is optional
