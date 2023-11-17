@@ -36,7 +36,8 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),
     #path('block-unblock-user/<int:user_id>/', views.block_unblock_user, name='block_unblock_user'),
     path('edit_address/',views.edit_address, name='edit_address'),
-
+    path('handle_payment/',views.handle_payment, name='handle_payment'),
+    path('create_order/',views.create_order, name='create_order'),
 
      path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),
      path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),

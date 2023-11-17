@@ -8,6 +8,10 @@ from django.core.mail import send_mail
 from . models import *
 from django.contrib.auth.decorators import *
 from django.views.decorators.cache import *
+import razorpay
+import json
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 
 
 #from django.contrib.auth.models import User
@@ -900,7 +904,9 @@ def checkout(request):
     })
 
 def edit_address(request):
-    user_profile, created = Address.objects.get_or_create(customer=request.user)
+    user_profile = None
+    if request.user.is_authenticated:
+        user_profile, created = Address.objects.get_or_create(customer=request.user)
 
     if request.method == 'POST':
         full_name = request.POST.get('fullName')
@@ -929,3 +935,77 @@ def edit_address(request):
             return redirect('profile')  # Redirect to the profile page or another appropriate page after editing
 
     return render(request, 'edit_address.html', {'user_profile': user_profile})
+
+@csrf_exempt
+def create_order(request):
+    if request.method == 'POST':
+        user = request.user
+        cart = user.cart
+
+        cart_items = add_to_cart.objects.filter(cart=cart)
+        total_amount = sum(item.product.price * item.quantity for item in cart_items)
+
+        try:
+            order = Order.objects.create(user=user, total_amount=total_amount)
+            for cart_item in cart_items:
+                OrderItem.objects.create(
+                    order=order,
+                    product=cart_item.product,
+                    quantity=cart_item.quantity,
+                    item_total=cart_item.product.price * cart_item.quantity
+                )
+
+            client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+            payment_data = {
+                'amount': int(total_amount * 100),
+                'currency': 'INR',
+                'receipt': f'order_{order.id}',
+                'payment_capture': '1'
+            }
+            orderData = client.order.create(data=payment_data)
+            order.payment_id = orderData['id']
+            order.save()
+
+            return JsonResponse({'order_id': orderData['id']})
+        
+        except Exception as e:
+            print(str(e))
+            return JsonResponse({'error': 'An error occurred. Please try again.'}, status=500)
+
+@csrf_exempt
+def handle_payment(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))  # Ensure decoding with the correct charset
+            razorpay_order_id = data.get('order_id')
+            payment_id = data.get('payment_id')
+
+            if not razorpay_order_id or not payment_id:
+                return JsonResponse({'message': 'Invalid data provided'})
+
+            try:
+                order = Order.objects.get(payment_id=razorpay_order_id)
+
+                client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+                payment = client.payment.fetch(payment_id)
+
+                if payment['status'] == 'captured':
+                    order.payment_status = True
+                    order.save()
+                    user = request.user
+                    user.cart.cartitem_set.all().delete()
+                    return JsonResponse({'message': 'Payment successful'})
+                else:
+                    return JsonResponse({'message': 'Payment failed'})
+
+            except Order.DoesNotExist:
+                return JsonResponse({'message': 'Invalid Order ID'})
+            except Exception as e:
+                print(str(e))
+                return JsonResponse({'message': 'Server error, please try again later.'})
+
+        except json.JSONDecodeError as e:
+            print(f'JSONDecodeError: {e}')
+            return JsonResponse({'message': 'Invalid JSON payload'})
+
+    return JsonResponse({'message': 'Invalid request method'})

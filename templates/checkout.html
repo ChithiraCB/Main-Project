@@ -494,10 +494,17 @@
             </table>
             {% comment %} <p id="total-items">Total Items: {{ cart_items.count }}</p> {% endcomment %}
             <p id="total-amount">Total Amount: Rs.{{ total }}</p>
-            <form method="post" action="">
+            {% comment %} <form method="post" action="{% url 'handle_payment' %}">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-success">Place Order</button>
-            </form>
+                <button type="submit" class="btn btn-success">checkout</button>
+            </form> {% endcomment %}
+            <form id="payment-form" action="{% url 'handle_payment' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="order_id" value="{{ razorpay_order_id }}">
+            <input type="hidden" name="payment_id" value="{{ razorpay_payment_id }}">
+            <!-- Other form fields and payment details go here -->
+            <button type="submit" class="btn btn-success">Checkout</button>
+        </form>
         </div>
     </div>
         </div>
@@ -600,6 +607,8 @@
     });
     
 </script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="{% static 'js/checkout.js' %}"></script>
 
 </body>
 </html>
