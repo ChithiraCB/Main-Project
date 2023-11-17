@@ -320,17 +320,17 @@ a[href*="wishlist"] i.fa-heart {
                                         <h5 class="card-title">{{ item.product.product_name }}</h5>
                                         <p class="card-text">Discount: {{ item.product.discount }}%</p>
                                         {% comment %} <p class="card-text">Sale Price: Rs.{{ item.product.sale_price }}</p> {% endcomment %}
-                                        <p class="card-text" id="total-price-{{ item.id }}">Total: Rs.{{ item.product.sale_price }}</p>
+                                        <p class="card-text" id="total-price-{{ item.product.id }}">Total: Rs.{{ item.product.sale_price }}</p>
                                         <!-- Plus-Minus quantity input -->
                                         <div class="quantity-input">
-                                            <button class="minus-btn" type="button" data-item-id="{{ item.id }}">-</button>
+                                            <button class="minus-btn" type="button" data-item-id="{{ item.product.id }}">-</button>
                                             <!--<input type="text" name="quantity" value="1" data-item-id="{{ item.id }}" data-sale-price="{{ item.product.sale_price }}" readonly>-->
-                                            <input type="text" name="quantity" value="1" data-item-id="{{ item.id }}" data-sale-price="{{ item.product.sale_price }}" data-max-quantity="{{ item.product.stock }}" readonly>
+                                            <input type="text" name="quantity" value="1" data-item-id="{{ item.product.id }}" data-sale-price="{{ item.product.sale_price }}" data-max-quantity="{{ item.product.stock }}" readonly>
 
-                                            <button class="plus-btn" type="button" data-item-id="{{ item.id }}">+</button>
+                                            <button class="plus-btn" type="button" data-item-id="{{ item.product.id }}">+</button>
                                         </div>
     
-                                         <form method="post" action="{% url 'remove_from_cart' item.id %}">
+                                         <form method="post" action="{% url 'remove_from_cart' item.product.id  %}">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-danger">Remove</button> 
                                         </form>
@@ -351,7 +351,7 @@ a[href*="wishlist"] i.fa-heart {
                             
                             <p id="total-amount">Total Amount: Rs.{{ total }}</p>
 
-                            <form method="post" action="">
+                            <form method="post" action="{% url 'checkout' %}">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-success">Place Order</button>
                             </form>

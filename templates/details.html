@@ -232,7 +232,11 @@ a[href*="wishlist"] i.fa-heart {
                 <a href="{% url 'Customer_Profile' %}">Profile</a>
                 <a href="{% url 'logout'  %}">Logout</a>
             </div></div>
-            <a href="{% url 'view_cart'  %}"><i class="fa fa-shopping-cart"></i></a>
+            <a href="{% url 'view_cart'  %}"><i class="fa fa-shopping-cart">{% if cart_count == 0 %}
+                <span></span>
+                {% else %}
+                <span class="cart-count">{{ cart_count }}</span>
+                {% endif %}</i></a>
     <a href="{% url 'wishlist'  %}"><i class="fa fa-heart"></i></a>
 	
             

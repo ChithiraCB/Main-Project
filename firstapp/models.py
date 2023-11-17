@@ -287,20 +287,20 @@ class Address(models.Model):
     def __str__(self):
         return self.fullName
 
-# class CartItem(models.Model):
-#     cart = models.ForeignKey('Cart', on_delete=models.CASCADE)
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-#     quantity = models.PositiveIntegerField(default=1)
+class CartItem(models.Model):
+    cart = models.ForeignKey('Cart', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product1, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
 
-#     def __str__(self):
-#         return f"{self.quantity} x {self.product.name}"
+    def __str__(self):
+        return f"{self.quantity} x {self.product.product_name}"
 
 class Cart(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    # products = models.ManyToManyField(Product1, through='CartItem')
+    products = models.ManyToManyField(Product1, through='CartItem')
 
     def __str__(self):
-        return f"Cart for {self.user.username}"
+        return f"Cart for {self.user.fullName}"
     
 
 

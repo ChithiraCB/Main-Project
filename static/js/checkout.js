@@ -11,21 +11,18 @@ document.addEventListener('DOMContentLoaded', function () {
         if (parts.length === 2) return parts.pop().split(";").shift();
     }
 
-    
     checkoutButton.addEventListener('click', function (event) {
         event.preventDefault();
 
         const rawPrice = totalItemAmount.textContent;
         const totalPrice = parseFloat(rawPrice.replace('₹', '').trim());
-        
-        
-        fetch("http://127.0.0.1:8000/create-order/", {
+
+        fetch("http://127.0.0.1:3000/create_order/", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCookie('csrftoken')
             }
-            
         })
             .then(response => {
                 if (!response.ok) {
@@ -35,10 +32,10 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 var options = {
-                    "key": "rzp_test_GPMkEmhjhK95lt",
-                    "amount": totalPrice * 100,
+                    "key": "rzp_test_4aTzV8dhXyLyaT",
+                    "amount": totalPrice ,
                     "currency": "INR",
-                    "name": "Ecommerce",
+                    "name": "Fashion finds hub",
                     "description": "Order Payment",
                     "order_id": data['order_id'],
                     "prefill": {
@@ -50,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         const payment_id = response.razorpay_payment_id;
                         console.log(razorpay_order_id, payment_id)
 
-                        fetch("http://127.0.0.1:8000/handle-payment/", {
+                        fetch("http://127.0.0.1:3000/handle_payment/", {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

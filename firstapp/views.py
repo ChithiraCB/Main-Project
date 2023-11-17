@@ -617,66 +617,66 @@ def change_password(request):
 
 
 
-def view_cart(request):
-    cart_items = AddToCart2.objects.filter(user=request.user, is_active=True)
+# def view_cart(request):
+#     cart_items = AddToCart2.objects.filter(user=request.user, is_active=True)
 
-    # Calculate order summary
-    subtotal = sum(item.product.sale_price * item.quantity for item in cart_items)
-    shipping = 10  # Adjust this value as needed
-    total = subtotal + shipping
+#     # Calculate order summary
+#     subtotal = sum(item.product.sale_price * item.quantity for item in cart_items)
+#     shipping = 10  # Adjust this value as needed
+#     total = subtotal + shipping
     
-    context = {
-        'cart_items': cart_items,
-        'subtotal': subtotal,
-        'shipping': shipping,
-        'total': total,
-    }
-    return render(request, 'view_cart.html', context)
+#     context = {
+#         'cart_items': cart_items,
+#         'subtotal': subtotal,
+#         'shipping': shipping,
+#         'total': total,
+#     }
+#     return render(request, 'view_cart.html', context)
 
-def remove_from_cart(request, item_id):
-    item = get_object_or_404(AddToCart2, pk=item_id)
+# def remove_from_cart(request, item_id):
+#     item = get_object_or_404(AddToCart2, pk=item_id)
 
-    if item.user == request.user:
-        # Remove the item from the cart and the database
-        item.delete()
+#     if item.user == request.user:
+#         # Remove the item from the cart and the database
+#         item.delete()
 
-    # Recalculate order summary after item removal
-    cart_items = AddToCart2.objects.filter(user=request.user, is_active=True)
-    subtotal = sum(item.product.sale_price * item.quantity for item in cart_items)
-    shipping = 10  # Adjust this value as needed
-    total = subtotal + shipping
+#     # Recalculate order summary after item removal
+#     cart_items = AddToCart2.objects.filter(user=request.user, is_active=True)
+#     subtotal = sum(item.product.sale_price * item.quantity for item in cart_items)
+#     shipping = 10  # Adjust this value as needed
+#     total = subtotal + shipping
 
-    context = {
-        'cart_items': cart_items,
-        'subtotal': subtotal,
-        'shipping': shipping,
-        'total': total,
-    }
-    return render(request, 'view_cart.html', context)
+#     context = {
+#         'cart_items': cart_items,
+#         'subtotal': subtotal,
+#         'shipping': shipping,
+#         'total': total,
+#     }
+#     return render(request, 'view_cart.html', context)
 
-@never_cache
-@login_required(login_url='login')
-def add_to_cart(request, id):
-    product = get_object_or_404(Product1, pk=id)
+# @never_cache
+# @login_required(login_url='login')
+# def add_to_cart(request, id):
+#     product = get_object_or_404(Product1, pk=id)
     
-    # Check if the product is in stock
-    if product.stock <= 0:
-        messages.warning(request, f"{product.product_name} is out of stock.")
-    else:
-        # Get or create a cart item for the user and the selected product
-        cart_item, created = AddToCart2.objects.get_or_create(user=request.user, product=product)
+#     # Check if the product is in stock
+#     if product.stock <= 0:
+#         messages.warning(request, f"{product.product_name} is out of stock.")
+#     else:
+#         # Get or create a cart item for the user and the selected product
+#         cart_item, created = AddToCart2.objects.get_or_create(user=request.user, product=product)
         
-        if not created:
-            # If the cart item already exists, update its quantity and set it as active
-            cart_item.is_active = True
-            cart_item.quantity += 1
-            cart_item.save()
-        else:
-            # If it's a new item, set it as active
-            cart_item.is_active = True
-            cart_item.save()
+#         if not created:
+#             # If the cart item already exists, update its quantity and set it as active
+#             cart_item.is_active = True
+#             cart_item.quantity += 1
+#             cart_item.save()
+#         else:
+#             # If it's a new item, set it as active
+#             cart_item.is_active = True
+#             cart_item.save()
     
-    return redirect('view_cart')  
+#     return redirect('view_cart')  
 
 # def remove_from_cart(request, item_id):
 #     cart_item = get_object_or_404(AddToCart, id=item_id)
@@ -690,6 +690,79 @@ def add_to_cart(request, id):
 #         messages.error(request, "You don't have permission to remove this item from your cart.")
     
 #     return redirect('view_cart')
+
+
+@never_cache
+@login_required(login_url='login')
+def add_to_cart(request, id):
+    product = Product1.objects.get(pk=id)
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
+    
+    if not item_created:
+        cart_item.quantity += 1
+        cart_item.save()
+    
+    return redirect('view_cart')
+
+def remove_from_cart(request, id):
+    product = Product1.objects.get(pk=id)
+    cart = Cart.objects.get(user=request.user)
+    try:
+        cart_item = cart.cartitem_set.get(product=product)
+        if cart_item.quantity >= 1:
+             cart_item.delete()
+    except CartItem.DoesNotExist:
+        pass
+    
+    return redirect('view_cart')
+
+@login_required(login_url='login')
+def increase_cart_item(request, id):
+    product = Product1.objects.get(pk=id)
+    cart = request.user.cart
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+
+    cart_item.quantity += 1
+    cart_item.save()
+
+    return redirect('cart')
+
+@login_required(login_url='login')
+def decrease_cart_item(request, id):
+    product = Product1.objects.get(pk=id)
+    cart = request.user.cart
+    cart_item = cart.cartitem_set.get(product=product)
+
+    if cart_item.quantity > 1:
+        cart_item.quantity -= 1
+        cart_item.save()
+    else:
+        cart_item.delete()
+
+    return redirect('cart')
+
+
+def view_cart(request):
+    cart = request.user.cart
+    cart_items = CartItem.objects.filter(cart=cart)
+    return render(request, 'view_cart.html', {'cart_items': cart_items})
+
+def fetch_cart_count(request):
+    cart_count = 0
+    if request.user.is_authenticated:
+        cart = request.user.cart
+        cart_count = CartItem.objects.filter(cart=cart).count()
+    return JsonResponse({'cart_count': cart_count})
+
+def get_cart_count(request):
+    if request.user.is_authenticated:
+        cart_items = CartItem.objects.filter(cart=request.user.cart)
+        cart_count = cart_items.count()
+    else:
+        cart_count = 0
+    return cart_count
+
 
 def user_r(request):
     user_s = CustomUser.objects.exclude(user_types=1)
@@ -880,28 +953,45 @@ def total_users(request):
 #         'total_price':total_price,
 #     })
 
-def checkout(request):   
-    user_address = Address.objects.filter(customer=request.user).first()
+# def checkout(request):   
+#     user_address = Address.objects.filter(customer=request.user).first()
 
-    # Retrieve cart items
-    cart_items = AddToCart2.objects.filter(user=request.user)
+#     # Retrieve cart items
+#     cart_items = Cart.objects.filter(user=request.user)
 
-    # Calculate total amount and total price for each item
-    total = sum(item.product.sale_price * item.quantity for item in cart_items)
+#     # Calculate total amount and total price for each item
+#     total = sum(item.product.sale_price * item.quantity for item in cart_items)
     
-    # Calculate total price for all items
-    total_price = sum(item.product.sale_price * item.quantity for item in cart_items)
+#     # Calculate total price for all items
+#     total_price = sum(item.product.sale_price * item.quantity for item in cart_items)
 
-    # Add total_price to each cart item
-    for item in cart_items:
-        item.total_price = item.product.sale_price * item.quantity
+#     # Add total_price to each cart item
+#     for item in cart_items:
+#         item.total_price = item.product.sale_price * item.quantity
 
-    return render(request, 'checkout.html', {
-        'user_address': user_address,
+#     return render(request, 'checkout.html', {
+#         'user_address': user_address,
+#         'cart_items': cart_items,
+#         'total': total,
+#         'total_price': total_price,
+#     })
+
+def checkout(request):
+    cart_items = CartItem.objects.filter(cart=request.user.cart)
+    total_amount = sum(item.product.price * item.quantity for item in cart_items)
+
+    cart_count = get_cart_count(request)
+    # email = request.user.email
+    # full_name = request.user.profile.full_name
+
+    context = {
+        'cart_count': cart_count,
         'cart_items': cart_items,
-        'total': total,
-        'total_price': total_price,
-    })
+        'total_amount': total_amount,
+        # 'email':email,
+        # 'full_name': full_name
+    }
+    return render(request, 'checkout.html', context)
 
 def edit_address(request):
     user_profile = None
@@ -942,8 +1032,8 @@ def create_order(request):
         user = request.user
         cart = user.cart
 
-        cart_items = add_to_cart.objects.filter(cart=cart)
-        total_amount = sum(item.product.price * item.quantity for item in cart_items)
+        cart_items = CartItem.objects.filter(cart=cart)
+        total_amount = sum(item.product.sale_price * item.quantity for item in cart_items)
 
         try:
             order = Order.objects.create(user=user, total_amount=total_amount)
@@ -952,7 +1042,7 @@ def create_order(request):
                     order=order,
                     product=cart_item.product,
                     quantity=cart_item.quantity,
-                    item_total=cart_item.product.price * cart_item.quantity
+                    item_total=cart_item.product.sale_price * cart_item.quantity
                 )
 
             client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
@@ -972,40 +1062,38 @@ def create_order(request):
             print(str(e))
             return JsonResponse({'error': 'An error occurred. Please try again.'}, status=500)
 
+    elif request.method == 'GET':
+        # Handle GET requests here (e.g., return a simple HttpResponse)
+        return HttpResponse("This is a GET request response. You can customize this.")
+    
+    else:
+        return HttpResponse(status=405)  # Method Not Allowed for other HTTP methods
+
 @csrf_exempt
 def handle_payment(request):
     if request.method == 'POST':
+        data = json.loads(request.body)
+        razorpay_order_id = data.get('order_id')
+        payment_id = data.get('payment_id')
+
         try:
-            data = json.loads(request.body.decode('utf-8'))  # Ensure decoding with the correct charset
-            razorpay_order_id = data.get('order_id')
-            payment_id = data.get('payment_id')
+            order = Order.objects.get(payment_id=razorpay_order_id)
 
-            if not razorpay_order_id or not payment_id:
-                return JsonResponse({'message': 'Invalid data provided'})
+            client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+            payment = client.payment.fetch(payment_id)
 
-            try:
-                order = Order.objects.get(payment_id=razorpay_order_id)
+            if payment['status'] == 'captured':
+                order.payment_status = True
+                order.save()
+                user = request.user
+                user.cart.cartitem_set.all().delete()
+                return JsonResponse({'message': 'Payment successful'})
+            else:
+                return JsonResponse({'message': 'Payment failed'})
 
-                client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
-                payment = client.payment.fetch(payment_id)
+        except Order.DoesNotExist:
+            return JsonResponse({'message': 'Invalid Order ID'})
+        except Exception as e:
 
-                if payment['status'] == 'captured':
-                    order.payment_status = True
-                    order.save()
-                    user = request.user
-                    user.cart.cartitem_set.all().delete()
-                    return JsonResponse({'message': 'Payment successful'})
-                else:
-                    return JsonResponse({'message': 'Payment failed'})
-
-            except Order.DoesNotExist:
-                return JsonResponse({'message': 'Invalid Order ID'})
-            except Exception as e:
-                print(str(e))
-                return JsonResponse({'message': 'Server error, please try again later.'})
-
-        except json.JSONDecodeError as e:
-            print(f'JSONDecodeError: {e}')
-            return JsonResponse({'message': 'Invalid JSON payload'})
-
-    return JsonResponse({'message': 'Invalid request method'})
+            print(str(e))
+            return JsonResponse({'message': 'Server error, please try again later.'})

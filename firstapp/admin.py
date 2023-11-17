@@ -10,6 +10,8 @@ from .models import WishlistItem
 from .models import AddToCart2
 from .models import Profile
 from .models import Address
+from .models import Cart
+from .models import CartItem
 from .models import Order
 from .models import OrderItem
 
@@ -32,5 +34,7 @@ admin.site.register(AddToCart2)
 admin.site.register(WishlistItem)
 admin.site.register(Profile)
 admin.site.register(Address)
+admin.site.register(Cart)
+admin.site.register(CartItem)
 admin.site.register(Order)
 admin.site.register(OrderItem)
