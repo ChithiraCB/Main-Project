@@ -19,6 +19,10 @@ from django.conf import settings
 def index(request):
     # if request.user.is_authenticated:
      return render(request, 'index.html')
+
+def header(request):
+    # if request.user.is_authenticated:
+     return render(request, 'header.html')
  
 
 def register_user(request):
@@ -201,6 +205,40 @@ def address(request):
 
 
     return render(request, 'Customer_Profile.html', {'user_profile': user_profile})
+
+def edit_address(request):
+    user_profile = None
+    if request.user.is_authenticated:
+        user_profile, created = Address.objects.get_or_create(customer=request.user)
+
+    if request.method == 'POST':
+        full_name = request.POST.get('fullName')
+        phone = request.POST.get('phone')
+        pincode = request.POST.get('pincode')
+        address = request.POST.get('address')
+        landmark = request.POST.get('landmark')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        address_type = request.POST.get('address-type')
+
+        # Check if the Address object exists
+        if not created:
+            # Update the user profile with form data
+            user_profile.fullName = full_name
+            user_profile.phone = phone
+            user_profile.pincode = pincode
+            user_profile.address = address
+            user_profile.landmark = landmark
+            user_profile.city = city
+            user_profile.state = state
+            user_profile.address_type = address_type
+            user_profile.save()
+
+            messages.success(request, 'Address updated successfully.')
+            return redirect('profile')  # Redirect to the profile page or another appropriate page after editing
+
+    return render(request, 'edit_address.html', {'user_profile': user_profile})
+
 
         
 
@@ -722,11 +760,11 @@ def increase_cart_item(request, id):
     product = Product1.objects.get(pk=id)
     cart = request.user.cart
     cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    if cart_item.quantity < product.stock:
+     cart_item.quantity += 1
+     cart_item.save()
 
-    cart_item.quantity += 1
-    cart_item.save()
-
-    return redirect('cart')
+    return redirect('view_cart')
 
 @login_required(login_url='login')
 def decrease_cart_item(request, id):
@@ -740,13 +778,18 @@ def decrease_cart_item(request, id):
     else:
         cart_item.delete()
 
-    return redirect('cart')
+    return redirect('view_cart')
 
 
 def view_cart(request):
     cart = request.user.cart
     cart_items = CartItem.objects.filter(cart=cart)
-    return render(request, 'view_cart.html', {'cart_items': cart_items})
+    for item in cart_items:
+        item.total_price = item.product.sale_price * item.quantity
+    
+    total_amount = sum(item.total_price for item in cart_items)
+
+    return render(request, 'view_cart.html', {'cart_items': cart_items,'total_amount': total_amount})
 
 def fetch_cart_count(request):
     cart_count = 0
@@ -993,38 +1036,6 @@ def checkout(request):
     }
     return render(request, 'checkout.html', context)
 
-def edit_address(request):
-    user_profile = None
-    if request.user.is_authenticated:
-        user_profile, created = Address.objects.get_or_create(customer=request.user)
-
-    if request.method == 'POST':
-        full_name = request.POST.get('fullName')
-        phone = request.POST.get('phone')
-        pincode = request.POST.get('pincode')
-        address = request.POST.get('address')
-        landmark = request.POST.get('landmark')
-        city = request.POST.get('city')
-        state = request.POST.get('state')
-        address_type = request.POST.get('address-type')
-
-        # Check if the Address object exists
-        if not created:
-            # Update the user profile with form data
-            user_profile.fullName = full_name
-            user_profile.phone = phone
-            user_profile.pincode = pincode
-            user_profile.address = address
-            user_profile.landmark = landmark
-            user_profile.city = city
-            user_profile.state = state
-            user_profile.address_type = address_type
-            user_profile.save()
-
-            messages.success(request, 'Address updated successfully.')
-            return redirect('profile')  # Redirect to the profile page or another appropriate page after editing
-
-    return render(request, 'edit_address.html', {'user_profile': user_profile})
 
 @csrf_exempt
 def create_order(request):
@@ -1033,7 +1044,7 @@ def create_order(request):
         cart = user.cart
 
         cart_items = CartItem.objects.filter(cart=cart)
-        total_amount = sum(item.product.sale_price * item.quantity for item in cart_items)
+        total_amount = sum(item.product.price * item.quantity for item in cart_items)
 
         try:
             order = Order.objects.create(user=user, total_amount=total_amount)
@@ -1042,7 +1053,7 @@ def create_order(request):
                     order=order,
                     product=cart_item.product,
                     quantity=cart_item.quantity,
-                    item_total=cart_item.product.sale_price * cart_item.quantity
+                    item_total=cart_item.product.price * cart_item.quantity
                 )
 
             client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
@@ -1062,12 +1073,60 @@ def create_order(request):
             print(str(e))
             return JsonResponse({'error': 'An error occurred. Please try again.'}, status=500)
 
-    elif request.method == 'GET':
-        # Handle GET requests here (e.g., return a simple HttpResponse)
-        return HttpResponse("This is a GET request response. You can customize this.")
+
+# @csrf_exempt
+# def handle_payment(request):
+#     if request.method == 'POST':
+#         data = json.loads(request.body)
+#         razorpay_order_id = data.get('order_id')
+#         payment_id = data.get('payment_id')
+
+#         try:
+#             order = Order.objects.get(payment_id=razorpay_order_id)
+
+#             client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+#             payment = client.payment.fetch(payment_id)
+
+#             if payment['status'] == 'captured':
+#                 order.payment_status = True
+#                 order.save()
+#                 place_order(request.user.email)
+
+#                 user = request.user
+#                 user.cart.cartitem_set.all().delete()
+#                 return JsonResponse({'message': 'Payment successful'})
+#             else:
+#                 return JsonResponse({'message': 'Payment failed'})
+
+#         except Order.DoesNotExist:
+#             return JsonResponse({'message': 'Invalid Order ID'})
+#         except Exception as e:
+
+#             print(str(e))
+#             return JsonResponse({'message': 'Server error, please try again later.'})
+
+# @login_required(login_url='login')
+# def place_order(request):
+#     # Your existing code to place the order
+
+#     # Fetch the user's email
+#     user_email = request.user.email
+
+#     # Send order confirmation email
+#     subject = 'Order Confirmation'
+#     message = 'Thank you for placing your order!'
+#     from_email = 'chithiracb2024a@mca.ajce.in'
+#     recipient_list = [user_email]
+#     send_mail(subject, message, from_email, recipient_list)
+
+# def send_order_confirmation_email(user_email):
+#     subject = 'Order Confirmation'
+#     message = 'Thank you for placing your order! Your payment was successful.'
+#     from_email = 'chithiracb2024a@mca.ajce.in'
+#     recipient_list = [user_email]
     
-    else:
-        return HttpResponse(status=405)  # Method Not Allowed for other HTTP methods
+#     send_mail(subject, message, from_email, recipient_list)
+
 
 @csrf_exempt
 def handle_payment(request):
@@ -1085,6 +1144,12 @@ def handle_payment(request):
             if payment['status'] == 'captured':
                 order.payment_status = True
                 order.save()
+
+                # Send order confirmation email
+                # send_order_confirmation_email(request.user.email)
+                # print("Order confirmation email sent successfully!")
+
+                # Clear the user's cart after successful payment
                 user = request.user
                 user.cart.cartitem_set.all().delete()
                 return JsonResponse({'message': 'Payment successful'})
@@ -1094,6 +1159,6 @@ def handle_payment(request):
         except Order.DoesNotExist:
             return JsonResponse({'message': 'Invalid Order ID'})
         except Exception as e:
-
             print(str(e))
             return JsonResponse({'message': 'Server error, please try again later.'})
+

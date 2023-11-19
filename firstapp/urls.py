@@ -25,7 +25,7 @@ urlpatterns = [
     path('add_to_cart/<int:id>/', views.add_to_cart, name='add_to_cart'),
     path('increase-cart-item/<int:id>/', views.increase_cart_item, name='increase-cart-item'),
     path('decrease-cart-item/<int:id>/', views.decrease_cart_item, name='decrease-cart-item'),
-    path('remove_from_cart/<int:id>/', views.remove_from_cart, name='remove_from_cart'),
+    path('remove-from-cart/<int:id>/', views.remove_from_cart, name='remove-from-cart'),
     #path('remove_from_cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
      path('user_r', views.user_r, name='user_r'),
      path('delete_user/<int:user_id>/', views.delete_user, name='delete_user'),
@@ -44,6 +44,9 @@ urlpatterns = [
     path('create_order/',views.create_order, name='create_order'),
     path('fetch-cart-count/', views.fetch_cart_count, name='fetch-cart-count'),
     path('get_cart_count/', views.get_cart_count, name='get_cart_count'),
+    path('header/', views.header, name='header'),
+
+
 
      path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),
      path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),

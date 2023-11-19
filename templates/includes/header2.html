@@ -1,0 +1,312 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Add your head content here (meta tags, title, links to stylesheets, etc.) -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <link rel="stylesheet" href="{% static 'css/product_list.css' %}">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE-edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+    <title>fashion finds hub</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+    <!-- Font Awesome styles -->
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+    <!-- jQuery UI CSS for the date picker -->
+    <link rel="stylesheet" type="text css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+    <!-- Responsive style -->
+    <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
+    <link href="{% static 'css/modal.css' %}" rel="stylesheet">
+    <style>
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f7444e; /* Adjust the color as needed */
+            padding: 20px 20px;
+            color: #fff; /* Text color */
+        }
+
+        /* Style the logo */
+        .logo img {
+            width: 100px; /* Adjust the logo size */
+        }
+
+        /* Style the navigation menu */
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #fff; /* Link color */
+        }
+
+        /* Style the search bar */
+        .search input[type="text"] {
+            padding: 5px;
+            border: none;
+        }
+
+        .search button {
+            background-color: #ff0000; /* Button background color */
+            color: #fff; /* Button text color */
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Style the account links and shopping cart icon */
+        .account a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .checkout-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .shipping-address-container,
+        .price-details-container {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .shipping-address-container {
+            border-right: 1px solid #ddd;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+        a[href*="view_cart"] i.fa-shopping-cart {
+            color: white; /* Red color for the shopping cart icon */
+            font-size: 22px; /* Adjust the font size as needed */
+            margin-right: 10px; /* Adjust the right margin as needed */
+            
+        }
+        
+        /* Styling for the heart icon */
+        a[href*="wishlist"] i.fa-heart {
+            color: white; /* Red color for the heart icon */
+            font-size: 22px; /* Adjust the font size as needed */
+            margin-right: 10px; /* Adjust the right margin as needed */
+            
+        }
+        .checkout-steps {
+            display: flex;
+            align-items: center;
+            color: #333;
+        }
+        
+        .step {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .step:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .step.completed {
+            background-color: #f7444e;
+            color: #fff;
+        }
+        
+        .step-number {
+            font-size: 18px;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .step-label {
+            font-size: 12px;
+        }
+        .profile-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        /* Style the dropdown content (hidden by default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f0f0f0; /* Background color for the dropdown */
+            min-width: 160px;
+            z-index: 1;
+        }
+        
+        /* Style the dropdown links */
+        .dropdown-content a {
+            color: #f7444e;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        
+        /* Change the link color on hover */
+        .dropdown-content a:hover {
+            background-color: ; /* Background color on hover */
+        }
+        
+         /*Display the dropdown content when hovering over the profile icon */
+        .profile-dropdown:hover .dropdown-content {
+            display: block;
+        }
+        /* Styles for the main content */
+        main {
+          padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+      
+      <div class="back-button">
+            <a href="{% url 'userhome' %}">
+                <span>&larr;</span>
+            </a>
+            
+         </div> 
+         {% comment %} <div class="reload-button">
+            <a href="#" onclick="location.reload(true)">
+                <span>&#8635;</span>
+            </a>
+        </div> {% endcomment %}
+        <nav>
+            <div class="checkout-steps">
+                <div class="step">
+                    
+                    <span class="step-label">Cart</span>
+                </div> 
+                <div class="step completed">
+                  
+                    <span class="step-label">Checkout</span>
+                </div>
+                <div class="step">
+                    
+                    <span class="step-label">Payment</span>
+                </div>
+                
+            </div>
+            {% comment %} <ul>
+                <li><a href="{% url 'userhome' %}"><strong>HOME</strong></a></li>
+                <li class="dropdown">
+                    <a href="#"><strong>ORNAMENTS</strong></a>
+                    <div class="dropdown-content">
+                        <a href="{% url 'products_by_subcategory' 'Bangles' %}">BANGLES</a>
+                        <a href="{% url 'products_by_subcategory' 'Earrings' %}">EARRINGS</a>
+                        <a href="{% url 'products_by_subcategory' 'Neckpieces' %}">NECKPIECES</a>
+                    </div>
+                </li>
+                 {% endcomment %}
+                
+                <!--<li><a href="#">Home & Living</a></li>
+                <li><a href="#">Brands</a></li>-->
+                {% comment %} <li class="dropdown">
+                    <a href="#"><strong>BAGS</strong></a>
+                    <div class="dropdown-content">
+                        <a href="#">CLUTCHES</a>
+                        <a href="#">HAND BAGS</a>
+                        
+                    </div>
+                </li> {% endcomment %}
+            </ul>
+        </nav>
+        {% comment %} <div class="search">
+            <input type="text" placeholder="Search">
+            <button>Search</button>
+        </div> {% endcomment %}
+        			<div class="account">
+   
+	<div class="profile-dropdown">
+    <a href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ffffff">
+            <circle cx="12" cy="12" r="11" stroke="#ffffff" stroke-width="2" fill="none"/>
+            <path d="M12 16C10.48 16 9.33 17.15 9.33 18.67H14.67C14.67 17.15 13.52 16 12 16ZM12 14C14.21 14 16 15.79 16 18.67H8C8 15.79 9.79 14 12 14ZM12 12C9.86 12 8.17 10.21 8.17 8S9.86 4 12 4 15.83 5.79 15.83 8 14.14 12 12 12Z" fill="#ffffff"/>
+          </svg>
+    </a>
+    <div class="dropdown-content">
+        <a href="{% url 'Customer_Profile' %}">Profile</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </div></div>
+    <a href="#"><i class="fa fa-shopping-cart"></i></a>
+    <a href="{% url 'wishlist'  %}"><i class="fa fa-heart"></i></a>
+	
+
+
+
+
+        </svg>
+    </a>
+</div>
+
+        </div>
+    </header>
+
+<body>
+  
+        {% block content %}
+  <!-- content -->
+  {% endblock %}
+
+   
+</body>

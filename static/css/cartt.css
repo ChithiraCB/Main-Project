@@ -1,0 +1,139 @@
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-left: 10px;
+    margin-top:10px;
+}
+
+.cart-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+/* .quantity-btn {
+    background-color: #ff6347;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    
+}*/
+
+.cart-item {
+    display: flex;
+    flex-direction: column; 
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-item-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cart-item-name {
+    font-weight: bold;
+    margin-right: 10px;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* .remove-from-cart-btn {
+    background-color: #e74c3c;
+    
+    
+    padding: 5px 10px;
+    
+}
+
+.quantity-btn {
+    background-color: #e74c3c;
+    width:10px;
+}*/
+
+.cart-item-quantity {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+} 
+
+/* Common styles for quantity buttons */
+.quantity-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+   
+    margin-right: 5px; 
+   /* Adjust spacing between buttons */
+}
+
+/* Styles for increase button */
+.increase-quantity {
+    background-color: #28a745;
+     /* Green color for increase button */
+}
+
+/* Styles for decrease button */
+.decrease-quantity {
+    background-color:  #28a745; /* Red color for decrease button */
+}
+
+/* Styles for remove button */
+.remove-from-cart-btn {
+    background-color: #ff6347; /* Coral color for remove button */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+/* Hover effect for all buttons 
+.quantity-btn:hover,
+.remove-from-cart-btn:hover {
+    background-color: #2c3e50; /
+}*/
+
+.cart-item-price {
+    font-weight: bold;
+}
+
+.continue-shopping-link {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #3498db;
+    font-weight: bold;
+}
+
+.continue-shopping-link:hover {
+    text-decoration: underline;
+}
+
+.checkout-button {
+    display: inline-block;
+    background-color: #28a745; 
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    margin-top: 20px;
+    margin-left: 150px;
+    text-decoration: none;
+    font-weight: bold;
+    
+}
+
+.checkout-button {
+    background-color: #218838;
+}
