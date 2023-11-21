@@ -8,35 +8,36 @@ body {
 
 /* Add these styles to your existing CSS */
 
+/* Add these styles to your existing CSS */
+
 .checkout-container {
     display: flex;
     justify-content: space-between;
     margin: 0 auto;
-    max-width: 1500px; /* Set the maximum width as needed */
+    max-width: 900px; /* Adjust the maximum width as needed */
 }
 
-/* .shipping-container,
+.shipping-container,
 .order-summary-container {
-    max-width: 500px;
-    width: 100%; 
+    max-width: 700px; /* Adjust the maximum width as needed */
+    width: 100%; /* Use 100% width to take up the available space */
     padding: 40px;
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
 }
-*/
 
-@media (max-width: 768px) {
-    .checkout-container {
-        flex-direction: column;
-    }
 
-   /* .shipping-container,
+
+    
+
+ /* .shipping-container,
     .order-summary-container {
         margin: 20px 0;
-    }
-}
- */
+    } 
+} */
+
 
 
 h1 {
@@ -104,7 +105,3 @@ button#rzp-button1:active {
 #order-success-message {
     color: green;
 }
-
-
-
-   

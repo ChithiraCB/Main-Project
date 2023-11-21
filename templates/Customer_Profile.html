@@ -1,634 +1,79 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
+{% extends 'includes/header2.html' %}
 
-<head>
-    <!-- Basic -->
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE-edge" />
-    <!-- Mobile Metas -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <!-- Site Metas -->
-    <meta name="keywords" content="" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="">
-    <title>fashion finds hub</title>
-    <!-- bootstrap core css -->
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
-    <!-- font awesome style -->
-    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
-    <!-- jQuery UI CSS for the date picker -->
-    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <!-- Custom styles for this template -->
-    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
-    <!-- responsive style -->
-    <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-    <style>
-        /* Style for the form container */
-        .form-container {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 20px;
-            width: 80%;
-            margin: 0 auto;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
+{% block content %}
 
-        /* Style for form labels */
-        .form-group label {
-            font-weight: bold;
-        }
+<section class="section-conten padding-y bg">
 
-        /* Style for form inputs */
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-        }
+{% comment %} {% include 'includes/alerts.html' %} {% endcomment %}
+<div class="container">
+	<div class="row">
+	{% include 'includes/dashboard_sidebar.html' %}
+	<main class="col-md-9">
+		<article class="card">
+		<header class="card-header">
+			<strong class="d-inline-block mr-3">Edit your profile</strong>
 
-        /* Style for form buttons */
-        .btn-primary {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+		</header>
+		<div class="card-body">
+			
+			<div class="row">
+			<div class="col-md-12">
+				<form action="{% url 'edit_profile' %}" method="POST" enctype="multipart/form-data">
+					{% csrf_token %}
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label>FULLNAME</label>
+							{{user_form.fullName}}
+						</div>
+						
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label>PHONE NUMBER</label>
+							{{user_form.phone}}
+						</div>
+						
+					</div>
+					<div class="form-group">
+						<label>ADDRESS LINE 1</label>
+						{{profile_form.address_line_1}}
+					</div>
+					<div class="form-group">
+						<label>ADDRESS LINE 2</label>
+						{{profile_form.address_line_2}}
+					</div>
+					
+						<div class="form-group">
+							<label>CITY</label>
+							{{profile_form.city}}
+						</div>
+                        <div class="form-group">
+							<label>PINCODE</label>
+							{{profile_form.pincode}}
+						</div>
+						<div class="form-group ">
+							<label>STATE</label>
+							{{profile_form.state}}
+						</div>
+						<div class="form-group">
+							<label>COUNTRY</label>
+							{{profile_form.country}}
+						</div>
+					
+					<input type="submit" value="Save" class="btn btn-primary">
+				</form>
+			</div>
 
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
+			</div> <!-- row.// -->
+		</div> <!-- card-body .// -->
 
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        
-        /* Add your sidebar styles here */
-        .sidebar {
-            width: 20%;
-            background-color: #f0f0f0;
-            padding: 20px;
-            position: fixed;
-            height: 100%;
-            overflow: auto;
-        }
-
-        .sidebar-item {
-            margin-top:5px;
-            margin-bottom: 20px; 
-            padding: 10px;
-            background-color: #ccc;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .sidebar-item:hover {
-            background-color: #ddd;
-        }
-
-        .account-settings {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            padding: 20px;
-        }
-
-        .account-box {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-top: 10px;
-        }
-
-        /* Additional styles for content on the right side */
-        .content {
-            margin-left: 20%;
-            padding: 20px;
-        }
-        /* Additional styles for the user profile box */
-        .user-profile-box {
-            padding: 2px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            margin-top: 2px;
-        }
-
-        /* Style for the user profile */
-        .user-profile {
-            text-align: center;
-        }
-
-        .user-profile img {
-            width: 80px; /* Adjust the width as needed */
-            height: 80px; /* Adjust the height as needed */
-            border-radius: 50%;
-        }
-
-        .user-profile p {
-            font-size: 18px;
-            margin-top: 10px;
-            font-weight: bold;
-            color: #003300; /* Adjust the color as needed */
-        }
-
-        /* Additional styles for the sidebar items */
-        .sidebar-item {
-            margin-bottom: 20px;
-            padding: 20px;
-            background-color: #ccc;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            bottom: 0.5;
-            margin-top: 5px;
-        }
-
-        .sidebar-item:hover {
-            background-color: #ddd;
-            bottom: 0.5;
-        }
-        /* Style the header */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #f7444e; /* Adjust the color as needed */
-            padding: 20px 20px;
-            color: #fff; /* Text color */
-        }
-
-        /* Style the logo */
-        .logo img {
-            width: 100px; /* Adjust the logo size */
-        }
-
-        /* Style the navigation menu */
-        nav ul {
-            list-style: none;
-        }
-
-        nav ul li {
-            display: inline;
-            margin-right: 20px;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #fff; /* Link color */
-        }
-
-        /* Style the search bar */
-        .search input[type="text"] {
-            padding: 5px;
-            border: none;
-        }
-
-        .search button {
-            background-color: #ff0000; /* Button background color */
-            color: #fff; /* Button text color */
-            padding: 5px 10px;
-            border: none;
-            cursor: pointer;
-        }
-
-        /* Style the account links and shopping cart icon */
-        .account a {
-            color: #fff;
-            text-decoration: none;
-            margin-left: 20px;
-        }
-        /* Style the dropdown container */
-.profile-dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-/* Style the dropdown content (hidden by default) */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f0f0f0; /* Background color for the dropdown */
-    min-width: 160px;
-    z-index: 1;
-}
-
-/* Style the dropdown links */
-.dropdown-content a {
-    color: #f7444e;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-/* Change the link color on hover */
-.dropdown-content a:hover {
-    background-color: ; /* Background color on hover */
-}
-
- /*Display the dropdown content when hovering over the profile icon */
-.profile-dropdown:hover .dropdown-content {
-    display: block;
-}
-
-    </style>
-</head>
-
-<body>
-    <header>
-        <div class="logo">
-            <img src="" alt="">
-        </div>
-        <nav>
-            <ul>
-                <li><a href="{% url 'userhome' %}"><strong>HOME</strong></a></li>
-                <li class="dropdown">
-                    <a href="#"><strong>ORNAMENTS</strong></a>
-                    <div class="dropdown-content">
-                        <a href="{% url 'products_by_subcategory' 'Bangles' %}">BANGLES</a>
-                        <a href="{% url 'products_by_subcategory' 'Earrings' %}">EARRINGS</a>
-                        <a href="{% url 'products_by_subcategory' 'Neckpieces' %}">NECKPIECES</a>
-                        {% comment %} <a href="#">RING</a> {% endcomment %}
-                    </div>
-                </li>
-                
-                <!--<li><a href="#">Home & Living</a></li>
-                <li><a href="#">Brands</a></li>-->
-                {% comment %} <li class="dropdown">
-                    <a href="#"><strong>BAGS</strong></a>
-                    <div class="dropdown-content">
-                        <a href="#">CLUTCHES</a>
-                        <a href="#">HAND BAGS</a>
-                        
-                    </div>
-                </li> {% endcomment %}
-            </ul>
-        </nav>
-        {% comment %} <div class="search">
-            <input type="text" placeholder="Search">
-            <button>Search</button>
-        </div> {% endcomment %}
-        			<div class="account">
-   
-	<div class="profile-dropdown">
-    <a href="#">
-        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="#ffffff">
-            <path d="M12 2c-4.42 0-8 3.58-8 8 0 1.63.49 3.16 1.38 4.43 1.71-1.95 4.28-3.24 7.27-3.24s5.56 1.29 7.27 3.24c.89-1.27 1.38-2.8 1.38-4.43 0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-3.31 2.69-6 6-6s6 2.69 6 6-2.69 6-6 6zm6 2h-1.65c-1.42-.49-2.83-.72-4.35-.72s-2.93.23-4.35.72h-1.65c-.83 0-1.51.68-1.51 1.51s.68 1.51 1.51 1.51h1.65c1.42.49 2.83.72 4.35.72s2.93-.23 4.35-.72h-1.65c.83 0 1.51-.68 1.51-1.51s-.68-1.51-1.51-1.51zm-6-1.5c-2.48 0-4.73.97-6.42 2.58 1.25 1.81 3.44 3 5.92 3s4.67-1.19 5.92-3c-1.69-1.61-3.94-2.58-6.42-2.58z"/>
-        </svg>
-    </a>
-    <div class="dropdown-content">
-        <a href="{% url 'Customer_Profile' %}">Profile</a>
-        <a href="{% url 'logout' %}">Logout</a>
-    </div>
-    <a href="{% url 'view_cart'  %}"><i class="fa fa-shopping-cart"></i></a>
-    <a href="{% url 'wishlist'  %}"><i class="fa fa-heart"></i></a>
-	
+		</article> <!-- order-group.// -->
+	</main>
+</div> <!-- row.// -->
 </div>
 
 
+</section>
 
-        </svg>
-    </a>
-</div>
-
-        </div>
-    </header>
-	 <div class="sidebar">
-        <!-- Add your filter options and content for the sidebar here -->
-        <h3>Ornaments</h3>
-    <ul>
-        <li><a href="{% url 'products_by_subcategory' 'Bangles' %}">Bangles</a></li>
-        <li><a href="{% url 'products_by_subcategory' 'Earrings' %}">Earrings</a></li>
-        <li><a href="{% url 'products_by_subcategory' 'Neckpieces' %}">Neckpieces</a></li>
-    </ul>
-    </div> 
-    
-    
-    <div class="sidebar">
-        <div class="sidebar-item">
-        <div class="user-profile-box">
-            <div class="user-profile">
-                <img src="{% static 'images/profile.jpeg' %}" alt="User Avatar">
-                <p>
-                    {% if user.is_authenticated %}
-                        Hello {{ user.fullName }}
-                    {% endif %}
-                </p>
-            </div>
-        </div>
-    </div>
-        
-
-        <div class="sidebar-item">MY ORDERS</div>
-        <div class="sidebar-item">
-            ACCOUNT SETTINGS
-            <div class="account-box">
-                {% comment %} <div class="content-item" onclick="loadProfileForm()">Profile Information</div> {% endcomment %}
-                <div class="content-item" onclick="loadProfileForm()" id="profile-info">Profile Information</div>
-
-            </div>
-            <div class="account-box">
-                <div class="content-item" onclick="loadManageAddressesForm()">Manage Address</div>
-            </div>
-            <div class="account-box">
-                 <a href="{% url 'change_password' %}"> 
-                    <div class="content-item">Reset Password</div>
-                </a> 
-
-                
-            </div> 
-           
-            
-            
-        </div>
-        <div class="sidebar-item">PAYMENT</div>
-    </div>
-
-    <!-- Middle Content -->
-    <div class="content" id="middle-content">
-        <!-- Content will be loaded here dynamically using JavaScript -->
-    </div>
-
-    <!-- JavaScript to load the form and initialize the date picker -->
-    
-    <script>
-        function loadProfileForm() {
-            // You can load your form content here
-             
-            const middleContent = document.getElementById("middle-content");
-            middleContent.innerHTML = ` 
-                <div class="form-container">
-                    <h2>Profile Information Form</h2>
-                    <form id="profileForm" method="POST" onsubmit="return validateProfileForm();">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="fullName">Full Name</label>
-                            
-                            <input id="fullName" type="text" name="fullName"  required value="{% if request.user.is_authenticated %}{{ user_profile.customer.fullName }}{% endif %}" />
-
-                        </div>
-
-                        <!-- Add the Gender field here as radio buttons with labels -->
-                        <!-- Add the Gender field here as radio buttons -->
-                        <div class="form-group">
-                            <label>Your Gender</label><br>
-                            <div class="form-check form-check-inline">
-                                <input type="radio" id="male" name="gender" class="form-check-input" value="{% if request.user.is_authenticated %}{{ user_profile.gender }}{% endif %}" required>
-                                <label for="male" class="form-check-label">Male</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input type="radio" id="female" name="gender" class="form-check-input" value="female" required>
-                                <label for="female" class="form-check-label">Female</label>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="date_of_birth">Date of Birth</label>
-                            <input type="text" id="date_of_birth" name="date_of_birth" class="form-control" placeholder="YYYY-MM-DD" required value="{% if request.method == 'POST' %}{{ request.POST.date_of_birth }}{% elif request.user.is_authenticated %}{{ user_profile.date_of_birth }}{% endif %}">
-
-                        </div>
-                        
-
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" class="form-control" required value="{% if request.user.is_authenticated %}{{ user_profile.customer.username }}{% endif %}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="phone">Phone</label>
-                            <input type="tel" id="phone" name="phone" class="form-control"  required  value= "{% if request.user.is_authenticated %}{{ user_profile.customer.phone }}{% endif %}">
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Save</button>
-                        <button type="reset" class="btn btn-primary">Reset</button>
-                    </form>
-                </div>
-            `;
-
-            // Initialize the date picker
-            
-        }
-
-        function loadManageAddressesForm() {
-            const middleContent = document.getElementById("middle-content");
-            middleContent.innerHTML = `
-                <div class="form-container" id="address-form">
-                    <h2>Manage Addresses</h2>
-                    <form method="POST" action="{% url 'address' %}" onsubmit="return validateAddressForm();">
-
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="fullName">Full Name</label>
-                            {% comment %}  value="{{ user_profile.fullName }}" required> {% endcomment %}
-                            <input type="text" id="fullName" name="fullName" class="form-control" value = "{% if user_profile %}{{ user_profile.fullName }}{% endif %}" required>
-
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" class="form-control" required value="{% if user_profile %}{{ user_profile.phone }}{% endif %}">
-                        </div>
-                        <div class="form-group">
-                            <label for="pincode">PIN Code</label>
-                            <input type="text" id="pincode" name="pincode" class="form-control" required  value="{% if user_profile %}{{ user_profile.pincode }}{% endif %}">
-                        </div>
-                        <div class="form-group">
-                            <label for="address">Address</label>
-                            <input type="text" id="address" name="address" class="form-control" required value="{% if user_profile %}{{ user_profile.address }}{% endif %} ">
-                        </div>
-                        <div class="form-group">
-                            <label for="landmark">Landmark (Optional)</label>
-                            <input type="text" id="landmark" name="landmark" class="form-control" value="{% if user_profile %}{{ user_profile.landmark }}{% endif %}">
-                        </div>
-                        <div class="form-group">
-                            <label for="city">City</label>
-                            <input type="text" id="city" name="city" class="form-control" required value="{% if user_profile %}{{ user_profile.city }}{% endif %}";">
-                        </div>
-                        <div class="form-group">
-                            <label for="state">State</label>
-                            <input type="text" id="state" name="state" class="form-control" required value="{% if user_profile %}{{ user_profile.state }}{% endif %}">
-                        </div>
-                        <div class="form-group">
-                            <label for="address-type">Address Type</label>
-                            <select id="address-type" name="address-type" class="form-control" required value="{% if user_profile %}{{ user_profile.address_type }}{% endif %}"">
-                                <option value="home">Home</option>
-                                <option value="work">Work</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Save Address</button>
-                        <button type="reset" class="btn btn-primary">Reset</button>
-                        <button type="update" class="btn btn-primary">Update</button>
-
-                    </form>
-                </div>
-            `;
-        }
-
-        function validateFullNameInput(inputElement) {
-            const fullNameRegex = /^[A-Za-z ]+$/;
-            if (!fullNameRegex.test(inputElement.value)) {
-                inputElement.setCustomValidity("Full Name should only contain alphabets and spaces.");
-            } else {
-                inputElement.setCustomValidity("");
-            }
-        }
-
-        function validatePhoneNumberInput(inputElement) {
-            const phoneRegex = /^\d{10}$/;
-            if (!phoneRegex.test(inputElement.value)) {
-                inputElement.setCustomValidity("Phone number should be numeric and have exactly 10 digits.");
-            } else {
-                inputElement.setCustomValidity("");
-            }
-        }
-        function validateDateOfBirthInput(inputElement) {
-            const selectedDate = new Date(inputElement.value);
-            const currentDate = new Date();
-            if (
-                selectedDate.getFullYear() >= currentDate.getFullYear() ||
-                selectedDate.getFullYear() > 2023
-            ) {
-                inputElement.setCustomValidity("Invalid date of birth. Year should be less than 2023.");
-            } else {
-                inputElement.setCustomValidity("");
-            }
-        }
-
-        function validateProfileForm()
-         {
-            const isFullNameValid = validateFullName();
-            const isPhoneNumberValid = validatePhoneNumber();
-
-            if (isFullNameValid && isPhoneNumberValid) {
-                // Form is valid, you can submit it or perform other actions here
-                return true;
-            } else {
-                // Form is not valid, prevent submission
-                return false;
-            }
-            $("#date_of_birth").datepicker({
-                dateFormat: 'yy-mm-dd', // Set the desired date format
-                changeMonth: true,
-                changeYear: true,
-                yearRange: "1900:+nn", // You can adjust the range as needed
-            });
-        }
-        
-
-        function validateAddressForm() {
-            // Add any additional validation for the address form here if needed
-        }
-       
-            // Add this JavaScript code to your existing script
-            var form = document.getElementById('address-form');
-            document.addEventListener("DOMContentLoaded", function () {
-                const profileInfoItem = document.getElementById("profile-info");
-        
-                profileInfoItem.addEventListener("click", function () {
-                    loadProfileForm();
-                });
-            });
-        
-            // Rest of your JavaScript code...
-            document.addEventListener("DOMContentLoaded", function () {
-                const profileInfoItem = document.getElementById("profile-info");
-                const manageAddressItem = document.getElementById("manage-address"); // Add an ID to the corresponding sidebar item
-            
-                profileInfoItem.addEventListener("click", function () {
-                    loadProfileForm();
-                });
-            
-                manageAddressItem.addEventListener("click", function () {
-                    loadManageAddressesForm();
-                });
-            });
-         
-            {% comment %} function validatePincode(input) {
-                var pincode = input.value.trim();
-                var pincodeRegex = /^\d{6}$/;
-                if (!pincodeRegex.test(pincode)) {
-                    input.setCustomValidity('PIN Code must be 6 digits.');
-                } else {
-                    input.setCustomValidity('');
-                }
-            }
-                function validateAddress(input) {
-                    var address = input.value.trim();
-                    var addressRegex = /^[a-zA-Z ,]+$/;
-                    if (!addressRegex.test(address)) {
-                        input.setCustomValidity('Address should not contain numbers and should only contain alphabets. Comma is allowed.');
-                    } else {
-                        input.setCustomValidity('');
-                    }
-                } {% endcomment %}
-            
-                function validateLandmark(input) {
-                    // No specific validation for landmark, as it is optional
-                    input.setCustomValidity('');
-                }
-            
-                function validateAddressType(input) {
-                    var addressType = input.value.trim();
-                    if (addressType === '') {
-                        input.setCustomValidity('Please select an Address Type.');
-                    } else {
-                        input.setCustomValidity('');
-                    }
-                }
-            
-                
-                function validateCity(input) {
-                    var city = input.value.trim();
-                    var cityRegex = /^[a-zA-Z\s,.'-]+$/; // Adjust the regex as needed
-                    if (!cityRegex.test(city)) {
-                        input.setCustomValidity('City should contain only alphabets. Special characters like ,.\'- are allowed.');
-                    } else {
-                        input.setCustomValidity('');
-                    }
-                }
-            
-                function validateState(input) {
-                    var state = input.value.trim();
-                    var stateRegex = /^[a-zA-Z\s,.'-]+$/; // Adjust the regex as needed
-                    if (!stateRegex.test(state)) {
-                        input.setCustomValidity('State should contain only alphabets. Special characters like ,.\'- are allowed.');
-                    } else {
-                        input.setCustomValidity('');
-                    }
-                }
-            
-                function validateAddressForm() {
-                    var form = document.getElementById('addressForm');
-                    var inputs = form.querySelectorAll('input, select');
-            
-                    // Check the validity of each input field
-                    for (var i = 0; i < inputs.length; i++) {
-                        if (!inputs[i].checkValidity()) {
-                            // If any field is invalid, prevent form submission
-                            return false;
-                        }
-                    }
-            
-                    // If all fields are valid, allow form submission
-                    return true;
-                }
-            
-            </script>
-            
-            
-        
-  
-</body>
-
-</html>
+{% endblock %}

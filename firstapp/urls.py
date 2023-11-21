@@ -45,6 +45,7 @@ urlpatterns = [
     path('fetch-cart-count/', views.fetch_cart_count, name='fetch-cart-count'),
     path('get_cart_count/', views.get_cart_count, name='get_cart_count'),
     path('header/', views.header, name='header'),
+    path('edit_profile/', views.edit_profile, name='edit_profile'),
 
 
 

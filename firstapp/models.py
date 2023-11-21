@@ -287,6 +287,22 @@ class Address(models.Model):
     def __str__(self):
         return self.fullName
 
+
+class UserProfile1(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    address_line_1 = models.CharField(blank=True, max_length=100)
+    address_line_2 = models.CharField(blank=True, max_length=100)
+    city = models.CharField(blank=True, max_length=20)
+    state = models.CharField(blank=True, max_length=20)
+    country = models.CharField(blank=True, max_length=20)
+    pincode = models.CharField(blank=True,max_length=10)
+
+    def __str__(self):
+        return self.user.fullName
+
+    def full_address(self):
+        return f'{self.address_line_1} {self.address_line_2}'
+
 class CartItem(models.Model):
     cart = models.ForeignKey('Cart', on_delete=models.CASCADE)
     product = models.ForeignKey(Product1, on_delete=models.CASCADE)

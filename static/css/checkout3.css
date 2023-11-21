@@ -1,0 +1,31 @@
+/* Style for shipping address container */
+.shipping-address-container {
+    width: 50%;
+    float: left;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Style for order summary container */
+.order-summary-container {
+    width: 50%;
+    float: left;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Clearfix to fix float issues */
+.checkout-container::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Style for the order placed section */
+#order-placed-section {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #e0ffe0;
+}
+
+/* Additional styles as needed */

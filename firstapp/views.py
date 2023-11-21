@@ -12,6 +12,7 @@ import razorpay
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
+from .forms import  UserForm, UserProfileForm
 
 
 #from django.contrib.auth.models import User
@@ -204,7 +205,7 @@ def address(request):
            user_profile = Address.objects.get(customer=request.user)
 
 
-    return render(request, 'Customer_Profile.html', {'user_profile': user_profile})
+    return render(request, 'Customer_Profile.html', {'user_address': user_profile})
 
 def edit_address(request):
     user_profile = None
@@ -237,7 +238,7 @@ def edit_address(request):
             messages.success(request, 'Address updated successfully.')
             return redirect('profile')  # Redirect to the profile page or another appropriate page after editing
 
-    return render(request, 'edit_address.html', {'user_profile': user_profile})
+    return render(request, 'edit_address.html', {'user_address': user_profile})
 
 
         
@@ -1058,7 +1059,7 @@ def create_order(request):
 
             client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
             payment_data = {
-                'amount': int(total_amount * 100),
+                'amount': int(total_amount*100),
                 'currency': 'INR',
                 'receipt': f'order_{order.id}',
                 'payment_capture': '1'
@@ -1161,4 +1162,24 @@ def handle_payment(request):
         except Exception as e:
             print(str(e))
             return JsonResponse({'message': 'Server error, please try again later.'})
+
+def edit_profile(request):
+    userprofile = get_object_or_404(UserProfile1, user=request.user)
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=userprofile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Your profile has been updated.')
+            return redirect('edit_profile')
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = UserProfileForm(instance=userprofile)
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'userprofile': userprofile,
+    }
+    return render(request, 'edit_profile.html', context)
 

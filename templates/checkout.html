@@ -1,25 +1,25 @@
 {% load static %}
 {% include 'includes/header2.html' %}
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/checkout.css' %}">
-<link rel="stylesheet" href="{% static 'css/checkout2.css' %}">
+{% comment %} <link rel="stylesheet" href="{% static 'css/checkout.css' %}"> {% endcomment %}
+ <link rel="stylesheet" href="{% static 'css/checkout3.css' %}">
 
 
 <div id="order-placed-section" style="display: none;">
     <h2>Order Placed</h2>
     <p id="order-success-message"></p>
+    <a class="continue-shopping-link" href="{% url 'userhome' %}">Continue Shopping</a>
 </div>
-{% comment %} <div class="checkout-container"> {% endcomment %}
-    <div class="shipping-container">
-        <!-- Shipping address content goes here -->
-        <h2>Shipping Address</h2>
-        <!-- Add your shipping address form or content here -->
-        {% if user_address %}
+<div class="checkout-container">
+    <div class="shipping-address-container">
+        
+        
+            {% if user_address %}
                 <div class="shipping-address-box">
                     <h3>Shipping Address</h3>
+                    
                     <div class="address-details">
                         <p><strong></strong> {{ user_address.fullName }}</p>
-                        
                         <p><strong>Address:</strong> {{ user_address.address }}, {{ user_address.state }},{{ user_address.landmark }} - {{ user_address.pincode }} </p>
                         <!--<p><strong>Landmark:</strong> {{ user_address.landmark }}</p>-->
                         <!--<p><strong>City:</strong> {{ user_address.city }}</p>-->
@@ -38,11 +38,13 @@
                     </div>
                 </div>
             {% else %}
-                <p>No address found. Please add an address <a href="{% url 'address' %}">here</a>.</p>
+            <p>Athira C B</p>
+            <p>Cheriyampurath house, sulthan bathery , wayanad ,kerala -673592</p>
+            <p>Mobile: 9946271752</p>
+            <p><strong>Address Type:Home</strong> </p>
             {% endif %}
         
     </div>
-
     <div class="order-summary-container">
         <!-- Order summary content goes here -->
         <h2>Order Summary</h2>

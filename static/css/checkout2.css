@@ -1,33 +1,18 @@
-.shipping-container {
-    float: left;
-    width: 50%; /* Adjust the width as needed */
-    box-sizing: border-box;
-    padding: 20px; /* Add padding as needed */
+.checkout-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 200px;
+    margin: 20px auto;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.order-summary-container {
-    float: right;
-    width: 50%; /* Adjust the width as needed */
-    box-sizing: border-box;
-    padding: 20px; /* Add padding as needed */
+.shipping-address-container,
+.price-details-container {
+    flex: 1;
+    padding: 20px;
 }
 
-/* Clear the float to prevent layout issues */
-.clearfix:after {
-    content: "";
-    display: table;
-    clear: both;
+.shipping-address-container {
+    border-right: 1px solid #ddd;
 }
-
-/* Optional: Style for the buttons, adjust as needed */
-button {
-    display: block;
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-}
-
-
