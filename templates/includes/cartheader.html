@@ -26,6 +26,7 @@
     <!-- Responsive style -->
     <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
     <link href="{% static 'css/modal.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha384-bBzRGZRkAq2bKmQd8sSIaFQAg0tHzTL5PpBzA/16P0wiGmAjP5Dl/G9vJzo/aWM3" crossorigin="anonymous">
     <style>
         header {
             display: flex;
@@ -150,36 +151,16 @@
         }
         
         .step {
-            position: relative;
-            display: flex;
-            align-items: center;
-            margin-right: 20px;
-            padding: 10px;
-            background-color: #f8f8f8;
-            border: 1px solid #e0e0e0;
-            border-radius: 2px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .step:hover {
-            background-color: #e0e0e0;
+            margin-right: 10px;
+            font-size: 18px;
+            font-family: 'Times New Roman', Times, serif;
         }
         
         .step.completed {
-            background-color: #f7444e;
-            color: #fff;
-        }
-        
-        .step-number {
-            font-size: 18px;
+            color: white;
             font-weight: bold;
-            margin-right: 5px;
         }
         
-        .step-label {
-            font-size: 12px;
-        }
         .profile-dropdown {
             position: relative;
             display: inline-block;
@@ -233,20 +214,13 @@
         </div> {% endcomment %}
         <nav>
             <div class="checkout-steps">
-                <div class="step completed">
-                    
-                    <span class="step-label">Cart</span>
-                </div> 
-                <div class="step ">
-                  
-                    <span class="step-label">Checkout</span>
-                </div>
-                <div class="step">
-                    
-                    <span class="step-label">Payment</span>
-                </div>
-                
+                <div class="step completed">CART</div>
+                <div class="step">---</div>
+                <div class="step">CHECKOUT</div>
+                <div class="step">---</div>
+                <div class="step">PAYMENT</div>
             </div>
+            
             {% comment %} <ul>
                 <li><a href="{% url 'userhome' %}"><strong>HOME</strong></a></li>
                 <li class="dropdown">
@@ -288,7 +262,7 @@
         <a href="{% url 'Customer_Profile' %}">Profile</a>
         <a href="{% url 'logout' %}">Logout</a>
     </div></div>
-    <a href="#"><i class="fa fa-shopping-cart"></i></a>
+    <a href="{% url 'view_cart'  %}"><i class="fa fa-shopping-cart"></i></a>
     <a href="{% url 'wishlist'  %}"><i class="fa fa-heart"></i></a>
 	
 

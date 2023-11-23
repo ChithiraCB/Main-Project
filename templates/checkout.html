@@ -5,11 +5,11 @@
  <link rel="stylesheet" href="{% static 'css/checkout3.css' %}">
 
 
-<div id="order-placed-section" style="display: none;">
-    <h2>Order Placed</h2>
+ {% comment %} <div id="order-placed-section" style="display: none;">
+     <h2>Order Placed</h2>
     <p id="order-success-message"></p>
     <a class="continue-shopping-link" href="{% url 'userhome' %}">Continue Shopping</a>
-</div>
+</div>  {% endcomment %}
 <div class="checkout-container">
     <div class="shipping-address-container">
         
@@ -78,6 +78,7 @@
 </div> {% endcomment %}
 <script>
 var handlePaymentUrl = "{% url 'handle_payment' %}";
+var orderCompleteUrl = "{% url 'order_complete'  %}";  
 </script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="{% static 'js/checkout.js' %}"></script> 

@@ -24,6 +24,8 @@ def index(request):
 def header(request):
     # if request.user.is_authenticated:
      return render(request, 'header.html')
+
+
  
 
 def register_user(request):
@@ -1153,15 +1155,34 @@ def handle_payment(request):
                 # Clear the user's cart after successful payment
                 user = request.user
                 user.cart.cartitem_set.all().delete()
-                return JsonResponse({'message': 'Payment successful'})
-            else:
-                return JsonResponse({'message': 'Payment failed'})
-
+                return JsonResponse({'message': 'Payment successful', 'order_id': order.id, 'transID': payment_id})
+               
         except Order.DoesNotExist:
             return JsonResponse({'message': 'Invalid Order ID'})
         except Exception as e:
             print(str(e))
             return JsonResponse({'message': 'Server error, please try again later.'})
+        
+
+def order_complete(request):
+    order_id = request.GET.get('id')
+    transID = request.GET.get('payment_id')
+    try:
+   
+        order = Order.objects.get(id=order_id, payment_status=True)
+      
+        ordered_products = OrderItem.objects.filter(order_id=order.id)
+
+        context = {
+            'order': order,
+            'ordered_products': ordered_products,
+            'order_id': order.id,
+           'transID': transID,
+        }
+
+        return render(request, 'order_complete.html', context)
+    except Order.DoesNotExist:
+        return redirect('userhome')
 
 def edit_profile(request):
     userprofile = get_object_or_404(UserProfile1, user=request.user)

@@ -33,6 +33,23 @@
 .nav-item:hover .dropdown-menu {
     display: block;
 }
+/* Styling for the shopping cart icon */
+a[href*="view_cart"] i.fa-shopping-cart {
+    color: black; /* Red color for the shopping cart icon */
+    font-size: 22px; /* Adjust the font size as needed */
+    margin-right: 10px;
+    margin-top:5px; /* Adjust the right margin as needed */
+    
+}
+
+/* Styling for the heart icon */
+a[href*="wishlist"] i.fa-heart {
+    color: black; /* Red color for the heart icon */
+    font-size: 22px; /* Adjust the font size as needed */
+    margin-right: 10px; /* Adjust the right margin as needed */
+    margin-top:5px;
+    margin-left:10px;
+}
 </style>
    </head>
    <body>
@@ -93,7 +110,12 @@
 <li class="nav-item">
    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
 </li>
-
+<li class="nav-item">
+   <a href="{% url 'view_cart'  %}"><i class="fa fa-shopping-cart"></i></a>
+</li>
+<li class="nav-item">
+<a href="{% url 'wishlist'  %}"><i class="fa fa-heart"></i></a>
+</li>
 <!-- Container for displaying products -->
 <div id="product-container">
    <!-- Products will be displayed here -->

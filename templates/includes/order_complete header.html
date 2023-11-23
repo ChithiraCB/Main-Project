@@ -26,6 +26,11 @@
     <!-- Responsive style -->
     <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
     <link href="{% static 'css/modal.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   
+    
+ 
+    
     <style>
         header {
             display: flex;
@@ -215,9 +220,9 @@
             <div class="checkout-steps">
                 <div class="step ">CART</div>
                 <div class="step">---</div>
-                <div class="step completed">CHECKOUT</div>
+                <div class="step ">CHECKOUT</div>
                 <div class="step">---</div>
-                <div class="step">PAYMENT</div>
+                <div class="step completed">PAYMENT</div>
             </div>
             {% comment %} <ul>
                 <li><a href="{% url 'userhome' %}"><strong>HOME</strong></a></li>
@@ -260,7 +265,7 @@
         <a href="{% url 'Customer_Profile' %}">Profile</a>
         <a href="{% url 'logout' %}">Logout</a>
     </div></div>
-    <a href="{% url 'view_cart'  %}"><i class="fa fa-shopping-cart"></i></a>
+    <a href="#"><i class="fa fa-shopping-cart"></i></a>
     <a href="{% url 'wishlist'  %}"><i class="fa fa-heart"></i></a>
 	
 
