@@ -15,6 +15,8 @@ from .models import CartItem
 from .models import Order
 from .models import OrderItem
 from .models import UserProfile1
+#from .models import Payment2
+
 
 
 # Register your models here.
@@ -40,3 +42,4 @@ admin.site.register(CartItem)
 admin.site.register(Order)
 admin.site.register(OrderItem)
 admin.site.register(UserProfile1)
+#admin.site.register(Payment2)

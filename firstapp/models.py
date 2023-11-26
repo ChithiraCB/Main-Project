@@ -318,24 +318,63 @@ class Cart(models.Model):
     def __str__(self):
         return f"Cart for {self.user.fullName}"
     
+# class Payments(models.Model):
+#     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+#     payment_id = models.CharField(max_length=100)
+#     payment_method = models.CharField(max_length=100)
+#     amount_paid = models.CharField(max_length=100) # this is the total amount paid
+#     payment_status = models.BooleanField(default=False)
+#     created_at = models.DateTimeField(auto_now_add=True)
 
+#     def __str__(self):
+#         return self.payment_id
+    
+# class Payment2(models.Model):
+#     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+#     payment_id = models.CharField(max_length=100)
+#     payment_method = models.CharField(max_length=100)
+#     amount_paid = models.CharField(max_length=100) # this is the total amount paid
+#     payment_status = models.BooleanField(default=False)
+#     created_at = models.DateTimeField(auto_now_add=True)
+
+#     def __str__(self):
+#         return self.payment_id
+    
+    
 
 class Order(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    products = models.ManyToManyField(Product1, through='OrderItem')
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    payment_id = models.CharField(max_length=100, null=True, blank=True)
-    payment_status = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+     
+     STATUS = (
+        ('New', 'New'),
+        ('Accepted', 'Accepted'),
+        ('Completed', 'Completed'),
+        ('Cancelled', 'Cancelled'),
+    )
+     
+     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+     products = models.ManyToManyField(Product1, through='OrderItem')
+     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+     #payment = models.ForeignKey(Payment2, on_delete=models.SET_NULL, blank=True, null=True)
+     payment_id= models.CharField(blank=True, max_length=100, null=True)
+     payment_status= models.BooleanField(default=False)
+     status = models.CharField(max_length=10, choices=STATUS, default='New')
+     created_at = models.DateTimeField(auto_now_add=True)
     
-    def __str__(self):
+     def __str__(self):
         return f"Order {self.id} by {self.user.fullName}"
     
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    #payment = models.ForeignKey(Payment2, on_delete=models.SET_NULL, blank=True, null=True)
     product = models.ForeignKey(Product1, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     item_total = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return f"{self.quantity} x {self.product.product_name} in Order {self.order.id}"
+    
+
+
+    
+
+    

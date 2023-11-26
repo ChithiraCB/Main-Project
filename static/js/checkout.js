@@ -33,9 +33,9 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 var options = {
                     "key": "rzp_test_4aTzV8dhXyLyaT",
-                    "amount": totalPrice ,
+                    "amount": totalPrice * 100,
                     "currency": "INR",
-                    "name": "Fashion finds hub",
+                    "name": "Ecommerce",
                     "description": "Order Payment",
                     "order_id": data['order_id'],
                     "prefill": {
@@ -64,26 +64,22 @@ document.addEventListener('DOMContentLoaded', function () {
                                 }
                                 return response.json();
                             })
-                               .then(data => {
-                                  if (data.message === 'Payment successful') {
-                                    // const orderSection = document.getElementById('order-placed-section');
-                                    // const orderMessage = document.getElementById('order-success-message');
-
-                                    // orderMessage.textContent = "Successfully placed order!";
-                                    //  orderSection.style.display = "block"; 
+                            .then(data => {
+                                if (data.message === 'Payment successful') {
+                                    
                                     window.location.href = orderCompleteUrl + '?order_id=' + data.order_id + '&payment_id=' + data.transID;
-
-                                   
-
-                                } else {
+                                    console.log('Order ID:', data.order_id);
+                                    console.log('Payment ID:', data.transID);
+                                }
+                                else {
                                     alert('Payment failed');
                                 }
                             })
-                            // .catch(error => {
-                            //     // console.error('An error occurred while processing the payment.', error);
-                            //     // // alert('There was an issue processing your payment. Please try again.');
-                            // });
-                    }
+                    //         .catch(error => {
+                    //             console.error('An error occurred while processing the payment.', error);
+                    //             alert('There was an issue processing your payment. Please try again.');
+                    //         });
+                     }
                 };
 
                 var rzp1 = new Razorpay(options);

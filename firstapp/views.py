@@ -1040,6 +1040,42 @@ def checkout(request):
     return render(request, 'checkout.html', context)
 
 
+# @csrf_exempt
+# def create_order(request):
+#     if request.method == 'POST':
+#         user = request.user
+#         cart = user.cart
+
+#         cart_items = CartItem.objects.filter(cart=cart)
+#         total_amount = sum(item.product.price * item.quantity for item in cart_items)
+
+#         try:
+#             order = Order.objects.create(user=user, total_amount=total_amount)
+#             for cart_item in cart_items:
+#                 OrderItem.objects.create(
+#                     order=order,
+#                     product=cart_item.product,
+#                     quantity=cart_item.quantity,
+#                     item_total=cart_item.product.price * cart_item.quantity
+#                 )
+
+#             client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+#             payment_data = {
+#                 'amount': int(total_amount*100),
+#                 'currency': 'INR',
+#                 'receipt': f'order_{order.id}',
+#                 'payment_capture': '1'
+#             }
+#             orderData = client.order.create(data=payment_data)
+#             order.payment = orderData['id']
+#             order.save()
+
+#             return JsonResponse({'order_id': orderData['id']})
+        
+#         except Exception as e:
+#             print(str(e))
+#             return JsonResponse({'error': 'An error occurred. Please try again.'}, status=500)
+
 @csrf_exempt
 def create_order(request):
     if request.method == 'POST':
@@ -1061,7 +1097,7 @@ def create_order(request):
 
             client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
             payment_data = {
-                'amount': int(total_amount*100),
+                'amount': int(total_amount * 100),
                 'currency': 'INR',
                 'receipt': f'order_{order.id}',
                 'payment_capture': '1'
@@ -1075,6 +1111,7 @@ def create_order(request):
         except Exception as e:
             print(str(e))
             return JsonResponse({'error': 'An error occurred. Please try again.'}, status=500)
+
 
 
 # @csrf_exempt
@@ -1131,58 +1168,49 @@ def create_order(request):
 #     send_mail(subject, message, from_email, recipient_list)
 
 
-@csrf_exempt
-def handle_payment(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        razorpay_order_id = data.get('order_id')
-        payment_id = data.get('payment_id')
+# @csrf_exempt
+# def handle_payment(request):
+#     if request.method == 'POST':
+#         data = json.loads(request.body)
+#         razorpay_order_id = data.get('order_id')
+#         payment_id = data.get('payment_id')
 
-        try:
-            order = Order.objects.get(payment_id=razorpay_order_id)
+#         try:
+#             # payment = Payment2.objects.get(payment_id=payment_id)
 
-            client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
-            payment = client.payment.fetch(payment_id)
+#             # # Retrieve the associated Order using the ForeignKey
+#             # order = payment.order
+#             print(f"Attempting to find Payment2 with payment_id: {payment_id}")
+#             payment = Payment2.objects.get(payment_id=razorpay_order_id)
 
-            if payment['status'] == 'captured':
-                order.payment_status = True
-                order.save()
+#             client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+#             payment = client.payment.fetch(payment_id)
 
-                # Send order confirmation email
-                # send_order_confirmation_email(request.user.email)
-                # print("Order confirmation email sent successfully!")
+#             if payment['status'] == 'captured':
+#                 payment.payment_status = True
+#                 payment.save()
 
-                # Clear the user's cart after successful payment
-                user = request.user
-                user.cart.cartitem_set.all().delete()
-                return JsonResponse({'message': 'Payment successful', 'order_id': order.id, 'transID': payment_id})
+#                 # Send order confirmation email
+#                 # send_order_confirmation_email(request.user.email)
+#                 # print("Order confirmation email sent successfully!")
+
+#                 # Clear the user's cart after successful payment
+#                 user = request.user
+#                 user.cart.cartitem_set.all().delete()
+#                 return JsonResponse({'message': 'Payment successful'}) 
+#               # 'order_id': order.id, 'transID': payment_id}
                
-        except Order.DoesNotExist:
-            return JsonResponse({'message': 'Invalid Order ID'})
-        except Exception as e:
-            print(str(e))
-            return JsonResponse({'message': 'Server error, please try again later.'})
+#         except Order.DoesNotExist:
+#             return JsonResponse({'message': 'Invalid Order ID'})
+#         except Exception as e:
+#             print(str(e))
+#             return JsonResponse({'message': 'Server error, please try again later.'})
         
 
-def order_complete(request):
-    order_id = request.GET.get('id')
-    transID = request.GET.get('payment_id')
-    try:
-   
-        order = Order.objects.get(id=order_id, payment_status=True)
-      
-        ordered_products = OrderItem.objects.filter(order_id=order.id)
 
-        context = {
-            'order': order,
-            'ordered_products': ordered_products,
-            'order_id': order.id,
-           'transID': transID,
-        }
-
-        return render(request, 'order_complete.html', context)
-    except Order.DoesNotExist:
-        return redirect('userhome')
+# def order_complete(request):
+#     # if request.user.is_authenticated:
+#      return render(request, 'order_complete.html')
 
 def edit_profile(request):
     userprofile = get_object_or_404(UserProfile1, user=request.user)
@@ -1204,3 +1232,65 @@ def edit_profile(request):
     }
     return render(request, 'edit_profile.html', context)
 
+@csrf_exempt
+def handle_payment(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        razorpay_order_id = data.get('order_id')
+        payment_id = data.get('payment_id')
+
+        try:
+            order = Order.objects.get(payment_id=razorpay_order_id)
+
+            client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+            payment = client.payment.fetch(payment_id)
+
+            if payment['status'] == 'captured':
+                order.payment_status = True
+                order.save()
+                user = request.user
+                user.cart.cartitem_set.all().delete()
+
+                data = {
+                  'order_id': order.id,
+                   'transID': order.payment_id,
+            }
+                return JsonResponse({'message': 'Payment successful', 'order_id': order.id, 'transID': order.payment_id})
+            #     return JsonResponse({'message': 'Payment successful'})
+            # else:
+            #     return JsonResponse({'message': 'Payment failed'})
+
+        except Order.DoesNotExist:
+            return JsonResponse({'message': 'Invalid Order ID'})
+        except Exception as e:
+
+            print(str(e))
+            return JsonResponse({'message': 'Server error, please try again later.'})
+
+
+def order_complete(request):
+    order_id = request.GET.get('order_id')
+    transID = request.GET.get('payment_id')
+    print("Order ID from GET parameters:", order_id)
+    try:
+   
+        order = Order.objects.get(id=order_id, payment_status=True)
+        print("Retrieved Order:", order)
+        ordered_products = OrderItem.objects.filter(order_id=order.id)
+
+        subtotal = 0
+        for i in ordered_products:
+            subtotal += i.product.sale_price * i.quantity
+        
+
+        context = {
+            'order': order,
+            'ordered_products': ordered_products,
+            'order_id': order.id,
+           'transID': transID,
+           'subtotal': subtotal,
+        }
+
+        return render(request, 'order_complete.html', context)
+    except Order.DoesNotExist:
+        return redirect('userhome')
