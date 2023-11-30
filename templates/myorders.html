@@ -1,0 +1,69 @@
+{% extends 'includes/productheader.html' %}
+
+
+{% block content %}
+
+<section class="section-conten padding-y bg">
+
+
+<div class="container">
+	<div class="row">
+	{% include 'includes/dashboard_sidebar.html' %}
+	<main class="col-md-9">
+		<article class="card">
+		<header class="card-header">
+			<strong class="d-inline-block mr-3">Your order history</strong>
+
+		</header>
+		<div class="card-body">
+			<div class="row">
+			<div class="col-md-12">
+				<table class="table table-hover">
+                    {% if orders %}
+                    <div class="list-group">
+                        {% for order in orders %}
+                            <div class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Order #{{ order.id }}</h5>
+                                    <h8>Status: Order placed</h8>
+                                    <small>Total: Rs.{{ order.total_amount }}</small>
+                                </div>
+                                <p class="mb-1">Placed on: {{ order.created_at }}</p>
+                                <ul class="list-group">
+                                    {% for item in order.orderitem_set.all %}
+                                        <li class="list-group-item">
+                                            
+                                            <div>
+                                                <img src="{{ item.product.product_image.url }}" alt="{{ item.product.product_name }}" style="max-width: 100px; height:100px;border: 2px solid #ddd;">
+                                               {{ item.product.product_name }}<br>
+                                               Quantity: {{ item.quantity }}<br>
+                                               Rs.{{ item.item_total }}
+                                            </div>
+                                           
+                                        </li>
+                                        
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="mt-3">You haven't placed any orders yet.</p>
+                {% endif %}
+            </div>
+           
+				</table>
+			</div>
+
+			</div> <!-- row.// -->
+		</div> <!-- card-body .// -->
+
+		</article> <!-- order-group.// -->
+	</main>
+</div> <!-- row.// -->
+</div>
+
+
+</section>
+
+{% endblock %}

@@ -325,11 +325,11 @@ a[href*="wishlist"] i.fa-heart {
                 </li> 
             </ul>
         </nav>
-        <div class="search">
+        {% comment %} <div class="search">
             <input type="text" placeholder="Search" id="searchInput">
             <button onclick="searchProducts()">Search</button>
         </div>
-         
+          {% endcomment %}
         			<div class="account">
    
 	<div class="profile-dropdown">
@@ -359,3 +359,12 @@ a[href*="wishlist"] i.fa-heart {
 
         </div>
     </header>
+
+    <body>
+  
+        {% block content %}
+  <!-- content -->
+  {% endblock %}
+
+   
+</body>

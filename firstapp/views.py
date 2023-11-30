@@ -1248,8 +1248,12 @@ def handle_payment(request):
             if payment['status'] == 'captured':
                 order.payment_status = True
                 order.save()
-                user = request.user
-                user.cart.cartitem_set.all().delete()
+
+                for order_item in order.orderitem_set.all():
+                        product = order_item.product
+                        product.stock -= order_item.quantity
+                        product.save()
+
 
                 data = {
                   'order_id': order.id,
@@ -1294,3 +1298,13 @@ def order_complete(request):
         return render(request, 'order_complete.html', context)
     except Order.DoesNotExist:
         return redirect('userhome')
+
+
+@login_required(login_url='login')
+def myorders(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'myorders.html', context)
+
