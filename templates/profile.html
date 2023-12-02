@@ -1,0 +1,199 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <style>
+        /* Add your custom CSS styles here */
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            background-image: url('/static/images/dp4.jpg');
+            background-size: cover;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+            height: 130vh;
+        }
+
+        .sidebar h2 {
+            color: #4caf50;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar li {
+            padding: 8px;
+            font-size: 18px;
+            border-bottom: 1px solid #4caf50;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .sidebar li:hover {
+            background-color: #4caf50;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .profile-details {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .datepicker {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .profile-details {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .profile-details label {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-details label::before {
+            content: '\1F464'; /* Unicode character for user icon */
+            font-size: 20px;
+            margin-right: 10px;
+        }
+    </style>
+
+    <script>
+        // Add your custom JavaScript code here
+
+        $(function () {
+            // Initialize datepicker
+            $("#dob").datepicker({
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-100:+0" // Allow selection of the last 100 years
+            });
+        });
+    </script>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h2>Menu</h2>
+        <ul>
+             <li><a href="{% url 'user_profile' %}">My Profile</a></li> 
+            <li><a href="{% url 'change_password' %}">Change Password</a></li>
+            <li><a href="{% url 'order_complete' %}">My Orders</a></li>
+            {% comment %} <li><a href="{% url 'wish' %}">My Wishlist</a></li> {% endcomment %}
+            
+        </ul>
+    </div>
+
+    <div class="content">
+        <div class="container">
+            <h1>User Profile</h1>
+            <div class="profile-details">
+                <label for="user_name">Username</label>
+                <input type="text" id="user_name" name="Username" value="{{ user.fullName }}" readonly>
+
+                <label for="email">Email</label>
+                <input type="text" id="email" name="email" value="{{ user.email }}" readonly>
+            </div>
+
+            {% comment %} <form method="post" action="{% url 'user_profile' %}"> {% endcomment %}
+
+                {% csrf_token %}
+
+                <form method="post" action="{% url 'save_profile' %}">
+                    {% csrf_token %}
+                    <!-- Add other profile fields here -->
+                    <label for="phone_number">Phone Number:</label>
+                    <input type="text" id="phone_number" name="phone_number" value="{{ user.profile.phone_number|default:'' }}">
+                
+                    <label for="pincode">Pincode:</label>
+                    <input type="text" id="pincode" name="pincode" value="{{ user.profile.pincode|default:'' }}">
+                
+                    <label for="address">Address:</label>
+                    <textarea id="address" name="address">{{ user.profile.address|default:'' }}</textarea>
+                
+                    <label for="gender">Gender:</label>
+                    <input type="text" id="gender" name="gender" value="{{ user.profile.gender|default:'' }}">
+                
+                    <label for="city">City:</label>
+                    <input type="text" id="city" name="city" value="{{ user.profile.city|default:'' }}">
+                
+                    <label for="state">State:</label>
+                    <input type="text" id="state" name="state" value="{{ user.profile.state|default:'' }}">
+                
+                    <button type="submit">Save Profile</button>
+                </form>
+
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>

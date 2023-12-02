@@ -245,8 +245,8 @@ def edit_address(request):
 
         
 
-@never_cache
-@login_required(login_url='login')
+# @never_cache
+# @login_required(login_url='login')
 def user_home(request):
      return render(request, 'userhome.html')
 
@@ -462,55 +462,107 @@ from .models import Category1, Subcategory1, Product1
 
 def add_product(request):
     if request.method == 'POST':
-        # Extract form data from the request
-        product_name = request.POST.get('product-name')
         category_name = request.POST.get('category-name')
+        category, created = Category1.objects.get_or_create(name=category_name)
+
+        # Retrieve or create the Subcategory2 instance while providing the Category2 instance
         subcategory_name = request.POST.get('subcategory-name')
-        quantity = request.POST.get('quantity')
+        subcategory, created = Subcategory1.objects.get_or_create(name=subcategory_name, category=category)
+
+        # Handle the form submission
+        product_name = request.POST.get('product-name')
+        stock = request.POST.get('stock')  # Retrieve quantity from the form
         description = request.POST.get('description')
         price = request.POST.get('price')
         discount = request.POST.get('discount')
-        sale_price = request.POST.get('sale-price')
         status = request.POST.get('status')
         product_image = request.FILES.get('product-image')
 
-        # Validate form data (you may need to add more validation)
-        if not (product_name and category_name and subcategory_name and quantity and
-                description and price and discount and sale_price and status and product_image):
-            # Handle invalid form data (redirect, show error message, etc.)
-            return redirect('add_product')
+        price = float(price)
+        discount = float(discount)
 
-        # Retrieve or create Category1 instance based on the name (case-insensitive)
-        category, created_category = Category1.objects.get_or_create(name__iexact=category_name)
-        if not created_category:
-            # If the category already exists, you might want to handle this differently,
-            # for example, by showing an error message or redirecting back to the form.
-            return redirect('add_product')
+        # Calculate sale_price
+        sale_price = price - (price * (discount / 100))
 
-        # Create or retrieve Subcategory1 instance based on the name and category (case-insensitive)
-        subcategory, created_subcategory = Subcategory1.objects.get_or_create(
-            name__iexact=subcategory_name,
-            category=category
-        )
-
-        # Create a new Product1 instance and save it
+        # Create a new Product2 object and save it to the database
         product = Product1(
             product_name=product_name,
             category=category,
             subcategory=subcategory,
-            stock=quantity,
+            stock=stock,  # Assign the quantity field
             description=description,
             price=price,
             discount=discount,
             sale_price=sale_price,
             status=status,
-            product_image=product_image
+            product_image=product_image,
         )
         product.save()
 
-        return redirect('adminpanel')  # Replace 'adminpanel' with the URL name for the admin panel
+        # Redirect to a success page or any other desired action
+        return redirect('viewproduct')
 
-    return render(request, 'adminpanel.html')
+    return render(request, 'addproduct.html')
+
+
+# def add_product(request):
+#     if request.method == 'POST':
+#         # Extract form data from the request
+#         product_name = request.POST.get('product-name')
+#         category_name = request.POST.get('category-name')
+#         subcategory_name = request.POST.get('subcategory-name')
+#         quantity = request.POST.get('quantity')
+#         description = request.POST.get('description')
+#         price = request.POST.get('price')
+#         discount = request.POST.get('discount')
+#         sale_price = request.POST.get('sale-price')
+#         status = request.POST.get('status')
+#         product_image = request.FILES.get('product-image')
+
+#         # Validate form data (you may need to add more validation)
+#         # if not (product_name and category_name and subcategory_name and quantity and
+#         #         description and price and discount and sale_price and status and product_image):
+#         #     # Handle invalid form data (redirect, show error message, etc.)
+#         #     return redirect('add_product')
+#         if not (product_name and category_name and subcategory_name and quantity and
+#             description and price and discount and sale_price and status and product_image):
+#         # Handle invalid form data
+#             messages.error(request, 'Please fill in all the required fields.')
+#             return redirect('add_product')
+#         else:
+   
+
+#         #Retrieve or create Category1 instance based on the name (case-insensitive)
+#             category, created_category = Category1.objects.get_or_create(name__iexact=category_name)
+#             if not created_category:
+#                 # If the category already exists, you might want to handle this differently,
+#             # for example, by showing an error message or redirecting back to the form.
+#                 return redirect('add_product')
+
+#             #Create or retrieve Subcategory1 instance based on the name and category (case-insensitive)
+#             subcategory, created_subcategory = Subcategory1.objects.get_or_create(
+#                 name__iexact=subcategory_name,
+#                 category=category
+#             )
+
+#             # Create a new Product1 instance and save it
+#             product = Product1(
+#                 product_name=product_name,
+#                 category=category,
+#                 subcategory=subcategory,
+#                 stock=quantity,
+#                 description=description,
+#                 price=price,
+#                 discount=discount,
+#                 sale_price=sale_price,
+#                 status=status,
+#                 product_image=product_image
+#             )
+#             product.save()
+
+#         return redirect('adminpanel')  # Replace 'adminpanel' with the URL name for the admin panel
+
+#     return render(request, 'adminpanel.html')
 
 
 @login_required
@@ -841,15 +893,16 @@ def delete_user(request, user_id):
 
 from django.shortcuts import get_object_or_404
 
-def products_by_subcategory(request, subcategory):
-    # Retrieve the Subcategory1 object based on the provided subcategory name
-    subcategory_obj = get_object_or_404(Subcategory1, name=subcategory)
 
-    # Retrieve products based on the Subcategory1 object
-    products = Product1.objects.filter(subcategory=subcategory_obj)
+from django.shortcuts import get_list_or_404
+def products_by_subcategory(request, subcategory):
+    # Retrieve a list of Subcategory1 objects based on the provided subcategory name
+    subcategories = get_list_or_404(Subcategory1, name=subcategory)
+
+    # Retrieve products based on the list of Subcategory1 objects
+    products = Product1.objects.filter(subcategory__in=subcategories)
 
     return render(request, 'product.html', {'products': products})
-
 
 
 from django.shortcuts import render, redirect
@@ -1023,6 +1076,8 @@ def total_users(request):
 #     })
 
 def checkout(request):
+    user_address = ProfileUser.objects.filter(user=request.user).first()
+
     cart_items = CartItem.objects.filter(cart=request.user.cart)
     total_amount = sum(item.product.price * item.quantity for item in cart_items)
 
@@ -1034,6 +1089,7 @@ def checkout(request):
         'cart_count': cart_count,
         'cart_items': cart_items,
         'total_amount': total_amount,
+        'user_address': user_address,
         # 'email':email,
         # 'full_name': full_name
     }
@@ -1168,49 +1224,6 @@ def create_order(request):
 #     send_mail(subject, message, from_email, recipient_list)
 
 
-# @csrf_exempt
-# def handle_payment(request):
-#     if request.method == 'POST':
-#         data = json.loads(request.body)
-#         razorpay_order_id = data.get('order_id')
-#         payment_id = data.get('payment_id')
-
-#         try:
-#             # payment = Payment2.objects.get(payment_id=payment_id)
-
-#             # # Retrieve the associated Order using the ForeignKey
-#             # order = payment.order
-#             print(f"Attempting to find Payment2 with payment_id: {payment_id}")
-#             payment = Payment2.objects.get(payment_id=razorpay_order_id)
-
-#             client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
-#             payment = client.payment.fetch(payment_id)
-
-#             if payment['status'] == 'captured':
-#                 payment.payment_status = True
-#                 payment.save()
-
-#                 # Send order confirmation email
-#                 # send_order_confirmation_email(request.user.email)
-#                 # print("Order confirmation email sent successfully!")
-
-#                 # Clear the user's cart after successful payment
-#                 user = request.user
-#                 user.cart.cartitem_set.all().delete()
-#                 return JsonResponse({'message': 'Payment successful'}) 
-#               # 'order_id': order.id, 'transID': payment_id}
-               
-#         except Order.DoesNotExist:
-#             return JsonResponse({'message': 'Invalid Order ID'})
-#         except Exception as e:
-#             print(str(e))
-#             return JsonResponse({'message': 'Server error, please try again later.'})
-        
-
-
-# def order_complete(request):
-#     # if request.user.is_authenticated:
-#      return render(request, 'order_complete.html')
 
 def edit_profile(request):
     userprofile = get_object_or_404(UserProfile1, user=request.user)
@@ -1283,7 +1296,7 @@ def order_complete(request):
         ordered_products = OrderItem.objects.filter(order_id=order.id)
 
         subtotal = 0
-        for i in ordered_products:
+        for i in ordered_products: 
             subtotal += i.product.sale_price * i.quantity
         
 
@@ -1308,3 +1321,58 @@ def myorders(request):
     }
     return render(request, 'myorders.html', context)
 
+def user_profile(request):
+    # Retrieve the logged-in user's information
+    user = request.user
+
+    # You can fetch additional information from the user's profile if needed
+    # For example: profile = user.profileuser
+
+    context = {
+        'user': user,
+        # Add additional context variables as needed
+    }
+
+    return render(request, 'user_profile.html', context)
+
+
+
+
+
+
+def save_profile(request):
+    if request.method == 'POST':
+        try:
+            # Retrieve the user's profile instance or create it if it doesn't exist
+            user_profile, created = ProfileUser.objects.get_or_create(user=request.user)
+
+            # Get form data from the request
+            phone_number = request.POST.get('phone_number')
+            pincode = request.POST.get('pincode')
+            address = request.POST.get('address')
+            gender = request.POST.get('gender')
+            city = request.POST.get('city')
+            state = request.POST.get('state')
+
+            # Update the user's profile fields
+            user_profile.phone_number = phone_number
+            user_profile.pincode = pincode
+            user_profile.address = address
+            user_profile.gender = gender
+            user_profile.city = city
+            user_profile.state = state
+
+            # Save the changes
+            user_profile.save()
+
+            messages.success(request, 'Profile updated successfully.')
+            return redirect('user_profile')  # Redirect to the user profile page
+        except Exception as e:
+            messages.error(request, f'Error updating profile: {e}')
+
+    return render(request, 'user_profile.html')
+
+@never_cache
+@login_required(login_url='login')
+def profile(request):
+    return render(request, 'profile.html')

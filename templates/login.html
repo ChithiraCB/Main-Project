@@ -25,11 +25,11 @@
                     <div class="input-container">
                         <input type="text" placeholder="EMAIL" name="username" required>
                         <input type="password" placeholder="PASSWORD" name="password" required><br>
-                        <button><b>LOGIN</b></button><br><br>
+                        <button id="login"><b>LOGIN</b></button><br><br>
                         <p class="forgot-password"><a href="{% url 'reset_password' %}">Forgot Password?</a></p><br>
                         <p class="signup">Don't have an account? <a href="/register">Register</a></p><br>
                        
-                        <button class="google-login-button"><b>CONTINUE WITH GOOGLE</b></button>
+                        {% comment %} <button class="google-login-button"><b>CONTINUE WITH GOOGLE</b></button> {% endcomment %}
                         
                     </div>
                 </div>

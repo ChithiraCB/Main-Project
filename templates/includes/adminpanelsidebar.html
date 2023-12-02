@@ -1,0 +1,20 @@
+{% load static %}
+<aside class="col-md-3">
+    <!--   SIDEBAR   -->
+    <ul class="list-group">
+        <a class="list-group-item">
+            <img src="{% static 'images/profile.jpeg' %}" alt="User Avatar">
+            {% comment %} <p>
+                {% if user.is_authenticated %}
+                    <strong>Hello {{ user.fullName }}</strong>
+                {% endif %}
+            </p> {% endcomment %}
+        </a>
+      {% comment %} <a class="list-group-item {% if '/accounts/' == request.path %}active{% endif %}" href=""> Dashboard </a> {% endcomment %}
+      {% comment %} <a class="list-group-item {% if '/myorders/' in request.path %}active{% endif %}" href="{% url 'myorders' %}"> My Orders </a> {% endcomment %}
+      <a class="list-group-item {% if '/addproduct/' in request.path %}active{% endif %}" href="{% url 'add_product' %}"> add product </a>
+      <a class="list-group-item {% if '/change_password/' in request.path %}active{% endif %}" href="{% url 'change_password' %}"> Change Password </a>
+    </ul>
+    <br>
+        <!--   SIDEBAR .//END   -->
+  </aside>

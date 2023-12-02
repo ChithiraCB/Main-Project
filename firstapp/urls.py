@@ -48,6 +48,11 @@ urlpatterns = [
     path('edit_profile/', views.edit_profile, name='edit_profile'),
     path('order_complete/', views.order_complete, name='order_complete'),
     path('myorders/', views.myorders, name='myorders'),
+    path('addproduct/',views.add_product,name="addproduct"),
+    path('profile/',views.profile,name="profile"),
+    path('user_profile/',views.user_profile,name="user_profile"),
+    path('save_profile/',views.save_profile,name="save_profile"),
+
     
      path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),
      path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),

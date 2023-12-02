@@ -223,6 +223,7 @@ class Product1(models.Model):
         ('Out of Stock', 'Out of Stock'),
     ]
 
+
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='In Stock')
 
     def save(self, *args, **kwargs):
@@ -374,7 +375,19 @@ class OrderItem(models.Model):
         return f"{self.quantity} x {self.product.product_name} in Order {self.order.id}"
     
 
+class ProfileUser(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    fullName = models.CharField(max_length=50, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    pincode = models.CharField(max_length=10, blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
+    gender = models.CharField(max_length=10, blank=True, null=True)
+    city = models.CharField(max_length=50, blank=True, null=True)  # New field
+    state = models.CharField(max_length=50, blank=True, null=True)  # New field
 
+    def _str_(self):
+        return self.user.fullName
     
 
     

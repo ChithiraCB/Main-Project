@@ -19,29 +19,27 @@
                     <h3>Shipping Address</h3>
                     
                     <div class="address-details">
-                        <p><strong></strong> {{ user_address.fullName }}</p>
-                        <p><strong>Address:</strong> {{ user_address.address }}, {{ user_address.state }},{{ user_address.landmark }} - {{ user_address.pincode }} </p>
+                        <p><strong></strong> {{ user.fullName }}</p>
+                        <p><strong>Address:</strong> {{ user_address.address }} </p>
                         <!--<p><strong>Landmark:</strong> {{ user_address.landmark }}</p>-->
                         <!--<p><strong>City:</strong> {{ user_address.city }}</p>-->
                         <!--<p><strong>State:</strong> {{ user_address.state }}</p>-->
-                        <!--<p><strong>Pincode:</strong> {{ user_address.pincode }}</p>-->
-                        <p><strong>Mobile:</strong> {{ user_address.phone }}</p>
-                        <p><strong>Address Type:</strong> {{ user_address.address_type }}</p>
-                        
+                        <p><strong>Pincode:</strong> {{ user_address.pincode }}</p>
+                        <p><strong>Mobile:</strong> {{ user_address.phone_number }}</p>
+                      
                     </div>
                     <div class="address-actions">
                         {% comment %} <button onclick="editAddress">Edit</button> {% endcomment %}
-                        <button id="editButton" onclick="openEditModal()">Edit</button>
+                        <a href="{% url 'user_profile'  %}">
+                            <button>Edit</button>
+                        </a>
 
 
                         <button onclick="removeAddress">Remove</button>
                     </div>
                 </div>
             {% else %}
-            <p>Athira C B</p>
-            <p>Cheriyampurath house, sulthan bathery , wayanad ,kerala -673592</p>
-            <p>Mobile: 9946271752</p>
-            <p><strong>Address Type:Home</strong> </p>
+           
             {% endif %}
         
     </div>
