@@ -660,7 +660,7 @@ def edit_product(request, id):
         product.price = request.POST['price']
         product.discount = request.POST['discount']
         product.sale_price = request.POST['sale-price']
-        product.product_image = request.POST['product_image']
+        # product.product_image = request.POST['product_image']
         #product.product_image = request.FILES.get('product-image')
         
         # Save the updated product
@@ -785,8 +785,8 @@ def change_password(request):
 #     return redirect('view_cart')
 
 
-@never_cache
-@login_required(login_url='login')
+# @never_cache
+# @login_required(login_url='login')
 def add_to_cart(request, id):
     product = Product1.objects.get(pk=id)
     cart, created = Cart.objects.get_or_create(user=request.user)
@@ -1376,3 +1376,14 @@ def save_profile(request):
 @login_required(login_url='login')
 def profile(request):
     return render(request, 'profile.html')
+
+
+def search_products(request):
+    query = request.GET.get('q', '')
+    products = Product1.objects.filter(product_name=query)
+    
+    context = {
+        'products': products,
+        'query': query,
+    }
+    return render(request, 'viewproduct.html', context)

@@ -52,6 +52,7 @@ urlpatterns = [
     path('profile/',views.profile,name="profile"),
     path('user_profile/',views.user_profile,name="user_profile"),
     path('save_profile/',views.save_profile,name="save_profile"),
+     path('search/', views.search_products, name='search_products'),
 
     
      path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),
