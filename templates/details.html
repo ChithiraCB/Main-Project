@@ -1,4 +1,5 @@
 {% load static %}
+{% load social_share %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,6 +24,56 @@
     <link href="{% static 'css/details.css' %}" rel="stylesheet">
     
         <style>
+            /* CSS for the modal */
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+                z-index: 999; /* Ensure overlay is below the modal but above other content */
+                display: none; /* Hide the overlay by default */
+              }
+              
+.modal {
+  display: none; /* Hide the modal by default */
+  position: fixed; /* Fixed position to overlay the page */
+  z-index: 1000; /* Ensure modal is above other elements */
+  left: 50%; /* Move the modal to the center horizontally */
+  top: 50%; /* Move the modal to the center vertically */
+  transform: translate(-50%, -50%); /* Center the modal precisely */
+  width: 200%; /* Set the width of the modal */
+  max-width: 400px; /* Set a maximum width for the modal */
+  max-height: 70%; 
+  background-color: white; /* Background color of the modal */
+  border-radius: 8px; /* Add some border radius for visual appeal */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a shadow for depth */
+}
+
+/* CSS for the modal content */
+.modal-content {
+  padding: 20px; /* Add padding to the modal content */
+}
+
+/* CSS for the close button */
+.close {
+  position: absolute; /* Position the close button */
+  top: 10px; /* Set the top position */
+  right: 10px; /* Set the right position */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+#rental_period_options {
+    display: flex;
+    align-items: center;
+  }
+  
+  #rental_period_options input[type="radio"] {
+    margin-right: 10px;
+  }
+  
+
             /* Style for the sidebar */
         .sidebar {
             width: 200px; /* Adjust the width as needed */
@@ -195,6 +246,7 @@ a[href*="wishlist"] i.fa-heart {
         
         </head>
         <body>
+
             <header>
                 <div class="logo">
                     <img src="" alt="">
@@ -278,15 +330,25 @@ a[href*="wishlist"] i.fa-heart {
                         </p>
                         <p class="product-discount">Discount: {{ product.discount }}% Off</p>
                         <p class="product-description">Product Description: {{ product.description }}</p>
+                        {% post_to_whatsapp object_or_url "Share via WhatsApp" %}
                         
+                        {% comment %} <div class="button-container">
+                            <form method="post" action="{% url 'add_to_cart' product.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success">Buy Now</button>
+                               
+                            </form>
+                           
+                            
+                        </div> {% endcomment %}
                         <div class="button-container">
                             <form method="post" action="{% url 'add_to_cart' product.id %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-success">Add to Cart</button>
+                                <button type="submit" class="btn btn-success">Buy Now</button>
                             </form>
-                            {% comment %} <button type="submit" class="btn btn-success">Buy now</button> {% endcomment %}
-                            
+                            <button id="rentBtn" class="btn btn-primary">Rent Now</button> <!-- This is the Rent Now button -->
                         </div>
+                        
                     </div>
                 </section>
         
@@ -305,5 +367,90 @@ a[href*="wishlist"] i.fa-heart {
     <footer>
         <!-- Your website footer with links, contact info, etc. -->
     </footer>
+    <div id="rentModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Rent Now</h2>
+    <form id="rentForm" method="post" action="">
+      {% csrf_token %}
+      <input type="hidden" name="product_id" value="{{ product.id }}">
+      <label for="rental_period">RENT PERIOD:</label>
+<div id="rental_period_options">
+  <input type="radio" id="rental_period_3_days" name="rental_period" value="3" checked>
+  <label for="rental_period_3_days">3 days</label>
+  
+  <input type="radio" id="rental_period_5_days" name="rental_period" value="5">
+  <label for="rental_period_5_days">5 days</label>
+  
+  <input type="radio" id="rental_period_10_days" name="rental_period" value="10">
+  <label for="rental_period_10_days">10 days</label>
+</div>
+
+      <label for="event_date">Event Date:</label>
+      <input type="text" id="event_date" name="event_date">
+      <input type="hidden" id="product_name" name="product_name" value="{{ product.product_name }}">
+      <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+  </div>
+</div>
+<div id="modalOverlay" class="modal-overlay"></div>
+      
 </body>
+<script>
+    // Get the modal
+    var modal = document.getElementById('rentModal');
+    
+    // Get the button that opens the modal
+    var btn = document.getElementById("rentBtn");
+    
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    
+    // When the user clicks the button, open the modal
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+    
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+    
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+    // Get the modal and overlay elements
+var modal = document.getElementById('rentModal');
+var overlay = document.getElementById('modalOverlay');
+
+// Get the button that opens the modal
+var btn = document.getElementById("rentBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal and show the overlay
+btn.onclick = function() {
+  modal.style.display = "block";
+  overlay.style.display = "block";
+}
+
+// When the user clicks on <span> (x) or outside the modal, close the modal and hide the overlay
+span.onclick = function() {
+  modal.style.display = "none";
+  overlay.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+    overlay.style.display = "none";
+  }
+}
+
+    </script>
+    
 </html>

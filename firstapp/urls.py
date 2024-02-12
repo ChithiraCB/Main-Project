@@ -52,7 +52,10 @@ urlpatterns = [
     path('profile/',views.profile,name="profile"),
     path('user_profile/',views.user_profile,name="user_profile"),
     path('save_profile/',views.save_profile,name="save_profile"),
-     path('search/', views.search_products, name='search_products'),
+    path('search/', views.search_products, name='search_products'),
+    path('rent_product/', views.rent_product, name='rent_product'),
+    path('rental/', views.rental, name='rental'),
+     path('addrentalproduct/', views.add_rental_product, name='addrentalproduct'),
 
     
      path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),

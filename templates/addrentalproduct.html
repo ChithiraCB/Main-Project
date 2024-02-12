@@ -1,0 +1,284 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Add Product</title>
+    <style>
+        /* Style for the form container */
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('/static/images/dp4.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 0;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color:; /* Dark green color for the header */
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: #003300; /* Dark green color for the footer */
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            width: 40%;
+            margin: 0 auto;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style for form labels */
+        .form-group label {
+            font-weight: bold;
+        }
+
+        /* Style for form inputs */
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        /* Style for form buttons */
+        .btn-primary {
+            background-color: #79bd82;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #27472b;
+        }
+        .Cart-icon{
+            position: absolute;
+            right: 0;
+            top:60px;
+
+        }
+        {% comment %} /* Add a class for the logo */
+        .logo {
+            width: 100px; /* Adjust the width as needed */
+            height: auto; /* To maintain the aspect ratio of the logo */
+            position: absolute;
+            left: 10px; /* Adjust the left position as needed */
+            top: 20px; /* Adjust the top position as needed */
+        } {% endcomment %}
+
+        /* Adjust the header style */
+        .header {
+            background-color: #f7444e;
+            color: #fff;
+            text-align: center; /* Center the content horizontally and vertically */
+            padding: 1px;
+            position: relative;
+            height: 15vh; /* Set the header's height to the viewport height */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    {% comment %} <div class="header">
+        <h2><center>Add product</center></h2>
+        <a href="{% url 'adminpanel' %}" style="margin-left: 10px;">Go to Dashboard</a>
+    </div> {% endcomment %}
+    
+
+    <!-- Form Container -->
+    <div class="form-container" id="product-form">
+        <form action="{% url 'addrentalproduct' %}" method="post" enctype="multipart/form-data" onsubmit="return validateProductForm();">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="product-name">Product Name</label>
+                <input type="text" id="product-name" name="product-name" class="form-control" required oninput="validateProductName(this)">
+                <span id="product-name-error" class="error-text"></span>
+            </div>
+            <div class="form-group">
+                <label for="category-name">Category Name</label>
+                <select id="category-name" name="category-name" class="form-control" required onchange="updateSubcategoryOptions()">
+                    <option value="">Select</option>
+                    <option value="ornaments">ornaments</option>
+                    <option value="bags">bags</option>
+                    <!-- Add more categories as needed -->
+                </select>
+            </div>
+            
+            
+            <!-- HTML code for the subcategory dropdown -->
+            <div class="form-group">
+                <label for="subcategory-name">Subcategory Name</label>
+                <select id="subcategory-name" name="subcategory-name" class="form-control" required>
+                    <!-- Subcategory options will be added dynamically here -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="stock">Stock</label>
+                <input type="number" id="stock" name="stock" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" class="form-control" oninput="validateDescription(this)" required></textarea>
+                <span id="description-error" class="error-text"></span>
+            </div>
+            <div class="form-group">
+                <label for="price">Rental Price</label>
+                <input type="number" id="price" name="price" class="form-control" required oninput="validatePrice(this); calculateSalePrice(document.getElementById('discount'))">
+                <span id="price-error" class="error-text"></span>
+            </div>
+            
+            <div class="form-group">
+                <label for="status">Status</label>
+                 <select id="status" name="status" class="form-control" required>
+                    <option value="active">active</option>
+                    <option value="inactive">inactive </option>
+                </select>
+            </div> 
+            <div class="form-group">
+                <label for="product-image">Product Image</label>
+                <input type="file" id="product-image" name="product-image" class="form-control" accept="image/*" required onchange="validateProductImage(this)">
+                <span id="product-image-error" class="error-text"></span>
+            </div><!-- Rest of your form content -->
+            <button type="submit" id="add-product-button" class="btn btn-primary">Add Product</button>
+            <button type="reset" class="btn btn-primary">Reset</button>
+        </form>
+    </div>
+
+    <!-- Footer Section -->
+    
+
+    <!-- JavaScript function for dynamic subcategory options -->
+    <script>
+        function validateProductName(input) {
+            const productNameError = document.getElementById("product-name-error");
+            const productNameRegex = /^[A-Za-z ]+$/;
+            if (!productNameRegex.test(input.value)) {
+                productNameError.textContent = "Product name should contain only alphabet characters.";
+            } else {
+                productNameError.textContent = "";
+            }
+        }
+
+        function validatePrice(input) {
+            const priceError = document.getElementById("price-error");
+            const priceValue = parseFloat(input.value);
+            if (isNaN(priceValue) || priceValue <= 100) {
+                priceError.textContent = "Price should be greater than 100.";
+            } else {
+                priceError.textContent = "";
+            }
+        }
+
+        function validateProductForm() {
+            // Validation for other fields (if needed)
+
+            // Continue with form submission or other actions if all validations pass
+            // You can add code here to submit the form data using AJAX or perform other actions.
+
+            // Make sure to check for any errors and return false if there are errors.
+            // Example:
+            const productNameError = document.getElementById("product-name-error").textContent;
+            const priceError = document.getElementById("price-error").textContent;
+
+            if (productNameError || priceError) {
+                return false;
+            }
+
+            return true;
+        }
+
+        function calculateSalePrice(discountInput) {
+            const priceInput = document.getElementById("price");
+            const salePriceInput = document.getElementById("sale-price");
+
+            const price = parseFloat(priceInput.value);
+            const discount = parseFloat(discountInput.value);
+
+            if (!isNaN(price) && !isNaN(discount)) {
+                const salePrice = price - (price * (discount / 100));
+                salePriceInput.value = salePrice.toFixed(2);
+            } else {
+                salePriceInput.value = "";
+            }
+        }
+        
+       
+        
+     
+            function updateSubcategoryOptions() {
+                console.log("Updating subcategory options...");
+                const categoryDropdown = document.getElementById("category-name");
+                const subcategoryDropdown = document.getElementById("subcategory-name");
+                const selectedCategory = categoryDropdown.value;
+        
+                // Initialize subcategoryOptions
+                const subcategoryOptions = {
+                    ornaments: ["Neckpieces", "Earrings", "Bangles"],
+                    bags: ["Clutches", "Handbags"],
+                    // Add more categories and subcategories as needed
+                };
+        
+                // Clear existing options
+                subcategoryDropdown.innerHTML = "";
+        
+                // Add new options based on the selected category
+                for (const option of subcategoryOptions[selectedCategory]) {
+                    const optionElement = document.createElement("option");
+                    optionElement.value = option;
+                    optionElement.textContent = option;
+                    subcategoryDropdown.appendChild(optionElement);
+                }
+            }
+       
+        function validateDiscount(input) {
+            const discountError = document.getElementById("discount-error");
+            const discountValue = parseFloat(input.value);
+        
+            if (isNaN(discountValue) || discountValue < 0 || discountValue >= 100) {
+                discountError.textContent = "Discount should be between 0 and 99.";
+            } else {
+                discountError.textContent = "";
+            }
+        }
+        function validateDescription(input) {
+            const descriptionError = document.getElementById("description-error");
+            const descriptionValue = input.value;
+            const wordCount = descriptionValue.trim().split(/\s+/).length;
+        
+            if (wordCount > 60) {
+                descriptionError.textContent = "Description should not exceed 30 words.";
+            } else {
+                descriptionError.textContent = "";
+            }
+        }
+        
+    
+    </script>
+    <!-- Add this JavaScript code to your adminpanel.html file -->
+
+    
+</body>
+</html>
