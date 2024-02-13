@@ -1406,50 +1406,40 @@ def rent_product(request,id):
 def rental(request):
     return render(request, 'rental.html')
 
-def add_rental_product(request):
-    return render(request, 'addrentalproduct.html')
-
 # def add_rental_product(request):
-#     if request.method == 'POST':
-#         category_name = request.POST.get('category-name')
-#         category, created = Category1.objects.get_or_create(name=category_name)
+#     return render(request, 'addrentalproduct.html')
 
-#         # Retrieve or create the Subcategory2 instance while providing the Category2 instance
-#         subcategory_name = request.POST.get('subcategory-name')
-#         subcategory, created = Subcategory1.objects.get_or_create(name=subcategory_name, category=category)
 
-#         # Handle the form submission
-#         product_name = request.POST.get('product-name')
-#         stock = request.POST.get('stock')  # Retrieve quantity from the form
-#         description = request.POST.get('description')
-#         price = request.POST.get('price')
-#         discount = request.POST.get('discount')
-#         status = request.POST.get('status')
-#         product_image = request.FILES.get('product-image')
 
-#         price = float(price)
-#         discount = float(discount)
+def add_rental_product(request):
+    if request.method == 'POST':
+        rental_product_name = request.POST.get('product-name')
+        category_name = request.POST.get('category-name')
+        subcategory_name = request.POST.get('subcategory-name')
+        stock = request.POST.get('stock')
+        description = request.POST.get('description')
+        rental_price = request.POST.get('price')
+        security_deposit = request.POST.get('security-amount')
+        status = request.POST.get('status')
+        image = request.FILES.get('product-image')
 
-#         # Calculate sale_price
-#         sale_price = price - (price * (discount / 100))
+        # Create and save the RentalProduct object
+        rental_product = RentalProduct(
+            rental_product_name=rental_product_name,
+            category=category_name,
+            subcategory=subcategory_name,
+            stock=stock,
+            description=description,
+            rental_price=rental_price,
+            security_deposit=security_deposit,
+            status=status,
+            image=image
+        )
+        rental_product.save()
 
-#         # Create a new Product2 object and save it to the database
-#         product = Product1(
-#             product_name=product_name,
-#             category=category,
-#             subcategory=subcategory,
-#             stock=stock,  # Assign the quantity field
-#             description=description,
-#             price=price,
-#             discount=discount,
-#             sale_price=sale_price,
-#             status=status,
-#             product_image=product_image,
-#         )
-#         product.save()
+        # Redirect to a success page or dashboard
+        return redirect('adminpanel')  # Replace 'adminpanel' with the actual URL name for your admin panel
 
-#         # Redirect to a success page or any other desired action
-#         return redirect('viewproduct')
-
-#     return render(request, 'addproduct.html')
+    # If the request method is not POST, render the form template
+    return render(request, 'addrentalproduct.html')
 

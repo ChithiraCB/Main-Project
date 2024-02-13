@@ -419,10 +419,23 @@ function closeModal() {
                     descriptionError.textContent = "";
                 }
             }
-            
-        
-   
+
+           
+
+            function calculateSecurityAmount(input) {
+                const rentalPrice = parseFloat(input.value);
+                const securityAmountInput = document.getElementById("security-amount");
     
+                if (!isNaN(rentalPrice)) {
+                    // Calculate security amount (assuming it's 50% of the rental price)
+                    const securityAmount = rentalPrice * 0.5; // Adjust this calculation as needed
+                    securityAmountInput.value = securityAmount.toFixed(2);
+                } else {
+                    securityAmountInput.value = "";
+                }
+            }
+    
+           
     </script>
     
 

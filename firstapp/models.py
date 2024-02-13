@@ -391,3 +391,16 @@ class ProfileUser(models.Model):
     
 
     
+class RentalProduct(models.Model):
+    rental_product_name = models.CharField(max_length=255)
+    category = models.ForeignKey(Category1, on_delete=models.CASCADE)
+    subcategory = models.ForeignKey(Subcategory1, on_delete=models.CASCADE)
+    stock = models.IntegerField()
+    description = models.TextField()
+    rental_price = models.DecimalField(max_digits=10, decimal_places=2)
+    security_deposit = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=20, choices=(('active', 'Active'), ('inactive', 'Inactive')))
+    image = models.ImageField(upload_to='rental_product_images/')
+
+    def __str__(self):
+        return self.name

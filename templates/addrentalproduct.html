@@ -110,7 +110,7 @@
 
     <!-- Form Container -->
     <div class="form-container" id="product-form">
-        <form action="{% url 'addrentalproduct' %}" method="post" enctype="multipart/form-data" onsubmit="return validateProductForm();">
+        <form action="{% url 'adminpanel' %}" method="post" enctype="multipart/form-data" onsubmit="return validateProductForm();">
             {% csrf_token %}
             <div class="form-group">
                 <label for="product-name">Product Name</label>
@@ -146,8 +146,14 @@
             </div>
             <div class="form-group">
                 <label for="price">Rental Price</label>
-                <input type="number" id="price" name="price" class="form-control" required oninput="validatePrice(this); calculateSalePrice(document.getElementById('discount'))">
+                <input type="number" id="price" name="price" class="form-control" required oninput="validatePrice(this); calculateSecurityAmount(this)">
                 <span id="price-error" class="error-text"></span>
+            </div>
+            
+
+            <div class="form-group">
+                <label for="security-amount">Security Amount</label>
+                <input type="number" id="security-amount" name="security-amount" class="form-control" readonly>
             </div>
             
             <div class="form-group">
@@ -274,6 +280,24 @@
                 descriptionError.textContent = "";
             }
         }
+        function calculateSecurityAmount(input) {
+            const rentalPrice = parseFloat(input.value);
+            const securityAmountInput = document.getElementById("security-amount");
+
+            if (!isNaN(rentalPrice)) {
+                // Calculate security amount (assuming it's 50% of the rental price)
+                const securityAmount = rentalPrice * 0.5; // Adjust this calculation as needed
+                securityAmountInput.value = securityAmount.toFixed(2);
+            } else {
+                securityAmountInput.value = "";
+            }
+        }
+
+       
+        
+        
+
+
         
     
     </script>
