@@ -13,6 +13,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from .forms import  UserForm, UserProfileForm
+from django.core.exceptions import ObjectDoesNotExist
 
 #from django.contrib.auth.models import User
 
@@ -1413,9 +1414,13 @@ def rental(request):
 
 def add_rental_product(request):
     if request.method == 'POST':
-        rental_product_name = request.POST.get('product-name')
         category_name = request.POST.get('category-name')
+        category, created = Category1.objects.get_or_create(name=category_name)
+        
         subcategory_name = request.POST.get('subcategory-name')
+        subcategory, created = Subcategory1.objects.get_or_create(name=subcategory_name, category=category)
+
+        rental_product_name = request.POST.get('product-name')
         stock = request.POST.get('stock')
         description = request.POST.get('description')
         rental_price = request.POST.get('price')
@@ -1426,8 +1431,8 @@ def add_rental_product(request):
         # Create and save the RentalProduct object
         rental_product = RentalProduct(
             rental_product_name=rental_product_name,
-            category=category_name,
-            subcategory=subcategory_name,
+            category=category,
+            subcategory=subcategory,
             stock=stock,
             description=description,
             rental_price=rental_price,
@@ -1439,7 +1444,9 @@ def add_rental_product(request):
 
         # Redirect to a success page or dashboard
         return redirect('adminpanel')  # Replace 'adminpanel' with the actual URL name for your admin panel
-
-    # If the request method is not POST, render the form template
+    
     return render(request, 'addrentalproduct.html')
 
+def view_rental_product(request):
+    rental_products = RentalProduct.objects.all()  # Retrieve all rental products from the database
+    return render(request, 'viewrentalproduct.html', {'rental_products': rental_products})

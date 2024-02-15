@@ -55,7 +55,8 @@ urlpatterns = [
     path('search/', views.search_products, name='search_products'),
     path('rent_product/', views.rent_product, name='rent_product'),
     path('rental/', views.rental, name='rental'),
-     path('addrentalproduct/', views.add_rental_product, name='addrentalproduct'),
+    path('addrentalproduct/', views.add_rental_product, name='addrentalproduct'),
+    path('viewrentalproduct/', views.view_rental_product, name='viewrentalproduct'),
 
     
      path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),

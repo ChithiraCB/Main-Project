@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Products</title>
+    <!-- Add any necessary CSS or JavaScript links here -->
+    <head>
+        <!-- Basic -->
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE-edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="keywords" content="" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+        <title>fashion finds hub</title>
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+        <!-- Font Awesome styles -->
+        <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+        <!-- jQuery UI CSS for the date picker -->
+        <link rel="stylesheet" type="text css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <!-- Custom styles for this template -->
+        <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+        <!-- Responsive style -->
+        <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
+        <style>
+            .left-corner-heading {
+                position: absolute;
+                left: ; /* Align it to the left side of its container */
+                top: 0; /* Align it to the top of its container */
+            }
+            .delete-button, .edit-button {
+                background-color: #ff0000; /* Red color */
+                color: #fff; /* Text color */
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-right: 5px; /* Add some spacing between the buttons */
+            }
+            
+            .delete-button:hover, .edit-button:hover {
+                background-color: #cc0000; /* Darker red color on hover */
+            }
+        </style>
+        
+    
+    </head>
+<body class="sub_page"> 
+    <div class="hero_area">
+       <!-- header section strats -->
+       <header class="header_section" style="background-color: white;">
+
+          <div class="container">
+             <nav class="navbar navbar-expand-lg custom_nav-container ">
+                <!--<a class="navbar-brand" href="index.html"><img width="250" src="images/logo.png" alt="#" /></a>-->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class=""> </span>
+                </button>
+               
+          </div>
+        </header>
+        <section class="inner_page_head">
+    
+            <div class="container_fuild">
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="full">
+                            <h4 class="left-corner-heading">View product</h4>
+                            
+                        </div>
+                        <form class="form-inline" style="float: right;" action="{% url 'search_products' %}" method="get">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search" name="q" value="{{ query }}">
+
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Subcategory</th>
+                    <th>Stock</th>
+                    <th>Description</th>
+                    <th>Rental Price</th>
+                    <th>Security Deposit</th>
+                    <th>Status</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rental_product in rental_products %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ rental_product.rental_product_name }}</td>
+                    <td>{{ rental_product.category }}</td>
+                    <td>{{ rental_product.subcategory }}</td>
+                    <td>{{ rental_product.stock }}</td>
+                    <td>{{ rental_product.description }}</td>
+                    <td>{{ rental_product.rental_price }}</td>
+                    <td>{{ rental_product.security_deposit }}</td>
+                    <td>{{ rental_product.status }}</td>
+                    <td><img src="{{ rental_product.image.url }}" alt="Product Image" style="max-width: 100px;"></td>
+               
+                
+               <!-- Add the following code inside the <td> element where you have the delete button -->
+{% comment %} <td>
+    <form action="{% url 'delete_product' product.product_id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="product_id" value="{{ product.product_id }}">
+        <button type="submit" class="delete-button">Delete</button>
+    </form>
+    
+    <!-- Add an Edit button with the same style -->
+    <a class="edit-button" href="{% url 'edit_product' product.product_id %}">Edit</a>
+</td> {% endcomment %}
+
+<td>
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+        <button type="submit" class="delete-button">Delete</button>
+    </form>
+</td>
+    <!-- Edit button --><td>
+    <a class="edit-button" href="">Edit</a>
+</td>
+
+
+                    
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

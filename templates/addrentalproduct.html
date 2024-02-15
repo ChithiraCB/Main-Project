@@ -33,7 +33,7 @@
             background-color: #fff;
             border: 1px solid #ddd;
             padding: 20px;
-            width: 40%;
+            width: 60%;
             margin: 0 auto;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
@@ -57,7 +57,7 @@
 
         /* Style for form buttons */
         .btn-primary {
-            background-color: #79bd82;
+            background-color:#f7444e ;
             color: #fff;
             border: none;
             padding: 10px 20px;
@@ -110,7 +110,7 @@
 
     <!-- Form Container -->
     <div class="form-container" id="product-form">
-        <form action="{% url 'adminpanel' %}" method="post" enctype="multipart/form-data" onsubmit="return validateProductForm();">
+        <form action="{% url 'addrentalproduct' %}" method="post" enctype="multipart/form-data" onsubmit="return validateProductForm();">
             {% csrf_token %}
             <div class="form-group">
                 <label for="product-name">Product Name</label>
@@ -165,7 +165,7 @@
             </div> 
             <div class="form-group">
                 <label for="product-image">Product Image</label>
-                <input type="file" id="product-image" name="product-image" class="form-control" accept="image/*" required onchange="validateProductImage(this)">
+                <input type="file" id="product-image" name="product-image" class="form-control" accept="image/*" required >
                 <span id="product-image-error" class="error-text"></span>
             </div><!-- Rest of your form content -->
             <button type="submit" id="add-product-button" class="btn btn-primary">Add Product</button>
