@@ -204,7 +204,7 @@ main {
   width: calc(22% - 20px); /* Adjust the width based on your layout */
   border-radius: 5px;
   transition: transform 0.2s;
-  height:500px;
+  height:350px;
  
 }
 .strikethrough {
@@ -300,9 +300,8 @@ a[href*="wishlist"] i.fa-heart {
             <img src="" alt="">
         </div>
         <h2 style="font-size: 25px;">RENTAL ACCESSORIES</h2>
-
+ {% comment %}
         <nav>
-           
             <ul>
                 
                 <li><a href="{% url 'userhome' %}"><strong>HOME</strong></a></li>
@@ -312,7 +311,7 @@ a[href*="wishlist"] i.fa-heart {
                         <a href="{% url 'products_by_subcategory' 'Bangles' %}">BANGLES</a>
                         <a href="{% url 'products_by_subcategory' 'Earrings' %}">EARRINGS</a>
                         <a href="{% url 'products_by_subcategory' 'Neckpieces' %}">NECKPIECES</a>
-                        {% comment %} <a href="#">RING</a> {% endcomment %}
+                        {% comment %} <a href="#">RING</a> 
                     </div>
                 </li>
                 
@@ -329,6 +328,7 @@ a[href*="wishlist"] i.fa-heart {
                 </li> 
             </ul>
         </nav>
+            {% endcomment %}
        <div class="search">
             <input type="text" placeholder="Search" id="searchInput">
             <button  id="search" onclick="searchProducts()">Search</button>

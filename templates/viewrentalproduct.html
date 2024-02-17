@@ -4,77 +4,68 @@
 <head>
     <title>View Products</title>
     <!-- Add any necessary CSS or JavaScript links here -->
-    <head>
-        <!-- Basic -->
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE-edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="keywords" content="" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
-        <title>fashion finds hub</title>
-        <!-- Bootstrap core CSS -->
-        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
-        <!-- Font Awesome styles -->
-        <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
-        <!-- jQuery UI CSS for the date picker -->
-        <link rel="stylesheet" type="text css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <!-- Custom styles for this template -->
-        <link href="{% static 'css/style.css' %}" rel="stylesheet" />
-        <!-- Responsive style -->
-        <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
-        <style>
-            .left-corner-heading {
-                position: absolute;
-                left: ; /* Align it to the left side of its container */
-                top: 0; /* Align it to the top of its container */
-            }
-            .delete-button, .edit-button {
-                background-color: #ff0000; /* Red color */
-                color: #fff; /* Text color */
-                border: none;
-                padding: 5px 10px;
-                border-radius: 5px;
-                cursor: pointer;
-                margin-right: 5px; /* Add some spacing between the buttons */
-            }
-            
-            .delete-button:hover, .edit-button:hover {
-                background-color: #cc0000; /* Darker red color on hover */
-            }
-        </style>
-        
-    
-    </head>
+    <!-- Basic -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE-edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+    <title>fashion finds hub</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+    <!-- Font Awesome styles -->
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+    <!-- jQuery UI CSS for the date picker -->
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+    <!-- Responsive style -->
+    <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
+    <style>
+        .left-corner-heading {
+            position: absolute;
+            left: ; /* Align it to the left side of its container */
+            top: 0; /* Align it to the top of its container */
+        }
+        .delete-button, .edit-button {
+            background-color: #ff0000; /* Red color */
+            color: #fff; /* Text color */
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 5px; /* Add some spacing between the buttons */
+        }
+
+        .delete-button:hover, .edit-button:hover {
+            background-color: #cc0000; /* Darker red color on hover */
+        }
+    </style>
+</head>
 <body class="sub_page"> 
     <div class="hero_area">
        <!-- header section strats -->
        <header class="header_section" style="background-color: white;">
-
           <div class="container">
              <nav class="navbar navbar-expand-lg custom_nav-container ">
                 <!--<a class="navbar-brand" href="index.html"><img width="250" src="images/logo.png" alt="#" /></a>-->
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class=""> </span>
                 </button>
-               
           </div>
         </header>
         <section class="inner_page_head">
-    
             <div class="container_fuild">
-                
                 <div class="row">
                     <div class="col-md-12">
                         <div class="full">
-                            <h4 class="left-corner-heading">View product</h4>
-                            
+                            <h4 class="left-corner-heading"><center>VIEW RENTAL PRODUCTS</center></h4>
                         </div>
                         <form class="form-inline" style="float: right;" action="{% url 'search_products' %}" method="get">
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Search" name="q" value="{{ query }}">
-
                                 <div class="input-group-append">
                                     <button class="btn btn-primary" type="submit">
                                         <i class="fa fa-search" aria-hidden="true"></i>
@@ -86,10 +77,7 @@
                 </div>
             </div>
         </section>
-    
-
-
-        <table border="1">
+        <table class="table">
             <thead>
                 <tr>
                     <th>No.</th>
@@ -118,37 +106,82 @@
                     <td>{{ rental_product.security_deposit }}</td>
                     <td>{{ rental_product.status }}</td>
                     <td><img src="{{ rental_product.image.url }}" alt="Product Image" style="max-width: 100px;"></td>
-               
-                
-               <!-- Add the following code inside the <td> element where you have the delete button -->
-{% comment %} <td>
-    <form action="{% url 'delete_product' product.product_id %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="product_id" value="{{ product.product_id }}">
-        <button type="submit" class="delete-button">Delete</button>
-    </form>
-    
-    <!-- Add an Edit button with the same style -->
-    <a class="edit-button" href="{% url 'edit_product' product.product_id %}">Edit</a>
-</td> {% endcomment %}
-
-<td>
-    <form action="" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="product_id" value="{{ product.id }}">
-        <button type="submit" class="delete-button">Delete</button>
-    </form>
-</td>
-    <!-- Edit button --><td>
-    <a class="edit-button" href="">Edit</a>
-</td>
-
-
-                    
-                    
+                    <td>
+                        <form action="{% url 'delete_rental_product' rental_product.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ rental_product.id }}">
+                            <button type="submit" class="delete-button">Delete</button>
+                        </form>
+                        <a class="edit-button" href="#" onclick="openEditModal({{ rental_product.id }})">Edit</a>
+                    </td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Your edit form goes here -->
+                    <div class="form-container" id="product-form">
+                        <form action="{% url 'addrentalproduct' %}" method="post" enctype="multipart/form-data" onsubmit="return validateProductForm();">
+                            {% csrf_token %}
+                            <!-- Your form fields go here -->
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+<script>
+    function openEditModal(productId) {
+        // Find the rental product data associated with the productId
+        var rentalProduct = findRentalProductById(productId);
+
+        // Populate the form fields with the rental product data
+        document.getElementById("product-name").value = rentalProduct.rental_product_name;
+        document.getElementById("category-name").value = rentalProduct.category;
+        // You can populate other fields similarly
+
+        // Display the modal
+        $('#editModal').modal('show');
+    }
+
+    function findRentalProductById(productId) {
+        // You would typically fetch the rental product data from your backend here
+        // For demonstration purposes, I'll use a hardcoded example
+        var rentalProducts = [
+            // Assuming rental_products is a list of objects with rental product data
+            // Replace this with your actual data
+            {% for rental_product in rental_products %}
+                {
+                    id: {{ rental_product.id }},
+                    rental_product_name: "{{ rental_product.rental_product_name }}",
+                    category: "{{ rental_product.category }}",
+                    // Populate other fields similarly
+                },
+            {% endfor %}
+        ];
+
+        // Find and return the rental product with the specified ID
+        return rentalProducts.find(function(product) {
+            return product.id === productId;
+        });
+    }
+</script>
+
 </html>

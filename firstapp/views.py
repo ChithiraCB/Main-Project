@@ -1450,3 +1450,19 @@ def add_rental_product(request):
 def view_rental_product(request):
     rental_products = RentalProduct.objects.all()  # Retrieve all rental products from the database
     return render(request, 'viewrentalproduct.html', {'rental_products': rental_products})
+
+def delete_rental_product(request, id):
+    if request.method == 'POST':
+        # Get the rental product object
+        rental_product = get_object_or_404(RentalProduct, pk=id)
+        # Update the status to 'inactive'
+        rental_product.status = 'inactive'
+        rental_product.save()
+        # Redirect to a relevant page after deletion
+        return redirect('viewrentalproduct')
+    # Handle GET requests if needed
+    return redirect('viewrentalproduct') 
+
+def rental_products(request):
+    rental_products = RentalProduct.objects.all()
+    return render(request, 'rental_products.html', {'rental_products': rental_products})

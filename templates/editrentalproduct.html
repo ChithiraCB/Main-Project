@@ -1,0 +1,230 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE-edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+    <title>fashion finds hub</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+    <!-- Font Awesome styles -->
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+    <!-- jQuery UI CSS for the date picker -->
+    <link rel="stylesheet" type="text css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+    <!-- Responsive style -->
+    <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
+    <style>
+        .back-button {
+            text-decoration: none;
+            color: #333; /* Set the color you prefer */
+            margin-left: 1200px; /* Add margin to the right of the icon */
+        }
+        /* Add custom CSS styles here */
+#product-image-preview {
+    max-width: 200px; /* Set the maximum width for the image */
+    max-height: 200px; /* Set the maximum height for the image */
+}
+
+        /* Add custom CSS styles here */
+        .container {
+            max-width: 800px;
+            margin-top: 50px;
+            margin-left: 50 px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input[type="text"],
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #cc0000;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
+
+</head>
+
+    <body class="sub_page"> 
+        {% comment %} <div class="hero_area">
+           <!-- header section strats -->
+           <header class="header_section" style="background-color: white;">
+    
+              {% comment %} <div class="container">
+                 <nav class="navbar navbar-expand-lg custom_nav-container ">
+                    <!--<a class="navbar-brand" href="index.html"><img width="250" src="images/logo.png" alt="#" /></a>-->
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class=""> </span>
+                    </button> 
+                   
+              </div>
+            </header> {% endcomment %}
+            <section class="inner_page_head">
+        
+                <div class="container_fuild">
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="full">
+                                <h class="left-corner-heading"><strong>EDIT PRODUCT</strong></h2>
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div >
+                    <!-- Add a back button with the icon -->
+                    <a href="{% url 'adminpanel' %}" class="back-button">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                
+                    <!-- Rest of your form and content -->
+                    <!-- ... -->
+                </div>
+                
+            </section>
+    <div class="container">
+       
+        <form method="post" enctype="multipart/form-data">
+
+            {% csrf_token %}
+            <!-- Edit Product Form Fields -->
+            <label for="product-name">Product Name</label>
+            <input type="text" name="product-name" value="{{ product.product_name }}" required>
+
+            <label for="category-name">Category Name</label>
+            <select name="category-name" id="category-name" required onchange="updateSubcategoryOptions()">
+                <option value="">Select</option>
+                <option value="ornaments" {% if product.category == "ornaments" %}selected{% endif %}>Ornaments</option>
+                <option value="bags" {% if product.category == "bags" %}selected{% endif %}>Bags</option>
+                <!-- Add other category options as needed -->
+            </select>
+
+            <label for="subcategory-name">Subcategory Name</label>
+            <select name="subcategory-name" id="subcategory-name" required>
+                <!-- Subcategory options will be added dynamically here -->
+            </select>
+            
+            <!-- Other form fields -->
+            <label for="stock">Stock</label>
+            <input type="number" name="stock" value="{{ product.stock }}" required>
+
+            <label for="description">Description</label>
+            <textarea name="description" required>{{ product.description }}</textarea>
+
+            <label for="price">Product Price</label>
+            <input type="number" name="price" value="{{ product.price }}" required>
+
+            <label for="discount">Discount (%)</label>
+            <input type="number" name="discount" value="{{ product.discount }}" oninput="calculateSalePrice()">
+
+
+            <label for="sale-price">Sale Price</label>
+            <input type="number" name="sale-price" value="{{ product.sale_price }}" readonly>
+
+           
+
+            <!-- Add this block of code below your form fields to display the product image -->
+            
+            {% comment %} <label for="product-image">Product Image</label>
+            {% if product.product_image %}
+            <img  src="{{ product.product_image.url }}" alt="{{ product.product_name }}" style="max-width: 200px; max-height: 200px;">
+            {% endif %}
+            <input type="file" id="product_image" name="product_image" accept=".jpeg,.jpg,.png">
+             {% endcomment %}
+
+            <button type="submit">Update Product</button>
+        </form>
+    </div>
+
+    <script>
+        // JavaScript code to update subcategory options dynamically based on the selected category goes here
+        function updateSubcategoryOptions() {
+            const categoryDropdown = document.getElementById("category-name");
+            const subcategoryDropdown = document.getElementById("subcategory-name");
+            const selectedCategory = categoryDropdown.value;
+            const subcategoryOptions = {
+                ornaments: ["Neckpieces", "Earrings", "Bangles"],
+                bags: ["Clutches", "Handbags"],
+            };
+
+            // Clear existing options
+            subcategoryDropdown.innerHTML = "";
+
+            // Add new options based on the selected category
+            for (const option of subcategoryOptions[selectedCategory]) {
+                const optionElement = document.createElement("option");
+                optionElement.value = option;
+                optionElement.textContent = option;
+                subcategoryDropdown.appendChild(optionElement);
+            }
+        }
+
+        // Initial call to populate subcategories based on the initial selected category
+        updateSubcategoryOptions();
+
+        <!-- Add this to your HTML file inside the <head> section -->
+           
+                // Function to calculate the sale price
+                function calculateSalePrice() {
+                    const priceInput = document.querySelector('input[name="price"]');
+                    const discountInput = document.querySelector('input[name="discount"]');
+                    const salePriceInput = document.querySelector('input[name="sale-price"]');
+                    
+                    const price = parseFloat(priceInput.value);
+                    const discount = parseFloat(discountInput.value);
+            
+                    // Check if both price and discount are valid numbers
+                    if (!isNaN(price) && !isNaN(discount)) {
+                        const salePrice = price - (price * (discount / 100));
+                        salePriceInput.value = salePrice.toFixed(2); // Display with 2 decimal places
+                    } else {
+                        salePriceInput.value = ""; // Clear the sale price if inputs are invalid
+                    }
+                }
+                
+                // Initial call to calculate sale price when the page loads
+                window.addEventListener('load', calculateSalePrice);
+            
+    </script>
+</body>
+</html>

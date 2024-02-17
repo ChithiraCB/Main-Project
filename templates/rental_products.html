@@ -1,5 +1,5 @@
 {% load static %}
-{% include 'includes/productheader.html' %}
+{% include 'includes/rentalheader.html' %}
 {% block content %}
     <div class="sidebar">
         <!-- Add your filter options and content for the sidebar here -->
@@ -13,27 +13,26 @@
 
     <main>
         <div class="product-container">
-            {% for product in products %}
+            {% for rental_product in rental_products %}
                 <div class="product-card">
-                    <a href="{% url 'product_details' product.id %}">
-                        {% if product.product_image %}
-                            <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}">
+                    <a href="{% url 'product_details' rental_product.id %}">
+                        {% if rental_product.image %}
+                            <img src="{{ rental_product.image.url }}" alt="{{ rental_product.rental_product_name }}">
                         {% endif %}
                     </a>
                     <div class="product-details">
-                        <h4>{{ product.product_name }}</h4> 
-                        <p>Rs.{{ product.sale_price }}</p>
-                        <p>{{ product.discount }}%</p>
-                        <p class="strikethrough">Rs.{{ product.price }}
-                        <form method="post" action="{% url 'add_to_wishlist' product.id %}">
+                        <h4>{{ rental_product.rental_product_name }}</h4> 
+                        <p>Rs.{{ rental_product.rental_price }}</p>
+                        
+                        {% comment %} <form method="post" action="{% url 'add_to_wishlist' rental_product.id %}">
                             {% csrf_token %}
                             <button class="wishlist-button" type="submit">Add to Wishlist</button>
-                        </form>
+                        </form> {% endcomment %}
                         
-                            <form method="post" action="{% url 'add_to_cart' product.id %}">
+                            {% comment %} <form method="post" action="{% url 'add_to_cart' rental_product.id %}">
                                 {% csrf_token %}
                                 <button class="cart-button" type="submit">Add to Cart</button>
-                            </form>
+                            </form> {% endcomment %}
                         
                     </div>
                 </div>

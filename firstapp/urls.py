@@ -54,10 +54,11 @@ urlpatterns = [
     path('save_profile/',views.save_profile,name="save_profile"),
     path('search/', views.search_products, name='search_products'),
     path('rent_product/', views.rent_product, name='rent_product'),
-    path('rental/', views.rental, name='rental'),
+    path('rental_products/', views.rental_products, name='rental_products'),
     path('addrentalproduct/', views.add_rental_product, name='addrentalproduct'),
     path('viewrentalproduct/', views.view_rental_product, name='viewrentalproduct'),
-
+    path('delete_rental_product/<int:id>/', views.delete_rental_product, name='delete_rental_product'),
+    
     
      path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),
      path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),
