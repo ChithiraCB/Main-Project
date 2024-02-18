@@ -15,7 +15,7 @@
         <div class="product-container">
             {% for rental_product in rental_products %}
                 <div class="product-card">
-                    <a href="{% url 'product_details' rental_product.id %}">
+                    <a href="{% url 'rental_details' rental_product.id %}">
                         {% if rental_product.image %}
                             <img src="{{ rental_product.image.url }}" alt="{{ rental_product.rental_product_name }}">
                         {% endif %}

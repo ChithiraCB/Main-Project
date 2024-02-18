@@ -1466,3 +1466,10 @@ def delete_rental_product(request, id):
 def rental_products(request):
     rental_products = RentalProduct.objects.all()
     return render(request, 'rental_products.html', {'rental_products': rental_products})
+
+def rental_details(request, id):
+    # Retrieve the product details from the database
+    rental_products = get_object_or_404(RentalProduct, id=id)
+
+    # Render the product details template with the product data
+    return render(request, 'rentaldetails.html', {'rental_products': rental_products})

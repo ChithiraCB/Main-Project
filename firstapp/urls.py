@@ -58,6 +58,9 @@ urlpatterns = [
     path('addrentalproduct/', views.add_rental_product, name='addrentalproduct'),
     path('viewrentalproduct/', views.view_rental_product, name='viewrentalproduct'),
     path('delete_rental_product/<int:id>/', views.delete_rental_product, name='delete_rental_product'),
+    path('rental/<int:id>/', views.rental_details, name='rental_details'),
+
+
     
     
      path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),

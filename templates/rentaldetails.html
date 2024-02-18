@@ -1,6 +1,35 @@
 {% load static %}
-{% include 'includes/rentalheader.html' %}
+{% load social_share %}
+{% include 'includes/detailsheader.html' %}
+
 {% block content %}
+<main>
+    <section class="product-card">
+        <div class="product-image">
+            <img src="{{ rental_products.image.url }}" alt="{{ rental_products.rental_product_name }}">
+        </div>
+        
+        <div class="product-details">
+            <h1>{{ rental_products.rental_product_name }}</h1>
+            <p class="product-price">
+                <span class="sale-price">Rent price : Rs.{{ rental_products.rental_price }}</span>
+               
+            </p>
+          
+            <p class="product-description">Product Description: {{ rental_products.description }}</p>
+            {% post_to_whatsapp object_or_url "Share via WhatsApp" %}
+            
+            <div class="button-container">
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Rent Now</button>
+                </form>
+                {% comment %} <button id="rentBtn" class="btn btn-primary">Rent Now</button> <!-- This is the Rent Now button --> {% endcomment %}
+            </div>
+            
+        </div>
+    </section>
+</main>
 
 
 
