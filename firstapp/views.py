@@ -1473,3 +1473,21 @@ def rental_details(request, id):
 
     # Render the product details template with the product data
     return render(request, 'rentaldetails.html', {'rental_products': rental_products})
+
+# def rentalproducts_by_subcategory(request, subcategory_name):
+#     # Get the subcategory object based on the subcategory name
+#     subcategory = Subcategory1.objects.get(name=subcategory_name)
+    
+#     # Filter rental products based on the subcategory
+#     rental_products = RentalProduct.objects.filter(subcategory=subcategory)
+    
+#     return render(request, 'rental_products.html', {'rental_products': rental_products})
+
+def rentalproducts_by_subcategory(request, subcategory):
+    # Retrieve a list of Subcategory1 objects based on the provided subcategory name
+    subcategories = get_list_or_404(Subcategory1, name=subcategory)
+
+    # Retrieve products based on the list of Subcategory1 objects
+    rental_products = RentalProduct.objects.filter(subcategory__in=subcategories)
+
+    return render(request, 'rental_products.html', {'rental_products': rental_products})

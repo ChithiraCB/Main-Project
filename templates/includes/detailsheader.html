@@ -112,6 +112,15 @@ display: block;
 main {
 padding: 20px;
 }
+.product-image img {
+    width: 500px; /* Adjust the width to your desired size */
+    height: auto; /* This maintains the image's aspect ratio */
+    transition: transform 0.3s; /* Add a smooth transition for the zoom effect */
+}
+
+.product-image:hover img {
+    transform: scale(1.2); /* Increase the scale for the zoom effect on hover */
+        }
 
 </style>
 

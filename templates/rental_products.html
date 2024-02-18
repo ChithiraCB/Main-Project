@@ -3,13 +3,16 @@
 {% block content %}
     <div class="sidebar">
         <!-- Add your filter options and content for the sidebar here -->
-        <h3>Ornaments</h3>
-        <ul>
-            <li><a href="{% url 'products_by_subcategory' 'Bangles' %}">Bangles</a></li>
-            <li><a href="{% url 'products_by_subcategory' 'Earrings' %}">Earrings</a></li>
-            <li><a href="{% url 'products_by_subcategory' 'Neckpieces' %}">Neckpieces</a></li>
-        </ul>
-    </div>
+        
+            <h3>Ornaments</h3>
+            <ul>
+                <li><a href="{% url 'rentalproducts_by_subcategory' 'Bangles' %}"  >Bangles</a></li>
+                <li><a href="{% url 'rentalproducts_by_subcategory' 'Earrings' %}">Earrings</a></li>
+                <li><a href="{% url 'rentalproducts_by_subcategory' 'Neckpieces' %}"  >Neckpieces</a></li>
+                <li><a href="{% url 'rentalproducts_by_subcategory' 'Jewellery set' %}" >Jewellery Set</a></li>
+            </ul>
+        </div>
+        
 
     <main>
         <div class="product-container">
@@ -58,7 +61,7 @@
 
         function loadProductsBySubcategory(subcategory) {
             $.ajax({
-                url: '{% url "products_by_subcategory" "placeholder" %}'.replace('placeholder', subcategory),
+                url: '{% url "rentalproducts_by_subcategory" "placeholder" %}'.replace('placeholder', subcategory),
                 type: 'GET',
                 success: function (data) {
                     $('#product-container').html(data);
@@ -69,7 +72,7 @@
             });
         }
     </script>
-    <script>
+        <script>
         // JavaScript code to handle adding to the wishlist
         const wishlistForm = document.getElementById('wishlist-form');
         const wishlistLink = document.getElementById('wishlist-link');
