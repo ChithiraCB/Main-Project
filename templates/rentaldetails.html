@@ -11,26 +11,88 @@
         
         <div class="product-details">
             <h1>{{ rental_products.rental_product_name }}</h1>
-            <p class="product-price">
-                <span class="sale-price">Rent price : Rs.{{ rental_products.rental_price }}</span>
-               
-            </p>
-          
+            <div class="price-options-container"> <!-- Container for rental price and options -->
+                <p class="product-price">
+                    <span class="sale-price" id="rent-price">Rent price : Rs.{{ rental_products.rental_price }}</span>
+                </p>
+
+                <div class="rent-duration">
+                    <input type="radio" id="4-days" name="rent-duration" value="4">
+                    <label for="4-days">4 Days</label>
+                    
+                    <input type="radio" id="8-days" name="rent-duration" value="8">
+                    <label for="8-days">8 Days</label>
+                </div>
+
+                <p class="refund-amount">(+ Refundable security amount)</p> <!-- Refundable security amount inside price-options-container -->
+            </div>
             <p class="product-description">Product Description: {{ rental_products.description }}</p>
-            {% post_to_whatsapp object_or_url "Share via WhatsApp" %}
-            
-            <div class="button-container">
-                <form method="post" action="">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-success">Rent Now</button>
-                </form>
-                {% comment %} <button id="rentBtn" class="btn btn-primary">Rent Now</button> <!-- This is the Rent Now button --> {% endcomment %}
+
+            <div class="event-date-container">
+                <label for="event-date">Select rental start  Date:</label>
+                <input type="date" id="event-date" name="event-date">
             </div>
             
-        </div>
+            
+            <div class="button-container">
+                <button type="button" id="rentNowBtn" class="btn btn-success">Rent Now</button>
+            </div>
+
+            <div class="button-container">
+                <button type="button" id="addToCartBtn" class="btn btn-success">Add to cart</button>
+            </div>
+        </div>       
     </section>
 </main>
 
+<style>
+    .price-options-container {
+        background-color: #fce6ec; /* Pale pink color */
+        padding: 10px;
+        width:50%;
+        border-radius: 5px;
+        margin-top:20px;
+        margin-left:25%;
+        margin-bottom: 20px; /* Add margin between the container and other elements */
+        position: relative; /* Add position relative to contain the absolute positioned refund-amount */
+    }
 
+    .refund-amount {
+        position: absolute;
+        bottom: -10px; /* Adjusted to move the text slightly lower */
+        right: 0;
+        font-size: 9px;
+        color: #999; /* Color for the text */
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var rentPriceSpan = document.getElementById('rent-price');
+        var rentalPrice = parseInt("{{ rental_products.rental_price }}");
+
+        document.querySelectorAll('input[name="rent-duration"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                if (this.value === '8') {
+                    rentPriceSpan.textContent = 'Rent price : Rs.' + (rentalPrice * 1.4).toFixed(2); // Increase rental price by 40%
+                } else {
+                    rentPriceSpan.textContent = 'Rent price : Rs.' + rentalPrice;
+                }
+            });
+        });
+
+        document.getElementById('rentNowBtn').addEventListener('click', function() {
+            var selectedDuration = document.querySelector('input[name="rent-duration"]:checked').value;
+            var totalPrice = selectedDuration === '8' ? (rentalPrice * 1.4).toFixed(2) : rentalPrice; // Increase rental price by 40% if 8 days selected
+            alert('Total rental price: Rs.' + totalPrice);
+        });
+
+        document.getElementById('addToCartBtn').addEventListener('click', function() {
+            var selectedDuration = document.querySelector('input[name="rent-duration"]:checked').value;
+            var totalPrice = selectedDuration === '8' ? (rentalPrice * 1.4).toFixed(2) : rentalPrice; // Increase rental price by 40% if 8 days selected
+            alert('Added to cart. Total price: Rs.' + totalPrice);
+        });
+    });
+</script>
 
 {% endblock %}

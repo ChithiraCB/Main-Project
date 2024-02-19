@@ -1491,3 +1491,14 @@ def rentalproducts_by_subcategory(request, subcategory):
     rental_products = RentalProduct.objects.filter(subcategory__in=subcategories)
 
     return render(request, 'rental_products.html', {'rental_products': rental_products})
+
+# def rentaladd_to_cart(request, id):
+#     rentalproduct = RentalProduct.objects.get(pk=id)
+#     # cart, created = Cart.objects.get_or_create(user=request.user)
+#     # cart_item, item_created = CartItem.objects.get_or_create(cart=cart, rentaproduct=product)
+    
+#     # if not item_created:
+#     #     cart_item.quantity += 1
+#     #     cart_item.save()
+    
+#     return redirect('view_cart')
