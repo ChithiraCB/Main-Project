@@ -404,3 +404,31 @@ class RentalProduct(models.Model):
 
     def __str__(self):
         return self.name
+    
+class RentalAddToCart(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    rental_product = models.ForeignKey(RentalProduct, on_delete=models.CASCADE)  # Changed to RentalProduct
+    quantity = models.PositiveIntegerField(default=1)
+    date_added = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.rental_product.rental_product_name} in {self.user.username}'s cart"
+    
+
+    
+
+class RentalCartItem(models.Model):
+    cart = models.ForeignKey('RentalCart', on_delete=models.CASCADE)
+    rental_product = models.ForeignKey(RentalProduct, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.rental_product.rental_product_name}"
+
+class RentalCart(models.Model):
+    rental_cart_user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    rental_products = models.ManyToManyField(RentalProduct, through='RentalCartItem')
+
+    def __str__(self):
+        return f"RentalCart for {self.rental_cart_user.fullName}"

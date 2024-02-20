@@ -59,8 +59,9 @@ urlpatterns = [
     path('viewrentalproduct/', views.view_rental_product, name='viewrentalproduct'),
     path('delete_rental_product/<int:id>/', views.delete_rental_product, name='delete_rental_product'),
     path('rental/<int:id>/', views.rental_details, name='rental_details'),
-   path('rentalproducts-by-subcategory/<str:subcategory>/', views.rentalproducts_by_subcategory, name='rentalproducts_by_subcategory'),
-
+    path('rentalproducts-by-subcategory/<str:subcategory>/', views.rentalproducts_by_subcategory, name='rentalproducts_by_subcategory'),
+    # path('rentalview_cart/', views.rentalview_cart, name='rentalview_cart'),
+    # path('rentaladd_to_cart/<int:id>/', views.rentaladd_to_cart, name='rentaladd_to_cart'),
     
     
      path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),

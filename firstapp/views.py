@@ -787,16 +787,61 @@ def change_password(request):
 
 # @never_cache
 # @login_required(login_url='login')
+# def add_to_cart(request, id):
+#     product = RentalProduct.objects.get(pk=id)
+#     cart, created = Cart.objects.get_or_create(user=request.user)
+#     cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
+    
+#     if not item_created:
+#         cart_item.quantity += 1
+#         cart_item.save()
+    
+#     return redirect('view_cart')
+
+# def add_to_cart(request, id):
+#     rental_product = RentalProduct.objects.get(pk=id)
+#     rental_cart, created = RentalCart.objects.get_or_create(rental_cart_user=request.user)
+#     rental_cart_item, item_created = RentalCartItem.objects.get_or_create(cart=rental_cart, rental_product=rental_product)
+    
+#     if not item_created:
+#         rental_cart_item.quantity += 1
+#         rental_cart_item.save()
+    
+#     return redirect('view_cart')
+
+# def add_to_cart(request, id):
+#     rental_product = RentalProduct.objects.get(pk=id)
+#     user = request.user
+
+#     # Check if the user already has a rental cart
+#     try:
+#         rental_cart = RentalCart.objects.get(rental_cart_user=user)
+#     except RentalCart.DoesNotExist:
+#         # If the user doesn't have a rental cart, create one
+#         rental_cart = RentalCart.objects.create(rental_cart_user=user)
+
+#     # Check if the rental product is already in the user's cart
+#     rental_cart_item, created = RentalCartItem.objects.get_or_create(cart=rental_cart, rental_product=rental_product)
+
+#     if not created:
+#         rental_cart_item.quantity += 1
+#         rental_cart_item.save()
+
+#     return redirect('view_cart')
 def add_to_cart(request, id):
-    product = Product1.objects.get(pk=id)
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
+    rental_product = RentalProduct.objects.get(pk=id)
+    rental_cart, created = RentalCart.objects.get_or_create(rental_cart_user=request.user)
+    rental_cart_item, item_created = RentalCartItem.objects.get_or_create(cart=rental_cart, rental_product=rental_product)
     
     if not item_created:
-        cart_item.quantity += 1
-        cart_item.save()
+        rental_cart_item.quantity += 1
+        rental_cart_item.save()
     
     return redirect('view_cart')
+
+
+
+
 
 def remove_from_cart(request, id):
     product = Product1.objects.get(pk=id)
@@ -836,15 +881,44 @@ def decrease_cart_item(request, id):
     return redirect('view_cart')
 
 
-def view_cart(request):
-    cart = request.user.cart
-    cart_items = CartItem.objects.filter(cart=cart)
-    for item in cart_items:
-        item.total_price = item.product.sale_price * item.quantity
+# def view_cart(request):
+#     cart = request.user.cart
+#     cart_items = CartItem.objects.filter(cart=cart)
+#     for item in cart_items:
+#         item.total_price = item.product.sale_price * item.quantity
     
-    total_amount = sum(item.total_price for item in cart_items)
+#     total_amount = sum(item.total_price for item in cart_items)
 
-    return render(request, 'view_cart.html', {'cart_items': cart_items,'total_amount': total_amount})
+#     return render(request, 'view_cart.html', {'cart_items': cart_items,'total_amount': total_amount})
+
+# def view_cart(request):
+#     rental_cart = RentalCart.objects.get(rental_cart_user=request.user)
+#     rental_cart_items = RentalCartItem.objects.filter(cart=rental_cart)
+#     for item in rental_cart_items:
+#         item.total_price = item.rental_product.rental_price * item.quantity
+    
+#     total_amount = sum(item.total_price for item in rental_cart_items)
+
+#     return render(request, 'view_cart.html', {'cart_items': rental_cart_items, 'total_amount': total_amount})
+
+from django.db.models import ProtectedError
+
+def view_cart(request):
+    try:
+        rental_cart = RentalCart.objects.get(rental_cart_user=request.user)
+    except RentalCart.DoesNotExist:
+        rental_cart = RentalCart.objects.create(rental_cart_user=request.user)
+    
+    rental_cart_items = RentalCartItem.objects.filter(cart=rental_cart)
+    
+    for item in rental_cart_items:
+        item.total_price = item.rental_product.rental_price * item.quantity
+    
+    total_amount = sum(item.total_price for item in rental_cart_items)
+
+    return render(request, 'view_cart.html', {'cart_items': rental_cart_items, 'total_amount': total_amount})
+
+
 
 def fetch_cart_count(request):
     cart_count = 0
@@ -1494,11 +1568,48 @@ def rentalproducts_by_subcategory(request, subcategory):
 
 # def rentaladd_to_cart(request, id):
 #     rentalproduct = RentalProduct.objects.get(pk=id)
-#     # cart, created = Cart.objects.get_or_create(user=request.user)
-#     # cart_item, item_created = CartItem.objects.get_or_create(cart=cart, rentaproduct=product)
+#     cart, created = RentalCart.objects.get_or_create(user=request.user)
+#     cart_item, item_created = RentalCartItem.objects.get_or_create(cart=cart, rentalproduct=rentalproduct)
     
-#     # if not item_created:
-#     #     cart_item.quantity += 1
-#     #     cart_item.save()
+#     if not item_created:
+#         cart_item.quantity += 1
+#         cart_item.save()
     
-#     return redirect('view_cart')
+#     return redirect('rentalview_cart')
+
+# def rentalview_cart(request):
+#     cart = request.user.cart
+#     cart_items = RentalCartItem.objects.filter(cart=cart)
+#     # for item in cart_items:
+#     #     item.total_price = item.product.sale_price * item.quantity
+    
+#     # total_amount = sum(item.total_price for item in cart_items)
+
+#     return render(request, 'rentalview_cart.html', {'cart_items': cart_items})
+
+from django.shortcuts import get_object_or_404
+
+# def rentalview_cart(request):
+#     # Retrieve the RentalCart instance for the current user
+#     rental_cart = get_object_or_404(RentalCart, user=request.user)
+
+#     # Retrieve the cart items associated with the RentalCart instance
+#     cart_items = RentalCartItem.objects.filter(cart=rental_cart)
+
+#     return render(request, 'rentalview_cart.html', {'cart_items': cart_items})
+
+# def rentalview_cart(request):
+#     return render(request, 'rentalview_cart.html')
+
+# def rentalview_cart(request):
+#     cart = request.user.cart
+#     cart_items = RentalCartItem.objects.filter(cart=cart)
+#     for item in cart_items:
+#         item.total_price = item.product.sale_price * item.quantity
+    
+#     total_amount = sum(item.total_price for item in cart_items)
+
+#     return render(request, 'rentalview_cart.html', {'cart_items': cart_items,'total_amount': total_amount})
+
+
+
