@@ -4,7 +4,42 @@
 <link rel="stylesheet" href="{% static 'css/cartt.css' %}">
 <link rel="stylesheet" href="{% static 'css/cart.css' %}">
 
-       
+        {% comment %} {% for item in cart_items %}
+        <li class="cart-item">
+            <div class="cart-item-details">
+                <div class="col-md-4">
+                    <img src="{{ item.product.product_image.url }}" alt="{{ item.product.product_name }}" style="max-width: 250px; height:210px;border: 2px solid #ddd;">
+                </div>
+                <div class="cart-item-name">{{ item.product.product_name }}</div>
+                <form action="{% url 'remove-from-cart' item.product.id %}" method="post">
+                    {% csrf_token %}
+                    <button class="remove-from-cart-btn" type="submit">Remove</button>
+                </form>
+            </div>
+            <div class="cart-item-quantity">
+                <form action="{% url 'increase-cart-item' item.product.id %}" method="post">
+                    {% csrf_token %}
+                    <button class="quantity-btn increase-quantity" type="submit">+</button>
+                </form>
+                <span class="item-quantity">{{ item.quantity }}</span>
+                <form action="{% url 'decrease-cart-item' item.product.id %}" method="post">
+                    {% csrf_token %}
+                    <button class="quantity-btn decrease-quantity" type="submit">-</button>
+                </form>
+            </div>
+            <div class="cart-item-price" data-price="{{ item.product.price }}">
+                Rs.{{ item.product.price }}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+
+    {% comment %} <p class="total-price-data"><span id="total-price"></span></p> {% endcomment %}
+   
+
+    {% comment %} <a class="checkout-button" href="{% url 'checkout' %}">Checkout</a>
+</div>  {% endcomment %}
+
     <div class="row">
         <div class="col-md-8">
             <div class="product-details-container">
@@ -13,30 +48,32 @@
                 <div class="product-container card mb-3">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            <img src="{{ item.rental_product.image.url }}" alt="{{ item.rental_product.rental_product_name }}" style="max-width: 250px; height:210px;border: 2px solid #ddd;">
+                            <img src="{{ item.product.product_image.url }}" alt="{{ item.product.product_name }}" style="max-width: 250px; height:210px;border: 2px solid #ddd;">
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
-                                <h5 class="card-title">{{ item.rental_products.rental_product_name }}</h5>
-                                {% comment %} <p class="total-price" id="total-price-{{ item.rental_product.id }}">Total: Rs.{{ item.total_price }}</p>
-                                <!-- Plus-Minus quantity input --> {% endcomment %}
+                                <h5 class="card-title">{{ item.product.product_name }}</h5>
+                                <p class="card-text">Discount: {{ item.product.discount }}%</p>
+                                {% comment %} <p class="card-text">Sale Price: Rs.{{ item.product.sale_price }}</p> {% endcomment %}
+                                <p class="total-price" id="total-price-{{ item.product.id }}">Total: Rs.{{ item.total_price  }}</p>
+                                <!-- Plus-Minus quantity input -->
                                
                             </div>
-                            {% comment %} <div class="cart-item-quantity">
-                                <form action="{% url 'increase-cart-item' item.rental_products.id %}" method="post">
+                            <div class="cart-item-quantity">
+                                <form action="{% url 'increase-cart-item' item.product.id %}" method="post">
                                     {% csrf_token %}
                                     <button class="quantity-btn increase-quantity" type="submit">+</button>
                                 </form>
                                 <span class="item-quantity">{{ item.quantity }}</span>
-                                <form action="{% url 'decrease-cart-item' item.rental_product.id %}" method="post">
+                                <form action="{% url 'decrease-cart-item' item.product.id %}" method="post">
                                     {% csrf_token %}
                                     <button class="quantity-btn decrease-quantity" type="submit">-</button>
                                 </form>
 
-                                 <form method="post" action="{% url 'remove-from-cart' item.rental_product.id  %}">
+                                 <form method="post" action="{% url 'remove-from-cart' item.product.id  %}">
                                     {% csrf_token %}
                                     <button type="remove-from-cart-btn" class="btn btn-danger">Remove</button> 
-                                </form> {% endcomment %}
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -50,7 +87,7 @@
                     <h3>Price Details</h3>
                    <p class="total-price-data">Total amount : Rs.<span id="total-price"> {{total_amount}}</span></p>
                    <a class="continue-shopping-link" href="">Continue Shopping</a>
-                   <a class="checkout-button" href="">Place Order</a>
+                   <a class="checkout-button" href="{% url 'checkout' %}">Place Order</a>
                 </div>
             </div>
         </div>

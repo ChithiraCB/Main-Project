@@ -17,26 +17,27 @@
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
-                                <h5 class="card-title">{{ item.rental_products.rental_product_name }}</h5>
-                                {% comment %} <p class="total-price" id="total-price-{{ item.rental_product.id }}">Total: Rs.{{ item.total_price }}</p>
-                                <!-- Plus-Minus quantity input --> {% endcomment %}
+                                <h5 class="card-title">{{ item.rental_product.rental_product_name }}</h5>
+                                 <p class="total-price" id="total-price-{{ item.rental_product.id }}">Total: Rs.{{ item.total_price }}</p>
+                                 <p class="security-deposit">Security Deposit: Rs.{{ item.rental_product.security_deposit }}</p>
+                                <!-- Plus-Minus quantity input --> 
                                
                             </div>
-                            {% comment %} <div class="cart-item-quantity">
-                                <form action="{% url 'increase-cart-item' item.rental_products.id %}" method="post">
+                             <div class="cart-item-quantity">
+                                <form action="{% url 'rentalincrease-cart-item' item.rental_product.id %}" method="post">
                                     {% csrf_token %}
                                     <button class="quantity-btn increase-quantity" type="submit">+</button>
                                 </form>
                                 <span class="item-quantity">{{ item.quantity }}</span>
-                                <form action="{% url 'decrease-cart-item' item.rental_product.id %}" method="post">
+                                <form action="{% url 'rentaldecrease-cart-item' item.rental_product.id %}" method="post">
                                     {% csrf_token %}
                                     <button class="quantity-btn decrease-quantity" type="submit">-</button>
                                 </form>
 
-                                 <form method="post" action="{% url 'remove-from-cart' item.rental_product.id  %}">
+                                 <form method="post" action="{% url 'rentalremove-from-cart' item.rental_product.id  %}">
                                     {% csrf_token %}
                                     <button type="remove-from-cart-btn" class="btn btn-danger">Remove</button> 
-                                </form> {% endcomment %}
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -50,7 +51,7 @@
                     <h3>Price Details</h3>
                    <p class="total-price-data">Total amount : Rs.<span id="total-price"> {{total_amount}}</span></p>
                    <a class="continue-shopping-link" href="">Continue Shopping</a>
-                   <a class="checkout-button" href="">Place Order</a>
+                   <a class="checkout-button" href="{% url 'rentalcheckout' %}">Place Order</a>
                 </div>
             </div>
         </div>

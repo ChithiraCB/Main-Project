@@ -432,3 +432,35 @@ class RentalCart(models.Model):
 
     def __str__(self):
         return f"RentalCart for {self.rental_cart_user.fullName}"
+
+class RentalOrder(models.Model):
+     
+     STATUS = (
+        ('New', 'New'),
+        ('Accepted', 'Accepted'),
+        ('Completed', 'Completed'),
+        ('Cancelled', 'Cancelled'),
+    )
+     
+     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+     rental_products = models.ManyToManyField(RentalProduct, through='RentalOrderItem')
+     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+     #payment = models.ForeignKey(Payment2, on_delete=models.SET_NULL, blank=True, null=True)
+     payment_id= models.CharField(blank=True, max_length=100, null=True)
+     payment_status= models.BooleanField(default=False)
+     status = models.CharField(max_length=10, choices=STATUS, default='New')
+     created_at = models.DateTimeField(auto_now_add=True)
+    
+     def __str__(self):
+        return f"Order {self.id} by {self.user.fullName}"
+    
+class RentalOrderItem(models.Model):
+    order = models.ForeignKey(RentalOrder, on_delete=models.CASCADE)
+    #payment = models.ForeignKey(Payment2, on_delete=models.SET_NULL, blank=True, null=True)
+    rental_product = models.ForeignKey(RentalProduct, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    item_total = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.rental_product.rental_product_name} in Order {self.order.id}"
+    

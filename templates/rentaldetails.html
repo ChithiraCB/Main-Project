@@ -28,21 +28,21 @@
             </div>
             <p class="product-description">Product Description: {{ rental_products.description }}</p>
 
+           
+
             <div class="event-date-container">
-                <label for="event-date">Select rental start  Date:</label>
-                <input type="date" id="event-date" name="event-date">
+                <label for="event-date">Select rental start Date:</label>
+                <input type="date" id="event-date" name="event-date" value="{% now 'Y-m-d' %}">
             </div>
+            
             <p>Rental End Date: <span id="end-date"></span></p>
             
-            
-            {% comment %} <div class="button-container">
-                <button type="button" id="rentNowBtn" class="btn btn-success">Rent Now</button>
-            </div> {% endcomment %}
-            <form method="post" action="{% url 'add_to_cart' rental_products.id %}">
-            <div class="button-container">
-                <button type="button" id="addToCartBtn" class="btn btn-success">Add to cart</button>
-            </div>
-        </form>
+            <form id="rental-form" method="post" action="{% url 'rentaladd_to_cart' rental_products.id %}">
+                {% csrf_token %}
+                <div class="button-container">
+                    <button type="submit" id="addToCartBtn" class="btn btn-success">Add to cart</button>
+                </div>
+            </form>
         </div>       
     </section>
 </main>
@@ -83,17 +83,13 @@
             });
         });
 
-        document.getElementById('rentNowBtn').addEventListener('click', function() {
-            var selectedDuration = document.querySelector('input[name="rent-duration"]:checked').value;
-            var totalPrice = selectedDuration === '8' ? (rentalPrice * 1.4).toFixed(2) : rentalPrice; // Increase rental price by 40% if 8 days selected
-            alert('Total rental price: Rs.' + totalPrice);
+        document.getElementById('rental-form').addEventListener('submit', function(event) {
+            var selectedDuration = document.querySelector('input[name="rent-duration"]:checked');
+            if (!selectedDuration) {
+                alert("Please select a rental duration (4 days or 8 days) before adding to cart.");
+                event.preventDefault(); // Prevent form submission if no duration is selected
+            }
         });
-
-      /* document.getElementById('addToCartBtn').addEventListener('click', function() {
-            var selectedDuration = document.querySelector('input[name="rent-duration"]:checked').value;
-            var totalPrice = selectedDuration === '8' ? (rentalPrice * 1.4).toFixed(2) : rentalPrice; // Increase rental price by 40% if 8 days selected
-            alert('Added to cart. Total price: Rs.' + totalPrice);
-        }); */
     });
     
     document.addEventListener("DOMContentLoaded", function() {
@@ -108,21 +104,21 @@
         });
     
         function updateEndDate() {
-            var startDate = new Date(document.getElementById('event-date').value);
-            var duration = parseInt(document.querySelector('input[name="rent-duration"]:checked').value);
-            var endDate = new Date(startDate.getTime() + duration * 24 * 60 * 60 * 1000);
-            
-            // Format the date as DD-MM-YYYY
-            var dd = String(endDate.getDate()).padStart(2, '0');
-            var mm = String(endDate.getMonth() + 1).padStart(2, '0'); // January is 0!
-            var yyyy = endDate.getFullYear();
-            
-            var endDateString = dd + '-' + mm + '-' + yyyy;
-            
-            document.getElementById('end-date').textContent = endDateString;
-        }
-    });
+    var startDate = new Date(document.getElementById('event-date').value);
+    var duration = parseInt(document.querySelector('input[name="rent-duration"]:checked').value);
+    var endDate = new Date(startDate.getTime() + duration * 24 * 60 * 60 * 1000);
     
+    // Format the date as DD-MM-YYYY
+    var dd = String(endDate.getDate()).padStart(2, '0');
+    var mm = String(endDate.getMonth() + 1).padStart(2, '0'); // January is 0!
+    var yyyy = endDate.getFullYear();
+    
+    var endDateString = dd + '-' + mm + '-' + yyyy;
+    
+    document.getElementById('end-date').textContent = endDateString;
+}
+
+    });
 </script>
 
 {% endblock %}

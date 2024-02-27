@@ -113,12 +113,12 @@ a[href*="wishlist"] i.fa-heart {
 <li class="nav-item">
    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
 </li>
-<li class="nav-item">
+{% comment %} <li class="nav-item">
    <a href="{% url 'view_cart'  %}"><i class="fa fa-shopping-cart"></i></a>
-</li>
-<li class="nav-item">
+</li> {% endcomment %}
+{% comment %} <li class="nav-item">
 <a href="{% url 'wishlist'  %}"><i class="fa fa-heart"></i></a>
-</li>
+</li> {% endcomment %}
 <!-- Container for displaying products -->
 <div id="product-container">
    <!-- Products will be displayed here -->
