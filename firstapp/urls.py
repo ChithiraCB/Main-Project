@@ -66,7 +66,9 @@ urlpatterns = [
     path('rentalincrease-cart-item/<int:id>/', views.rentalincrease_cart_item, name='rentalincrease-cart-item'),
     path('rentaldecrease-cart-item/<int:id>/', views.rentaldecrease_cart_item, name='rentaldecrease-cart-item'),
     path('rentalremove-from-cart/<int:id>/', views.rentalremove_from_cart, name='rentalremove-from-cart'),
-    
+    path('create_rental_order/',views.create_rental_order, name='create_rental_order'),
+    path('rental_handle_payment/',views.rental_handle_payment, name='rental_handle_payment'),
+    path('rental_order_complete/', views.rental_order_complete, name='rental_order_complete'),
     
      path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),
      path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),

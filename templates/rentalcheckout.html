@@ -36,12 +36,11 @@
 </div>
 
 <div id="checkout-data" data-email="{{ email }}" data-fullname="{{ full_name }}"></div>
-
-{% comment %} <script>
-    var handlePaymentUrl = "{% url 'handle_payment' %}";
-    var orderCompleteUrl = "{% url 'order_complete' %}"; 
-</script> {% endcomment %}
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script src="{% static 'js/checkout.js' %}"></script> 
+<script>
+    var handlePaymentUrl = "{% url 'rental_handle_payment' %}";
+    var orderCompleteUrl = "{% url 'rental_order_complete' %}"; 
+</script>
+<script src="https://rentalcheckout.razorpay.com/v1/rentalcheckout.js "defer></script>
+<script src="{% static 'js/rentalcheckout.js' %}"></script> 
 
 {% endblock %}

@@ -1681,3 +1681,98 @@ def rental_checkout(request):
         'user_address': user_address,
     }
     return render(request, 'rentalcheckout.html', context)
+
+def create_rental_order(request):
+    if request.method == 'POST':
+        user = request.user
+        cart = user.rentalcart  # Assuming user has a RentalCart related_name set to 'rentalcart'
+
+        cart_items = RentalCartItem.objects.filter(cart=cart)
+        total_amount = sum(item.rental_product.rental_price * item.quantity for item in cart_items)
+
+        try:
+            rental_order = RentalOrder.objects.create(user=user, total_amount=total_amount)
+            for cart_item in cart_items:
+                RentalOrderItem.objects.create(
+                    order=rental_order,
+                    rental_product=cart_item.rental_product,
+                    quantity=cart_item.quantity,
+                    item_total=cart_item.rental_product.rental_price * cart_item.quantity
+                )
+
+            client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+            payment_data = {
+                'amount': int(total_amount * 100),
+                'currency': 'INR',
+                'receipt': f'rental_order_{rental_order.id}',
+                'payment_capture': '1'
+            }
+            order_data = client.order.create(data=payment_data)
+            rental_order.payment_id = order_data['id']
+            rental_order.save()
+
+            return JsonResponse({'order_id': order_data['id']})
+        
+        except Exception as e:
+            print(str(e))
+            return JsonResponse({'error': 'An error occurred. Please try again.'}, status=500)
+
+def rental_handle_payment(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        razorpay_order_id = data.get('order_id')
+        payment_id = data.get('payment_id')
+
+        try:
+            rental_order = RentalOrder.objects.get(payment_id=razorpay_order_id)
+
+            client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+            payment = client.payment.fetch(payment_id)
+
+            if payment['status'] == 'captured':
+                rental_order.payment_status = True
+                rental_order.save()
+
+                # Perform any additional actions related to payment success
+                # For example, updating stock levels or sending confirmation emails
+                
+                data = {
+                    'order_id': rental_order.id,
+                    'transID': rental_order.payment_id,
+                }
+                return JsonResponse({'message': 'Payment successful', 'order_id': rental_order.id, 'transID': rental_order.payment_id})
+            else:
+                return JsonResponse({'message': 'Payment failed'})
+
+        except RentalOrder.DoesNotExist:
+            return JsonResponse({'message': 'Invalid Order ID'})
+        except Exception as e:
+            print(str(e))
+            return JsonResponse({'message': 'Server error, please try again later.'})
+
+
+def rental_order_complete(request):
+    order_id = request.GET.get('order_id')
+    transID = request.GET.get('payment_id')
+    print("Order ID from GET parameters:", order_id)
+    try:
+        rental_order = RentalOrder.objects.get(id=order_id, payment_status=True)
+        print("Retrieved RentalOrder:", rental_order)
+        ordered_rental_products = RentalOrderItem.objects.filter(order_id=rental_order.id)
+
+        subtotal = 0
+        for item in ordered_rental_products:
+            subtotal += item.rental_product.rental_price * item.quantity
+
+        context = {
+            'rental_order': rental_order,
+            'ordered_rental_products': ordered_rental_products,
+            'order_id': rental_order.id,
+            'transID': transID,
+            'subtotal': subtotal,
+        }
+
+        return render(request, 'order_complete.html', context)
+    except RentalOrder.DoesNotExist:
+        return redirect('userhome')
+
