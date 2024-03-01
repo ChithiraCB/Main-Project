@@ -346,7 +346,7 @@ class Cart(models.Model):
 class Order(models.Model):
      
      STATUS = (
-        ('New', 'New'),
+        ('Order Confirmed', 'Order Confirmed'),
         ('Accepted', 'Accepted'),
         ('Completed', 'Completed'),
         ('Cancelled', 'Cancelled'),
@@ -358,7 +358,7 @@ class Order(models.Model):
      #payment = models.ForeignKey(Payment2, on_delete=models.SET_NULL, blank=True, null=True)
      payment_id= models.CharField(blank=True, max_length=100, null=True)
      payment_status= models.BooleanField(default=False)
-     status = models.CharField(max_length=10, choices=STATUS, default='New')
+     status = models.CharField(max_length=20, choices=STATUS, default='Order Confirmed')
      created_at = models.DateTimeField(auto_now_add=True)
     
      def __str__(self):
@@ -494,4 +494,22 @@ class RentalOrderItem(models.Model):
 
 #     def __str__(self):
 #         return f"{self.quantity} x {self.rental_product.rental_product_name} in Order {self.order.id}"
+    
+
+class Rating(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product1, on_delete=models.CASCADE)
+    value = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
+    comment = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class RentalRating(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    rental_products = models.ForeignKey(RentalProduct, on_delete=models.CASCADE)
+    value = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
+    comment = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    
+
     

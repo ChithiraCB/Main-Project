@@ -1,6 +1,5 @@
 {% extends 'includes/productheader.html' %}
 
-
 {% block content %}
 
 <section class="section-conten padding-y bg">
@@ -32,16 +31,15 @@
                                 <ul class="list-group">
                                     {% for item in order.orderitem_set.all %}
                                         <li class="list-group-item">
-                                            
-                                            <div>
-                                                <img src="{{ item.product.product_image.url }}" alt="{{ item.product.product_name }}" style="max-width: 100px; height:100px;border: 2px solid #ddd;">
-                                               {{ item.product.product_name }}<br>
-                                               Quantity: {{ item.quantity }}<br>
-                                               Rs.{{ item.item_total }}
-                                            </div>
-                                           
+                                            <a href="{% url 'orderstatus' order.id %}">
+                                                <div>
+                                                    <img src="{{ item.product.product_image.url }}" alt="{{ item.product.product_name }}" style="max-width: 100px; height:100px;border: 2px solid #ddd;">
+                                                    {{ item.product.product_name }}<br>
+                                                    Quantity: {{ item.quantity }}<br>
+                                                    Rs.{{ item.item_total }}
+                                                </div>
+                                            </a>
                                         </li>
-                                        
                                     {% endfor %}
                                 </ul>
                             </div>

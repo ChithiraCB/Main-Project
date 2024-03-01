@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const rawPrice = totalItemAmount.textContent;
         const totalPrice = parseFloat(rawPrice.replace('₹', '').trim());
 
-        fetch("http://127.0.0.1:3000/create_rental_order/", {
+        fetch("http://127.0.0.1:3000/create_order/", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         const payment_id = response.razorpay_payment_id;
                         console.log(razorpay_order_id, payment_id)
 
-                        fetch("http://127.0.0.1:3000/rental_handle_payment/", {
+                        fetch("http://127.0.0.1:3000/handle_payment/", {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

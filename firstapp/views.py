@@ -788,7 +788,7 @@ def change_password(request):
 @never_cache
 @login_required(login_url='login')
 def add_to_cart(request, id):
-    product = RentalProduct.objects.get(pk=id)
+    product = Product1.objects.get(pk=id)
     cart, created = Cart.objects.get_or_create(user=request.user)
     cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
     
@@ -1446,6 +1446,7 @@ def myorders(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     context = {
         'orders': orders,
+        
     }
     return render(request, 'myorders.html', context)
 
@@ -1598,9 +1599,10 @@ def rental_products(request):
 def rental_details(request, id):
     # Retrieve the product details from the database
     rental_products = get_object_or_404(RentalProduct, id=id)
+    ratings = RentalRating.objects.filter(rental_products=rental_products)
 
     # Render the product details template with the product data
-    return render(request, 'rentaldetails.html', {'rental_products': rental_products})
+    return render(request, 'rentaldetails.html', {'rental_products': rental_products,'ratings':ratings})
 
 # def rentalproducts_by_subcategory(request, subcategory_name):
 #     # Get the subcategory object based on the subcategory name
@@ -1772,7 +1774,94 @@ def rental_order_complete(request):
             'subtotal': subtotal,
         }
 
-        return render(request, 'order_complete.html', context)
+        return render(request, 'rental_order_complete.html', context)
     except RentalOrder.DoesNotExist:
         return redirect('userhome')
 
+
+def rate_rentalproduct(request, id):
+    if request.method == 'POST':
+        user = request.user
+        rental_products= RentalProduct.objects.get(pk=id)
+        value = int(request.POST['rating'])
+        comment = request.POST.get('comment', '')
+
+        rating, created = RentalRating.objects.get_or_create(user=user, rental_products=rental_products, defaults={'value': value, 'comment': comment})
+
+        if not created:
+            rating.value = value
+            rating.comment = comment
+            rating.save()
+
+        return redirect('rate_rentalproduct', id=rental_products.id)
+    else:
+        return redirect('userhome')
+
+# def order_cancellation(request,id):
+#     return render(request, 'ordercancellation.html')
+    
+def order_status(request, id):
+    # Retrieve the order object based on the provided ID
+    order = get_object_or_404(Order, id=id)
+    user_address = ProfileUser.objects.filter(user=request.user).first()
+    
+    # Extract relevant information from the order object
+    order_id = order.id
+    status = order.status
+    products = order.products.all()  # Retrieve associated products
+    
+    # Pass the data to the template
+    context = {
+        'order_id': order_id,
+        'status': status,
+        'products': products,
+        'user_address':user_address,
+        'total_amount': order.total_amount,
+    }
+
+    return render(request, 'orderstatus.html', context)
+
+def order_cancellation(request, id):
+    if request.method == 'POST':
+        # Get the order object
+        order = Order.objects.get(id=id)
+        
+        # Update order status to 'Cancelled'
+        order.status = 'Cancelled'
+        order.save()
+        
+        # Optionally, you can handle additional logic here, such as sending confirmation emails, etc.
+        
+        return JsonResponse({'message': 'Order successfully cancelled'}, status=200)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+# def order_cancellation(request, id):
+#     if request.method == 'POST':
+#         # Get the order object
+#         order = Order.objects.get(id=id)
+        
+#         # Update status of order items to 'Cancelled'
+#         order_items = OrderItem.objects.filter(order=order)
+#         for item in order_items:
+#             item.status = 'Cancelled'
+#             item.save()
+        
+#         # Check if all order items are cancelled
+#         all_cancelled = all(item.status == 'Cancelled' for item in order_items)
+#         if all_cancelled:
+#             # Update order status to 'Cancelled'
+#             order.status = 'Cancelled'
+#             order.save()
+        
+#         # Optionally, you can handle additional logic here, such as sending confirmation emails, etc.
+        
+#         # Redirect to the myorders page
+#         return redirect('myorders')  # Assuming 'myorders' is the name of the URL pattern for the myorders page
+#     else:
+#         return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+def order_details(request, order_id):
+    order = Order.objects.get(id=order_id)
+    cancel_button_visible = order.status != 'Cancelled'
+    return render(request, 'orderstatus.html', {'order': order, 'cancel_button_visible': cancel_button_visible})

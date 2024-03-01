@@ -57,6 +57,7 @@
 /* Style for the Add to Cart and Buy Now buttons */
 button.btn {
     margin-top: 10px;
+    margin-left:100px;
     padding: 10px 20px;
     background-color: #0077ff; /* Button background color */
     color: #fff; /* Button text color */
@@ -90,6 +91,7 @@ button.btn {
 .button-container {
     display: flex;
     align-items: center; /* Vertically center the buttons */
+    margin-left: 50px; /
 }
 
 .button-container form, .button-container a {
