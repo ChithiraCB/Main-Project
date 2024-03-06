@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from .forms import  UserForm, UserProfileForm
 from django.core.exceptions import ObjectDoesNotExist
+from firstapp.models import Thread
 
 #from django.contrib.auth.models import User
 
@@ -1796,6 +1797,25 @@ def rate_rentalproduct(request, id):
         return redirect('rate_rentalproduct', id=rental_products.id)
     else:
         return redirect('userhome')
+    
+def rate_product(request, id):
+    if request.method == 'POST':
+        user = request.user
+        product= Product1.objects.get(pk=id)
+        value = int(request.POST['rating'])
+        comment = request.POST.get('comment', '')
+
+        rating, created = RentalRating.objects.get_or_create(user=user, product=product, defaults={'value': value, 'comment': comment})
+
+        if not created:
+            rating.value = value
+            rating.comment = comment
+            rating.save()
+
+        return redirect('rate_product', id=product.id)
+    else:
+        return redirect('userhome')
+
 
 # def order_cancellation(request,id):
 #     return render(request, 'ordercancellation.html')
@@ -1865,3 +1885,22 @@ def order_details(request, order_id):
     order = Order.objects.get(id=order_id)
     cancel_button_visible = order.status != 'Cancelled'
     return render(request, 'orderstatus.html', {'order': order, 'cancel_button_visible': cancel_button_visible})
+
+def order_view(request):
+    orders = Order.objects.order_by('-created_at')
+    return render(request, 'orderview.html', {'orders': orders})
+
+def order_detail_view(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    return render(request, 'orderdetailview.html', {'order': order})
+
+def messages_page(request):
+    threads = Thread.objects.by_user(user=request.user).prefetch_related('chatmessage_thread').order_by('timestamp')
+    context = {
+        'Threads': threads
+    }
+    return render(request, 'messages.html', context)
+
+def refund_request(request, order_id):
+    
+    return render(request, 'refund_request.html', {'order_id': order_id})

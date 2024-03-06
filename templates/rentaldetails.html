@@ -38,7 +38,9 @@
             <p>Rental End Date: <span id="end-date"></span></p>
 
             <input type="text" id="pincode" placeholder="Enter Pincode">
+            
             <button onclick="checkDelivery()">Check Delivery</button>
+            <div id="delivery-message"></div>
 
     <!-- Map container 
     <div id="map"></div>-->
@@ -217,7 +219,7 @@
     function checkDelivery() {
         var pincode = document.getElementById('pincode').value;
         var apiEndpoint = 'https://api.postalpincode.in/pincode/' + pincode;
-    
+        
         // Fetch pincode details from the API
         fetch(apiEndpoint)
             .then(response => response.json())
@@ -227,25 +229,27 @@
                     var state = data[0].PostOffice[0].State;
                     // Check if the pincode belongs to Kerala
                     if (state.toLowerCase() === 'kerala') {
-                        // If delivery is available in Kerala, you can perform any desired actions, such as highlighting delivery area on the map
-                        // For demonstration purposes, I'm showing an alert message here
-                        alert('Delivery is available.');
+                        // If delivery is available in Kerala, display a success message
+                        document.getElementById('delivery-message').innerHTML = 'Delivery is available.';
+                        document.getElementById('delivery-message').style.color = 'green'; // Set message color to green
                     } else {
                         // If delivery is not available in Kerala for the entered pincode
-                        alert('Delivery not available for this pincode.');
+                        document.getElementById('delivery-message').innerHTML = 'Delivery not available for this pincode.';
+                        document.getElementById('delivery-message').style.color = 'red'; // Set message color to red
                     }
                 } else {
                     // If the API response is invalid or does not contain pincode details
-                    alert('Invalid pincode or pincode details not found.');
+                    document.getElementById('delivery-message').innerHTML = 'Invalid pincode or pincode details not found.';
+                    document.getElementById('delivery-message').style.color = 'red'; // Set message color to red
                 }
             })
             .catch(error => {
                 // Handle any errors that occur during the API request
                 console.error('Error fetching pincode details:', error);
-                alert('Error fetching pincode details. Please try again later.');
+                document.getElementById('delivery-message').innerHTML = 'Error fetching pincode details. Please try again later.';
+                document.getElementById('delivery-message').style.color = 'red'; // Set message color to red
             });
     }
-    
 
 </script>
 

@@ -54,18 +54,7 @@
     margin-top: 10px;
 }
 
-/* Style for the Add to Cart and Buy Now buttons */
-button.btn {
-    margin-top: 10px;
-    margin-left:100px;
-    padding: 10px 20px;
-    background-color: #0077ff; /* Button background color */
-    color: #fff; /* Button text color */
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-}
+
 
 /* Style for the product specifications */
 .product-specs {
@@ -87,14 +76,23 @@ button.btn {
     font-size: 16px;
 }
 
-/* Additional styles can be added to achieve the desired design */
-.button-container {
-    display: flex;
-    align-items: center; /* Vertically center the buttons */
-    margin-left: 50px; /
-}
-
 .button-container form, .button-container a {
     margin-right: 10px; /* Add spacing between the buttons */
     width: 150px;
+}
+.button-container {
+    display: flex; /* Use Flexbox */
+    justify-content: flex-end; /* Align items to the end of the container (right side) */
+    margin-top: 10px; /* Adjust as needed */
+    margin-right:100px;
+}
+
+button.btn {
+    padding: 10px 20px;
+    background-color: #0077ff; /* Button background color */
+    color: #fff; /* Button text color */
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
 }

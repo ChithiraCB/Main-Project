@@ -73,6 +73,13 @@ urlpatterns = [
     path('orderstatus/<int:id>/', views.order_status, name='orderstatus'),
     path('ordercancellation/<int:id>/', views.order_cancellation, name='ordercancellation'),
     path('order_details/<int:order_id>/', views.order_details, name='order_details'),
+    path('rate_product/<int:id>/', views.rate_product, name='rate_product'),
+    path('orderview/', views.order_view, name='orderview'),
+    path('orderdetailview/<int:order_id>/', views.order_detail_view, name='order_detail'),
+    path('messages_page/', views.messages_page,name='messages_page'), 
+    path('refund_request/<int:order_id>', views.refund_request,name='refund_request'), 
+
+
     
      path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),
      path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),

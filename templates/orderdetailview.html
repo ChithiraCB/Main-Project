@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Detail</title>
+  <!-- Include Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .header {
+        background-color: #f7444e;
+        color: #fff;
+        text-align: center; /* Center the content horizontally and vertically */
+        padding: 1px;
+        position: relative;
+        height: 15vh; /* Set the header's height to the viewport height */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+    }
+  </style>
+</head>
+<body  style="background-color: #f0f0f0;">
+    <div class="header">
+        <h2><center>Order View</center></h2>
+        <a href="{% url 'adminpanel' %}" style="margin-left: 10px;">Go to Dashboard</a>
+    </div>
+  <div class="container mt-5">
+    <h1>Order Detail</h1>
+    <div class="card">
+      <div class="card-body">
+        <p><strong>Order ID:</strong> {{ order.id }}</p>
+        <p><strong>User:</strong> {{ order.user.fullName }}</p>
+        <!-- Display other order details as needed -->
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'firstapp',
-    'django_social_share'
+    'django_social_share',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -70,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'fashion.wsgi.application'
+ASGI_APPLICATION = 'fashion.asgi.application'
 
 
 # Database
@@ -157,3 +158,12 @@ EMAIL_HOST_PASSWORD = 'Chithira#098'
 
 RAZOR_KEY_ID = 'rzp_test_4aTzV8dhXyLyaT'
 RAZOR_KEY_SECRET = 'f1I52lKptNQEvRqnBM7TuuGZ'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        # 'CONFIG': {
+        #     'hosts': [('127.0.0.1', 6379)],
+        # }
+    }
+}

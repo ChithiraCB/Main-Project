@@ -56,12 +56,13 @@
 			background-image: url('/static/images/dp4.jpg'); /* Add your background image URL here */
             background-size: cover;
             background-color:;
+            height: 100%;
         }
 
         /* Sidebar Styles */
         .sidebar {
             height: 400%;
-            width: 300px;
+            width: 250px;
             position: fixed;
             top: 0;
             left: 0;
@@ -157,7 +158,7 @@
         }
     </style>
 </head>
-<body>
+<body  style="background-color: #f0f0f0;">
     <div class="sidebar">
         <div class="welcome-admin">
             <h1>Welcome, Admin</h1>
@@ -183,24 +184,7 @@
 
         
 
-      {% comment %} <div class="dropdown">
-            <a href="#" class="dropbtn">Rental Product</a>
-            <div class="dropdown-content">
-                <a href="{% url 'addrentalproduct' %}">Add Rental Product</a>
-                <a href="{% url 'viewproduct' %}">View Rental Product</a> 
-                {% comment %} <a href="{% url 'edit_product' product.id %}">Edit Products</a> 
-
-            </div>
-            
-        </div>  {% endcomment %}
-        {% comment %} <div class="dropdown">
-            <a href="#" class="dropbtn" id="rentalProductDropdown">Rental Product</a>
-            <div class="dropdown-content">
-                <a href="{% url 'addrentalproduct' %}">Add Rental Product</a>
-                <a href="{% url 'viewproduct' %}">View Rental Product</a>
-            </div>
-        </div> {% endcomment %}
-
+      
 
          <div class="dropdown">
             <a href="#" class="dropbtn" id="rentalProductDropdown">Rental Product</a>
@@ -222,8 +206,9 @@
 
         
         
-        <a href="#">Orders</a>
-        <a href="#">Settings</a>
+        <a href="{% url 'orderview' %}">Orders</a>
+        <a href="{% url 'messages_page' %}">Chatroom</a>
+
         <a href="{% url 'logout' %}" class="logout-button">Logout</a>
     </div>
     
