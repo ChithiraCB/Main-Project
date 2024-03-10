@@ -78,8 +78,8 @@ urlpatterns = [
     path('orderdetailview/<int:order_id>/', views.order_detail_view, name='order_detail'),
     path('messages_page/', views.messages_page,name='messages_page'), 
     path('refund_request/<int:order_id>', views.refund_request,name='refund_request'), 
-
-
+    path('update_order_status/<int:order_id>/', views.update_order_status, name='update_order_status'),
+ 
     
      path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),
      path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),

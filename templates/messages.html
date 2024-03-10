@@ -15,7 +15,7 @@
 	<!--Coded With Love By Mutiullah Samim-->
 	<body>
     {% if user.is_authenticated %}
-        <h1 style="text-align: end; padding-right: 10px">Logged in as : {{ user.fullName }}</h1>
+        {% comment %} <h1 style="text-align: end; padding-right: 10px">Logged in as : {{ user.fullName }}</h1> {% endcomment %}
         <input type="hidden" id="logged-in-user" value="{{ user.id }}">
     {% endif %}
 		<div class="container-fluid h-100">

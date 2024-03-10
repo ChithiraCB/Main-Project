@@ -25,6 +25,8 @@
         </select><br><br>
         <label for="comments">Comments :</label><br>
         <textarea id="comments" name="comments" rows="4" placeholder="Max 25 words" required></textarea><br><br>
+        <label for="refundAmount">Total Amount for Refund:</label><br>
+        <input type="text" id="refundAmount" name="refundAmount" value="{{ total_amount }}" readonly><br><br>
         <button type="submit" class="btn cancel-btn">Submit</button>
       </form>
     </div>
@@ -32,7 +34,7 @@
 </div>
 
 <div class="container">
-  <h1>1. Order Status</h1>
+  <h1> Order Status</h1>
   <div class="order-status">
     <div class="status-item">
       <span>Order Number:</span>
@@ -71,10 +73,15 @@
  
   
   <button id="cancelBtn" class="btn cancel-btn">Cancel Order</button>
+
+  <div id="refundMessage" style="display: none; margin-top: 20px;">
+    <p>Your order has been cancelled. The money will be refunded within 4 days.</p>
+  </div>
 </div>
-<div class='container'>
+{% comment %} <div class='container'>
   <h6><a href="{% url 'refund_request' order_id %}">2. Refund policies</a></h6>
-</div>
+</div> {% endcomment %}
+
 
 <script>
   // Get the modal
@@ -83,8 +90,19 @@
   // Get the button that opens the modal
   var btn = document.getElementById("cancelBtn");
 
+  // Get the Track Order button
+  var trackOrderBtn = document.querySelector('.container .btn');
+
   // Get the <span> element that closes the modal
   var span = document.getElementsByClassName("close")[0];
+
+  // Check if order has been cancelled before and show refund message accordingly
+  var isOrderCancelled = sessionStorage.getItem('orderCancelled');
+  if (isOrderCancelled) {
+    document.getElementById('refundMessage').style.display = 'block';
+    btn.disabled = true; // Disable Cancel Order button
+    trackOrderBtn.disabled = true; // Disable Track Order button
+  }
 
   // When the user clicks the button, open the modal 
   btn.onclick = function() {
@@ -122,29 +140,7 @@
     // You can handle form submission here, e.g., by sending an AJAX request
     console.log("Reason for cancellation:", reason);
     console.log("Comments:", comments);
-    modal.style.display = "none"; // Close modal after submission
-    document.body.classList.remove("modal-open");
-  });
 
-  // Validate comments field for maximum word count
-  document.getElementById("comments").addEventListener("input", function() {
-    var comments = this.value.trim();
-    var words = comments.split(/\s+/).length;
-    
-    if (words > 25) {
-      this.setCustomValidity("Maximum 25 words allowed.");
-    } else {
-      this.setCustomValidity("");
-    }
-  });
-
-  document.getElementById("cancelForm").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent form submission
-    
-    // Get reason and comments
-    var reason = document.getElementById("reason").value;
-    var comments = document.getElementById("comments").value;
-  
     // Send AJAX request to cancel order
     var orderId = "{{ order_id }}";  // Replace with actual order ID
     var url = "/ordercancellation/" + orderId + "/";
@@ -164,6 +160,10 @@
     .then(response => {
       if (response.ok) {
         alert("Order cancelled successfully.");
+        sessionStorage.setItem('orderCancelled', true); // Store order cancelled flag
+        document.getElementById('refundMessage').style.display = 'block'; // Show refund message
+        btn.disabled = true; // Disable Cancel Order button
+        trackOrderBtn.disabled = true; // Disable Track Order button
         // Optionally, update the UI to reflect the cancelled order
       } else {
         alert("Failed to cancel order.");
@@ -173,6 +173,21 @@
       console.error('Error:', error);
       alert("An error occurred while cancelling the order.");
     });
+
+    modal.style.display = "none"; // Close modal after submission
+    document.body.classList.remove("modal-open");
+  });
+
+  // Validate comments field for maximum word count
+  document.getElementById("comments").addEventListener("input", function() {
+    var comments = this.value.trim();
+    var words = comments.split(/\s+/).length;
+    
+    if (words > 25) {
+      this.setCustomValidity("Maximum 25 words allowed.");
+    } else {
+      this.setCustomValidity("");
+    }
   });
   
   // Function to get CSRF token from cookies
@@ -191,7 +206,6 @@
     }
     return cookieValue;
   }
-  
 </script>
 
 {% endblock %}

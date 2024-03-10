@@ -1888,8 +1888,9 @@ def order_details(request, order_id):
 
 def order_view(request):
     orders = Order.objects.order_by('-created_at')
-    return render(request, 'orderview.html', {'orders': orders})
-
+    order_items = OrderItem.objects.select_related('product').filter(order__in=orders)
+    return render(request, 'orderview.html', {'orders': orders, 'order_items': order_items})
+   
 def order_detail_view(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     return render(request, 'orderdetailview.html', {'order': order})
@@ -1904,3 +1905,14 @@ def messages_page(request):
 def refund_request(request, order_id):
     
     return render(request, 'refund_request.html', {'order_id': order_id})
+
+def update_order_status(request, order_id):
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        order = Order.objects.get(pk=order_id)
+        order.status = new_status
+        order.save()
+        return redirect('orderview')  # Redirect to the order view page after updating status
+    else:
+        # Handle GET request if needed
+        pass

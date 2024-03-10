@@ -348,9 +348,11 @@ class Order(models.Model):
      
      STATUS = (
         ('Order Confirmed', 'Order Confirmed'),
-        ('Accepted', 'Accepted'),
-        ('Completed', 'Completed'),
+        ('Processing', 'Processing'),
+        ('Shipped', 'Shipped'),
+        ('Delivered', 'Delivered'),
         ('Cancelled', 'Cancelled'),
+
     )
      
      user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
