@@ -79,6 +79,7 @@ urlpatterns = [
     path('messages_page/', views.messages_page,name='messages_page'), 
     path('refund_request/<int:order_id>', views.refund_request,name='refund_request'), 
     path('update_order_status/<int:order_id>/', views.update_order_status, name='update_order_status'),
+    path('deliveryboydashboard/', views.deliveryboydashboard, name='deliveryboydashboard'),
  
     
      path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),

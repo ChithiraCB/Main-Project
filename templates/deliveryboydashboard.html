@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4); /* Transparent black overlay */
+        }
+
+        /* Modal Content Styles */
+        .modal-content {
+            background-color: white;
+            margin: 2% auto 0; /* Adjust the top margin to move the modal upward */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+            border-radius: 5px;
+        }
+
+        /* Close Button Styles */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal.active {
+            display: block;
+        }
+        
+        /* Reset some default styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+			background-image: url('/static/images/dp4.jpg'); /* Add your background image URL here */
+            background-size: cover;
+            background-color:;
+            height: 100%;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            height: 400%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color:#f7444e;
+            padding-top: 20px;
+            opacity: 0.9;
+        }
+
+        .sidebar a {
+            padding: 15px;
+            text-decoration: none;
+            font-size: 20px;
+            color: rgb(247, 240, 240);
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background-color:#f7444e;
+        }
+
+        /* Content Styles */
+        .content {
+            margin-left: 500px;
+            padding: 5px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        {% comment %} /* Header Styles */
+        .header {
+            background-color: white;
+            padding: 3px;
+            color: white;
+            text-align: right;
+            width: 100%; /* Take the full width of the content area */
+            display: flex;
+            flex-direction: column; /* Display items in a column layout */
+            align-items: flex-end; /* Align items to the right */
+            opacity: 0.9;
+        } {% endcomment %}
+
+        /* Welcome Admin Styles */
+        .welcome-admin {
+            font-size: 15px;
+            color: white;
+
+        }
+
+        /* Logout Button Styles */
+        .logout-button {
+            text-decoration: none;
+            color: white;
+            margin-top: 10px; /* Add margin to separate it from the welcome text */
+        }
+
+        /* Small Box Styles */
+        .small-box {
+            background-color: white;
+            padding: 20px;
+            margin: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            flex: 1; /* Distribute available space equally among boxes */
+            min-width: 200px;
+        }
+
+        /* Dropdown Styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color:pink;
+            min-width: 160px;
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            color: white;
+        }
+
+        .dropdown-content a:hover {
+            background-color:pink;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
+</head>
+<body  style="background-color: #f0f0f0;">
+    <div class="sidebar">
+        <div class="welcome-admin">
+            <h1>Welcome, Admin</h1>
+        </div>
+        <a href="{% url 'adminpanel' %}">Dashboard</a>
+        {% comment %} <a href="{% url 'user' %}">Users</a> {% endcomment %}
+        <div class="dropdown-content">
+            {% comment %} <a href="{% url 'activate_user' user.id %}">activate</a>
+<a href="{% url 'deactivate_user' user.id %}">deactivate</a> {% endcomment %}
+
+        </div>
+        <!-- Product Actions Dropdown -->
+        <div class="dropdown">
+            <a href="#" class="dropbtn">Product</a>
+            <div class="dropdown-content">
+                <a href="{% url 'addproduct' %}">Add Product</a>
+                <a href="{% url 'viewproduct' %}">View Products</a> 
+                {% comment %} <a href="{% url 'edit_product' product.id %}">Edit Products</a>  {% endcomment %}
+
+            </div>
+            
+        </div>
+
+        
+
+      
+
+         <div class="dropdown">
+            <a href="#" class="dropbtn" id="rentalProductDropdown">Rental Product</a>
+            <div class="dropdown-content">
+                <a href="#" id="addRentalProductLink">Add Rental Product</a>
+                <a href="{% url 'viewrentalproduct' %}">View Rental Product</a>
+            </div>
+        </div> 
+
+      <div id="rentalProductModal" class="modal">
+            <div id="rentalProductModalContent" class="modal-content">
+                <!-- Close button -->
+                <span id="closeModalBtn" class="close">&times;</span>
+                <!-- Content from addrentalproduct.html will be displayed here -->
+            </div>
+        </div>
+       
+  
+
+        
+        
+        <a href="{% url 'orderview' %}">Orders</a>
+        <a href="{% url 'messages_page' %}">Chat</a>
+
+        <a href="{% url 'logout' %}" class="logout-button">Logout</a>
+    </div>
+    
+    <div class="content">
+        <!-- Header -->
+        
+        
+
+        <!-- User Statistics Small Box -->
+        <div class="small-box">
+            <h2>User Statistics</h2>
+            <canvas id="userStatsChart"></canvas>
+        </div>
+
+        <div class="small-box">
+            <h2>Add product Here</h2>
+            <a href="{% url 'addproduct' %}">Add Product</a>
+
+ 
+        </div>
+        <!-- Recent Orders Small Box -->
+        <div class="small-box">
+            <h2>Recent Orders</h2>
+            <p> new Arrivals</p>
+
+        </div>
+        
+    </div>
+
+    <!-- Add the JavaScript code for the user statistics chart here -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Sample user statistics data (replace with your actual data)
+        var userData = {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+            datasets: [{
+                label: "User Count",
+                data: [100, 150, 200, 250, 300, 350],
+                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                borderColor: "rgba(75, 192, 192, 1)",
+                borderWidth: 1
+            }]
+        };
+    
+        // Get the canvas element by id
+        var ctx = document.getElementById('userStatsChart').getContext('2d');
+    
+        // Create a new chart using Chart.js
+        var userStatsChart = new Chart(ctx, {
+            type: 'bar', // You can choose the chart type (bar, line, pie, etc.)
+            data: userData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+   
+      // Function to show the modal
+ function showModal(content) {
+    var modalContent = document.getElementById("rentalProductModalContent");
+    modalContent.innerHTML = content;
+    document.getElementById("rentalProductModal").classList.add("active");
+}
+
+// Function to close the modal
+function closeModal() {
+    document.getElementById("rentalProductModal").classList.remove("active");
+}
+
+
+        // When the user clicks on the dropdown, fetch content from addrentalproduct.html and display it in the modal
+        document.getElementById("addRentalProductLink").onclick = function(event) {
+            event.preventDefault(); // Prevent default link behavior
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "{% url 'addrentalproduct' %}", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    showModal(xhr.responseText);
+                }
+            };
+            xhr.send();
+        };
+
+        // When the user clicks on the modal close button or outside the modal, close the modal
+        window.onclick = function(event) {
+            var modal = document.getElementById("rentalProductModal");
+            if (event.target == modal) {
+                closeModal();
+            }
+        };
+
+        // Close modal when user clicks on close button
+        document.getElementById("closeModalBtn").onclick = function() {
+            closeModal();
+        };
+
+      
+            function validateProductName(input) {
+                const productNameError = document.getElementById("product-name-error");
+                const productNameRegex = /^[A-Za-z ]+$/;
+                if (!productNameRegex.test(input.value)) {
+                    productNameError.textContent = "Product name should contain only alphabet characters.";
+                } else {
+                    productNameError.textContent = "";
+                }
+            }
+    
+            function validatePrice(input) {
+                const priceError = document.getElementById("price-error");
+                const priceValue = parseFloat(input.value);
+                if (isNaN(priceValue) || priceValue <= 100) {
+                    priceError.textContent = "Price should be greater than 100.";
+                } else {
+                    priceError.textContent = "";
+                }
+            }
+    
+            function validateProductForm() {
+                // Validation for other fields (if needed)
+    
+                // Continue with form submission or other actions if all validations pass
+                // You can add code here to submit the form data using AJAX or perform other actions.
+    
+                // Make sure to check for any errors and return false if there are errors.
+                // Example:
+                const productNameError = document.getElementById("product-name-error").textContent;
+                const priceError = document.getElementById("price-error").textContent;
+    
+                if (productNameError || priceError) {
+                    return false;
+                }
+    
+                return true;
+            }
+    
+            function calculateSalePrice(discountInput) {
+                const priceInput = document.getElementById("price");
+                const salePriceInput = document.getElementById("sale-price");
+    
+                const price = parseFloat(priceInput.value);
+                const discount = parseFloat(discountInput.value);
+    
+                if (!isNaN(price) && !isNaN(discount)) {
+                    const salePrice = price - (price * (discount / 100));
+                    salePriceInput.value = salePrice.toFixed(2);
+                } else {
+                    salePriceInput.value = "";
+                }
+            }
+            
+           
+            
+         
+                function updateSubcategoryOptions() {
+                    console.log("Updating subcategory options...");
+                    const categoryDropdown = document.getElementById("category-name");
+                    const subcategoryDropdown = document.getElementById("subcategory-name");
+                    const selectedCategory = categoryDropdown.value;
+            
+                    // Initialize subcategoryOptions
+                    const subcategoryOptions = {
+                        ornaments: ["Neckpieces", "Earrings", "Bangles" , "Jewellery set"],
+                        bags: ["Clutches", "Handbags"],
+                        // Add more categories and subcategories as needed
+                    };
+            
+                    // Clear existing options
+                    subcategoryDropdown.innerHTML = "";
+            
+                    // Add new options based on the selected category
+                    for (const option of subcategoryOptions[selectedCategory]) {
+                        const optionElement = document.createElement("option");
+                        optionElement.value = option;
+                        optionElement.textContent = option;
+                        subcategoryDropdown.appendChild(optionElement);
+                    }
+                }
+           
+            function validateDiscount(input) {
+                const discountError = document.getElementById("discount-error");
+                const discountValue = parseFloat(input.value);
+            
+                if (isNaN(discountValue) || discountValue < 0 || discountValue >= 100) {
+                    discountError.textContent = "Discount should be between 0 and 99.";
+                } else {
+                    discountError.textContent = "";
+                }
+            }
+            function validateDescription(input) {
+                const descriptionError = document.getElementById("description-error");
+                const descriptionValue = input.value;
+                const wordCount = descriptionValue.trim().split(/\s+/).length;
+            
+                if (wordCount > 60) {
+                    descriptionError.textContent = "Description should not exceed 30 words.";
+                } else {
+                    descriptionError.textContent = "";
+                }
+            }
+
+           
+
+            function calculateSecurityAmount(input) {
+                const rentalPrice = parseFloat(input.value);
+                const securityAmountInput = document.getElementById("security-amount");
+    
+                if (!isNaN(rentalPrice)) {
+                    // Calculate security amount (assuming it's 50% of the rental price)
+                    const securityAmount = rentalPrice * 0.5; // Adjust this calculation as needed
+                    securityAmountInput.value = securityAmount.toFixed(2);
+                } else {
+                    securityAmountInput.value = "";
+                }
+            }
+    
+           
+    </script>
+    
+
+    
+        
+</body>
+</html>

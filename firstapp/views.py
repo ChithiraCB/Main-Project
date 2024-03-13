@@ -1916,3 +1916,6 @@ def update_order_status(request, order_id):
     else:
         # Handle GET request if needed
         pass
+
+def deliveryboydashboard(request):
+    return render(request, 'deliveryboydashboard.html')
