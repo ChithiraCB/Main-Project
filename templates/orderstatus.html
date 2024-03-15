@@ -39,114 +39,80 @@
     <div class="status-item">
       <span>Order Number:</span>
       <p>#{{ order_id }}</p>
-      
     </div>
     <div class="status-item">
         <span>Products:</span>
         <ul>
           {% for product in products %}
-            <li>{{ product.product_name}}</li>
+            <li>{{ product.product_name }}</li>
           {% endfor %}
         </ul>
-      </div>
-
-      <div class="status-item">
+    </div>
+    <div class="status-item">
         <span>Total Amount:</span>
         {{ total_amount }}
-      </div>
-
-    <div class="status-item">
-      <span>Status:</span>
-      {{ status }}
     </div>
-    {% comment %} <div class="status-item">
-      <span>Estimated Delivery:</span>
-      <p>March 5, 2024</p>
-    </div> {% endcomment %}
-    {% comment %} <div class="status-item">
-      <span>Shipping Address:</span>
-      {{user_address.address}}
-    
-    </div> {% endcomment %}
+    <div class="status-item">
+        <span>Status:</span>
+        {{ status }}
+    </div>
   </div>
   <a href="#" class="btn">Track Order</a>
  
-  
-  <button id="cancelBtn" class="btn cancel-btn">Cancel Order</button>
+  <!-- Use a dynamic ID for the cancel button -->
+  <button id="cancelBtn-{{ order_id }}" class="btn cancel-btn" data-status="{{ status }}">Cancel Order</button>
 
   <div id="refundMessage" style="display: none; margin-top: 20px;">
     <p>Your order has been cancelled. The money will be refunded within 4 days.</p>
   </div>
 </div>
-{% comment %} <div class='container'>
-  <h6><a href="{% url 'refund_request' order_id %}">2. Refund policies</a></h6>
-</div> {% endcomment %}
+<div id="returnModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="return-close">&times;</span>
+    <h2>Return Order</h2>
+    <div class="modal-body">
+      <form id="returnForm">
+        <label for="returnReason">Reason for return:</label><br>
+        <select id="returnReason" name="returnReason" required>
+          <option value="" selected disabled>Select a reason</option>
+          <option value="Damaged">Damaged</option>
+          <option value="Wrong item received">Wrong item received</option>
+          <option value="Not as described">Not as described</option>
+          <option value="Changed mind">Changed mind</option>
+          <option value="Other">Other</option>
+          <!-- Add more options as needed -->
+        </select><br><br>
+        <label for="returnComments">Comments:</label><br>
+        <textarea id="returnComments" name="returnComments" rows="4" placeholder="Max 25 words" required></textarea><br><br>
+        <button type="submit" class="btn return-btn">Submit Return</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
 
 
+{% block scripts %}
 <script>
-  // Get the modal
-  var modal = document.getElementById("myModal");
-
-  // Get the button that opens the modal
-  var btn = document.getElementById("cancelBtn");
-
-  // Get the Track Order button
-  var trackOrderBtn = document.querySelector('.container .btn');
-
-  // Get the <span> element that closes the modal
-  var span = document.getElementsByClassName("close")[0];
-
-  // Check if order has been cancelled before and show refund message accordingly
-  var isOrderCancelled = sessionStorage.getItem('orderCancelled');
-  if (isOrderCancelled) {
-    document.getElementById('refundMessage').style.display = 'block';
-    btn.disabled = true; // Disable Cancel Order button
-    trackOrderBtn.disabled = true; // Disable Track Order button
-  }
-
-  // When the user clicks the button, open the modal 
-  btn.onclick = function() {
-    modal.style.display = "block";
-    document.body.classList.add("modal-open");
-  }
-
-  // When the user clicks on <span> (x), close the modal
-  span.onclick = function() {
-    modal.style.display = "none";
-    document.body.classList.remove("modal-open");
-  }
-
-  // When the user clicks anywhere outside of the modal, close it
-  window.onclick = function(event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-      document.body.classList.remove("modal-open");
-    }
-  }
-
-  // Handle form submission
-  document.getElementById("cancelForm").addEventListener("submit", function(event) {
+  document.getElementById("returnForm").addEventListener("submit", function(event) {
     event.preventDefault(); // Prevent form submission
     
-    // Validate reason and comments fields
-    var reason = document.getElementById("reason").value;
-    var comments = document.getElementById("comments").value;
-
-    if (!reason || !comments) {
+    // Validate return reason and comments fields
+    var returnReason = document.getElementById("returnReason").value;
+    var returnComments = document.getElementById("returnComments").value;
+  
+    if (!returnReason || !returnComments) {
       alert("Both reason and comments are required.");
       return;
     }
-
-    // You can handle form submission here, e.g., by sending an AJAX request
-    console.log("Reason for cancellation:", reason);
-    console.log("Comments:", comments);
-
-    // Send AJAX request to cancel order
-    var orderId = "{{ order_id }}";  // Replace with actual order ID
-    var url = "/ordercancellation/" + orderId + "/";
+  
+    // Send AJAX request to submit return order
+    var url = "/return-order/";
     var data = {
-      'reason': reason,
-      'comments': comments
+      'returnReason': returnReason,
+      'returnComments': returnComments
     };
   
     fetch(url, {
@@ -159,35 +125,16 @@
     })
     .then(response => {
       if (response.ok) {
-        alert("Order cancelled successfully.");
-        sessionStorage.setItem('orderCancelled', true); // Store order cancelled flag
-        document.getElementById('refundMessage').style.display = 'block'; // Show refund message
-        btn.disabled = true; // Disable Cancel Order button
-        trackOrderBtn.disabled = true; // Disable Track Order button
-        // Optionally, update the UI to reflect the cancelled order
+        alert("Return request submitted successfully.");
+        document.getElementById("returnModal").style.display = "none"; // Close modal after submission
       } else {
-        alert("Failed to cancel order.");
+        alert("Failed to submit return request.");
       }
     })
     .catch(error => {
       console.error('Error:', error);
-      alert("An error occurred while cancelling the order.");
+      alert("An error occurred while submitting return request.");
     });
-
-    modal.style.display = "none"; // Close modal after submission
-    document.body.classList.remove("modal-open");
-  });
-
-  // Validate comments field for maximum word count
-  document.getElementById("comments").addEventListener("input", function() {
-    var comments = this.value.trim();
-    var words = comments.split(/\s+/).length;
-    
-    if (words > 25) {
-      this.setCustomValidity("Maximum 25 words allowed.");
-    } else {
-      this.setCustomValidity("");
-    }
   });
   
   // Function to get CSRF token from cookies
@@ -206,6 +153,146 @@
     }
     return cookieValue;
   }
-</script>
 
+  
+
+
+  
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Get the button that opens the modal or serves as the cancel button
+  var btn = document.getElementById("cancelBtn-{{ order_id }}");
+
+  // Get the order status from the button's data attribute
+  var orderStatus = btn.getAttribute('data-status');
+
+  // When the user clicks the button, open the modal if the order status allows cancellation
+  btn.onclick = function() {
+    if (orderStatus === "Order confirmed" || orderStatus === "Processing") {
+      document.getElementById("myModal").style.display = "block";
+    } else if (orderStatus === "Delivered") {
+      // Open return modal
+      document.getElementById("returnModal").style.display = "block";
+    } else {
+      alert("This order cannot be cancelled.");
+    }
+  }
+
+  // Change button text and behavior if the order is delivered
+  if (orderStatus === "Delivered") {
+    btn.innerText = "Return Order";
+    btn.onclick = function() {
+      // Open return modal
+      document.getElementById("returnModal").style.display = "block";
+    };
+  }
+
+  // Get the <span> element that closes the cancel modal
+  var cancelSpan = document.getElementsByClassName("close")[0];
+
+  // When the user clicks on <span> (x), close the cancel modal
+  cancelSpan.onclick = function() {
+    document.getElementById("myModal").style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the cancel modal, close it
+  window.onclick = function(event) {
+    var cancelModal = document.getElementById("myModal");
+    if (event.target == cancelModal) {
+      cancelModal.style.display = "none";
+    }
+  }
+
+  // Get the <span> element that closes the return modal
+  var returnSpan = document.getElementsByClassName("return-close")[0];
+
+  // When the user clicks on <span> (x), close the return modal
+  returnSpan.onclick = function() {
+    document.getElementById("returnModal").style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the return modal, close it
+  window.onclick = function(event) {
+    var returnModal = document.getElementById("returnModal");
+    if (event.target == returnModal) {
+      returnModal.style.display = "none";
+    }
+  }
+
+  // Handle form submission for cancelling an order
+  document.getElementById("cancelForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form submission
+    
+    // Validate reason and comments fields
+    var reason = document.getElementById("reason").value;
+    var comments = document.getElementById("comments").value;
+
+    if (!reason || !comments) {
+      alert("Both reason and comments are required.");
+      return;
+    }
+
+    // Send AJAX request to cancel order
+    var orderId = "{{ order_id }}";  // Replace with actual order ID
+    var url = "/ordercancellation/" + orderId + "/";
+    var data = {
+      'reason': reason,
+      'comments': comments
+    };
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => {
+      if (response.ok) {
+        alert("Order cancelled successfully.");
+        sessionStorage.setItem('orderCancelled', true); // Store order cancelled flag
+        document.getElementById('refundMessage').style.display = 'block'; // Show refund message
+        btn.disabled = true; // Disable Cancel Order button
+        document.getElementById("myModal").style.display = "none"; // Close cancel modal after submission
+      } else {
+        alert("Failed to cancel order.");
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert("An error occurred while cancelling the order.");
+    });
+  });
+
+  // Validate comments field for maximum word count
+  document.getElementById("comments").addEventListener("input", function() {
+    var comments = this.value.trim();
+    var words = comments.split(/\s+/).length;
+    
+    if (words > 25) {
+      this.setCustomValidity("Maximum 25 words allowed.");
+    } else {
+      this.setCustomValidity("");
+    }
+  });
+
+  // Function to get CSRF token from cookies
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+});
+</script>
 {% endblock %}

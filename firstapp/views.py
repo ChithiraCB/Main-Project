@@ -1893,7 +1893,8 @@ def order_view(request):
    
 def order_detail_view(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-    return render(request, 'orderdetailview.html', {'order': order})
+    order_items = order.orderitem_set.all()  # Fetch related OrderItems
+    return render(request, 'orderdetailview.html', {'order': order, 'order_items': order_items})
 
 def messages_page(request):
     threads = Thread.objects.by_user(user=request.user).prefetch_related('chatmessage_thread').order_by('timestamp')
@@ -1919,3 +1920,38 @@ def update_order_status(request, order_id):
 
 def deliveryboydashboard(request):
     return render(request, 'deliveryboydashboard.html')
+
+import csv
+
+def financial_report_csv(request):
+    # Retrieve orders data or any other financial data you need, ordered by creation date in descending order
+    orders = Order.objects.order_by('-created_at')
+    
+    # Prepare CSV data
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="financial_report.csv"'
+
+    # Create a CSV writer
+    writer = csv.writer(response)
+    
+    # Write header row
+    writer.writerow(['Order ID', 'User', 'Total Amount', 'Status', 'Purchased On'])
+
+    # Write order data rows
+    for order in orders:
+        writer.writerow([order.id, order.user.fullName, order.total_amount, order.status, order.created_at])
+
+    return response
+
+def return_order(request):
+    if request.method == 'POST':
+        # Retrieve form data
+        return_reason = request.POST.get('returnReason')
+        return_comments = request.POST.get('returnComments')
+        
+        # Process the return request, you can send it to the admin panel here
+        
+        # Example response
+        return JsonResponse({'message': 'Return request submitted successfully'}, status=200)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)

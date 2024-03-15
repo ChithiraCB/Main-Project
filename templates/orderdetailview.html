@@ -22,7 +22,7 @@
     }
   </style>
 </head>
-<body  style="background-color: #f0f0f0;">
+<body style="background-color: #f0f0f0;">
     <div class="header">
         <h2><center>Order View</center></h2>
         <a href="{% url 'adminpanel' %}" style="margin-left: 10px;">Go to Dashboard</a>
@@ -33,7 +33,28 @@
       <div class="card-body">
         <p><strong>Order ID:</strong> {{ order.id }}</p>
         <p><strong>User:</strong> {{ order.user.fullName }}</p>
-        <!-- Display other order details as needed -->
+        <p><strong>Status:</strong> {{ order.status }}</p>
+        <p><strong>Purchased on:</strong> {{ order.created_at }}</p>
+        <h5>Products:</h5>
+        <div class="row">
+          {% for item in order.orderitem_set.all %}
+          <div class="col-md-4 mb-3">
+            <div class="d-flex align-items-center">
+              <img src="{{ item.product.product_image.url }}" alt="{{ item.product.product_name }}" style="max-width: 100px; height: 100px; border: 2px solid #ddd;">
+              <div class="ml-3">
+                <p><strong>Name:</strong> {{ item.product.product_name }}</p>
+                <p><strong>Quantity:</strong> {{ item.quantity }}</p>
+                <p><strong>Item Total:</strong> {{ item.item_total }}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% if return_order %}
+        <h5>Return Order Details:</h5>
+        <p><strong>Reason:</strong> {{ return_order.returnReason }}</p>
+        <p><strong>Comments:</strong> {{ return_order.returnComments }}</p>
+        {% endif %}
       </div>
     </div>
   </div>

@@ -37,14 +37,13 @@
           <th>Total Amount</th>
           {% comment %} <th>Payment ID</th> {% endcomment %}
           <th>Status</th>
-          <th>Created At</th>
+          <th>Purcased on</th>
         </tr>
       </thead>
       <tbody>
         {% for order in orders %}
         <tr>
-          <tr onclick="window.location='{% url 'order_detail' order.id %}'" style="cursor:pointer;">
-
+         
           <td>{{ order.id }}</td>
           <td>{{ order.user.fullName }}</td>
           <td>{{ order.total_amount }}</td>
@@ -67,6 +66,8 @@
             {% endif %}
           </td>
           <td>{{ order.created_at }}</td>
+          <td><a href="{% url 'order_detail' order.id %}">View Details</a></td>
+
         </tr>
         {% endfor %}
       </tbody>
