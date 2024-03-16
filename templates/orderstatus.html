@@ -65,6 +65,13 @@
   <div id="refundMessage" style="display: none; margin-top: 20px;">
     <p>Your order has been cancelled. The money will be refunded within 4 days.</p>
   </div>
+  <div id="returnMessage" style="display: none; margin-top: 20px;">
+    <p>Return request submitted successfully.</p>
+  </div>
+  <div id="errorMessage" style="display: none; margin-top: 20px;">
+    <p>Failed to submit return request.</p>
+  </div>
+  <div id="popupMessageContainer" class="popup-message-container"></div> <!-- Container for pop-up messages -->
 </div>
 <div id="returnModal" class="modal">
   <!-- Modal content -->
@@ -96,6 +103,20 @@
 
 {% block scripts %}
 <script>
+  // Function to show custom pop-up message
+  function showPopupMessage(message) {
+    var popup = document.createElement('div');
+    popup.classList.add('popup-message');
+    popup.textContent = message;
+
+    document.getElementById('popupMessageContainer').appendChild(popup);
+
+    // Remove the pop-up after 3 seconds
+    setTimeout(function() {
+      popup.remove();
+    }, 3000);
+  }
+
   document.getElementById("returnForm").addEventListener("submit", function(event) {
     event.preventDefault(); // Prevent form submission
     
@@ -104,7 +125,7 @@
     var returnComments = document.getElementById("returnComments").value;
   
     if (!returnReason || !returnComments) {
-      alert("Both reason and comments are required.");
+      showPopupMessage("Both reason and comments are required.");
       return;
     }
   
@@ -125,15 +146,15 @@
     })
     .then(response => {
       if (response.ok) {
-        alert("Return request submitted successfully.");
+        document.getElementById("returnMessage").style.display = "block"; // Show success message
         document.getElementById("returnModal").style.display = "none"; // Close modal after submission
       } else {
-        alert("Failed to submit return request.");
+        document.getElementById("errorMessage").style.display = "block"; // Show error message
       }
     })
     .catch(error => {
       console.error('Error:', error);
-      alert("An error occurred while submitting return request.");
+      document.getElementById("errorMessage").style.display = "block"; // Show error message
     });
   });
   
@@ -156,9 +177,6 @@
 
   
 
-
-  
-
 document.addEventListener("DOMContentLoaded", function() {
   // Get the button that opens the modal or serves as the cancel button
   var btn = document.getElementById("cancelBtn-{{ order_id }}");
@@ -174,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function() {
       // Open return modal
       document.getElementById("returnModal").style.display = "block";
     } else {
-      alert("This order cannot be cancelled.");
+      showPopupMessage("This order cannot be cancelled.");
     }
   }
 
@@ -228,7 +246,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var comments = document.getElementById("comments").value;
 
     if (!reason || !comments) {
-      alert("Both reason and comments are required.");
+      showPopupMessage("Both reason and comments are required.");
       return;
     }
 
@@ -250,18 +268,17 @@ document.addEventListener("DOMContentLoaded", function() {
     })
     .then(response => {
       if (response.ok) {
-        alert("Order cancelled successfully.");
+        document.getElementById("refundMessage").style.display = "block"; // Show refund message
         sessionStorage.setItem('orderCancelled', true); // Store order cancelled flag
-        document.getElementById('refundMessage').style.display = 'block'; // Show refund message
         btn.disabled = true; // Disable Cancel Order button
         document.getElementById("myModal").style.display = "none"; // Close cancel modal after submission
       } else {
-        alert("Failed to cancel order.");
+        showPopupMessage("Failed to cancel order.");
       }
     })
     .catch(error => {
       console.error('Error:', error);
-      alert("An error occurred while cancelling the order.");
+      showPopupMessage("An error occurred while cancelling the order.");
     });
   });
 

@@ -541,22 +541,22 @@ class ChatMessage(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
 
-# class ReturnOrder(models.Model):
-#     return_reason_choices = [
-#         ('Damaged', 'Damaged'),
-#         ('Wrong item received', 'Wrong item received'),
-#         ('Not as described', 'Not as described'),
-#         ('Changed mind', 'Changed mind'),
-#         ('Other', 'Other'),
-#     ]
+class ReturnOrder(models.Model):
+    return_reason_choices = [
+        ('Damaged', 'Damaged'),
+        ('Wrong item received', 'Wrong item received'),
+        ('Not as described', 'Not as described'),
+        ('Changed mind', 'Changed mind'),
+        ('Other', 'Other'),
+    ]
     
-#     order = models.ForeignKey(Order, on_delete=models.CASCADE)  # Foreign key relationship with the Order model
-#     return_reason = models.CharField(max_length=50, choices=return_reason_choices)
-#     return_comments = models.TextField()
-#     created_at = models.DateTimeField(auto_now_add=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)  # Foreign key relationship with the Order model
+    return_reason = models.CharField(max_length=50, choices=return_reason_choices)
+    return_comments = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
     
-#     def __str__(self):
-#         return f"Return Order {self.id}"
+    def __str__(self):
+        return f"Return Order {self.id}"
 
     
 
