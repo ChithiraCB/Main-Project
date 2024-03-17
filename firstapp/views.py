@@ -1923,24 +1923,85 @@ def deliveryboydashboard(request):
 
 import csv
 
-def financial_report_csv(request):
+
+# def financial_report_csv(request):
+#     # Retrieve orders data or any other financial data you need, ordered by creation date in descending order
+#     orders = Order.objects.order_by('-created_at')
+    
+#     # Prepare CSV data
+#     response = HttpResponse(content_type='text/csv')
+#     response['Content-Disposition'] = 'attachment; filename="financial_report.csv"'
+
+#     # Create a CSV writer
+#     writer = csv.writer(response)
+    
+#     # Write header row
+#     writer.writerow(['Order ID', 'User', 'Total Amount', 'Status', 'Purchased On'])
+
+#     # Write order data rows
+#     for order in orders:
+#         writer.writerow([order.id, order.user.fullName, order.total_amount, order.status, order.created_at])
+
+#     return response
+
+
+from reportlab.pdfgen import canvas
+from io import BytesIO
+from django.utils import timezone
+import matplotlib.pyplot as plt
+from reportlab.lib.utils import ImageReader
+
+def financial_report_pdf(request):
     # Retrieve orders data or any other financial data you need, ordered by creation date in descending order
     orders = Order.objects.order_by('-created_at')
     
-    # Prepare CSV data
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="financial_report.csv"'
-
-    # Create a CSV writer
-    writer = csv.writer(response)
+    # Create a BytesIO buffer for the PDF content
+    buffer = BytesIO()
     
-    # Write header row
-    writer.writerow(['Order ID', 'User', 'Total Amount', 'Status', 'Purchased On'])
-
-    # Write order data rows
+    # Create a PDF document
+    pdf = canvas.Canvas(buffer, pagesize='A4')
+    
+    # Define PDF filename
+    filename = "financial_report.pdf"
+    
+    # Set PDF metadata
+    pdf.setTitle(filename)
+    
+    # Define PDF title and formatting
+    pdf.setFont("Helvetica-Bold", 16)
+    pdf.drawCentredString(300, 800, "Financial Report")
+    
+    # Set up table headers
+    pdf.setFont("Helvetica-Bold", 12)
+    pdf.drawString(50, 750, 'Order ID')
+    # pdf.drawString(150, 750, 'User')
+    pdf.drawString(250, 750, 'Total Amount')
+    pdf.drawString(350, 750, 'Status')
+    pdf.drawString(450, 750, 'Purchased On')
+    
+    # Set up table rows
+    pdf.setFont("Helvetica", 12)
+    y_position = 730  # Initial y-position for the first row
+    
     for order in orders:
-        writer.writerow([order.id, order.user.fullName, order.total_amount, order.status, order.created_at])
-
+        pdf.drawString(50, y_position, str(order.id))
+        # pdf.drawString(150, y_position, order.user.fullName)  # Assuming full_name is a field in your User model
+        pdf.drawString(250, y_position, str(order.total_amount))
+        pdf.drawString(350, y_position, order.status)
+        pdf.drawString(450, y_position, order.created_at.strftime("%Y-%m-%d %H:%M:%S"))  # Format the date as needed
+        y_position -= 20  # Move to the next row
+    
+    # Save the PDF document
+    pdf.save()
+    
+    # Get PDF content from the BytesIO buffer
+    pdf_data = buffer.getvalue()
+    buffer.close()
+    
+    # Prepare HTTP response with PDF content
+    response = HttpResponse(pdf_data, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
     return response
 
 def return_order(request):
@@ -1955,3 +2016,16 @@ def return_order(request):
         return JsonResponse({'message': 'Return request submitted successfully'}, status=200)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+    
+from django.template.loader import get_template
+    
+def download_invoice(request, order_id):
+    order = Order.objects.get(pk=order_id)
+    context = {'order': order}
+    template = get_template('order_complete.html')  # Create an HTML template for your invoice
+    html = template.render(context)
+    
+    response = HttpResponse(html, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="invoice_{order_id}.pdf"'
+    
+    return response

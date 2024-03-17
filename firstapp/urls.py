@@ -80,8 +80,9 @@ urlpatterns = [
     path('refund_request/<int:order_id>', views.refund_request,name='refund_request'), 
     path('update_order_status/<int:order_id>/', views.update_order_status, name='update_order_status'),
     path('deliveryboydashboard/', views.deliveryboydashboard, name='deliveryboydashboard'),
-    path('financial_report_csv/', views.financial_report_csv, name='financial_report_csv'),
+    path('financial_report_pdf/', views.financial_report_pdf, name='financial_report_pdf'),
     path('return-order/',views.return_order, name='return_order'),
+    path('download-invoice/<int:order_id>/', views.download_invoice, name='download_invoice'),
  
     
      path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),

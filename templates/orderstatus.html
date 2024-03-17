@@ -4,6 +4,13 @@
 <link rel="stylesheet" href="{% static 'css/checkout3.css' %}">
 <link rel="stylesheet" href="{% static 'css/orderstatus.css' %}">
 
+<!-- Additional CSS for popup message -->
+<style>
+.popup-message {
+  color: green; /* Set the text color to green */
+}
+</style>
+
 <!-- Modal -->
 <div id="myModal" class="modal">
   <!-- Modal content -->
@@ -56,6 +63,7 @@
         <span>Status:</span>
         {{ status }}
     </div>
+    <a href="{% url 'download_invoice' order_id %}" class="btn">Download Invoice</a>
   </div>
   <a href="#" class="btn">Track Order</a>
  
@@ -92,6 +100,7 @@
         </select><br><br>
         <label for="returnComments">Comments:</label><br>
         <textarea id="returnComments" name="returnComments" rows="4" placeholder="Max 25 words" required></textarea><br><br>
+       
         <button type="submit" class="btn return-btn">Submit Return</button>
       </form>
     </div>
@@ -106,7 +115,7 @@
   // Function to show custom pop-up message
   function showPopupMessage(message) {
     var popup = document.createElement('div');
-    popup.classList.add('popup-message');
+    popup.classList.add('popup-message'); // Add the CSS class to set text color to green
     popup.textContent = message;
 
     document.getElementById('popupMessageContainer').appendChild(popup);
