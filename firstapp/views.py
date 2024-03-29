@@ -1820,6 +1820,27 @@ def rate_product(request, id):
 # def order_cancellation(request,id):
 #     return render(request, 'ordercancellation.html')
     
+# def order_status(request, id):
+#     # Retrieve the order object based on the provided ID
+#     order = get_object_or_404(Order, id=id)
+#     user_address = ProfileUser.objects.filter(user=request.user).first()
+    
+#     # Extract relevant information from the order object
+#     order_id = order.id
+#     status = order.status
+#     products = order.products.all()  # Retrieve associated products
+    
+#     # Pass the data to the template
+#     context = {
+#         'order_id': order_id,
+#         'status': status,
+#         'products': products,
+#         'user_address':user_address,
+#         'total_amount': order.total_amount,
+#     }
+
+#     return render(request, 'orderstatus.html', context)
+
 def order_status(request, id):
     # Retrieve the order object based on the provided ID
     order = get_object_or_404(Order, id=id)
@@ -1855,6 +1876,9 @@ def order_cancellation(request, id):
         return JsonResponse({'message': 'Order successfully cancelled'}, status=200)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+
 
 # def order_cancellation(request, id):
 #     if request.method == 'POST':
@@ -1945,11 +1969,110 @@ import csv
 #     return response
 
 
+# from reportlab.pdfgen import canvas
+# from io import BytesIO
+# from django.utils import timezone
+# import matplotlib.pyplot as plt
+# from reportlab.lib.utils import ImageReader
+# from datetime import datetime, timedelta
+# from reportlab.lib.styles import getSampleStyleSheet
+# from reportlab.lib.pagesizes import letter
+  
+
+
+
+# def order_report(request):
+#   """
+#   Generates a basic order report for a specific date range.
+
+#   You can customize this function to include more details and filter by specific criteria.
+#   """
+#   today = datetime.today()
+#   # Set default date range to the past week
+#   start_date = today - timedelta(days=7)
+#   end_date = today
+
+#   if request.GET.get('start_date'):
+#     start_date = datetime.strptime(request.GET.get('start_date'), '%Y-%m-%d')
+#   if request.GET.get('end_date'):
+#     end_date = datetime.strptime(request.GET.get('end_date'), '%Y-%m-%d')
+
+#   # Filter orders based on date range
+#   orders = Order.objects.filter(created_at__gte=start_date, created_at__lte=end_date)
+
+#   # Calculate basic order summary data
+#   total_orders = orders.count()
+#   total_revenue = sum(order.total_amount for order in orders)
+#   average_order_value = total_revenue / total_orders if total_orders else 0
+
+#   # Get top 5 selling products
+# #   top_selling_products = OrderItem.objects.filter(order__in=orders).values('product__product_name').annotate(quantity=Sum('quantity')).order_by('-quantity')[:5]
+
+#   # Generate PDF data
+#   if request.GET.get('download_pdf'):
+#     buffer = BytesIO()
+#     pdf = canvas.Canvas(buffer, pagesize=letter)
+#     styles = getSampleStyleSheet()
+#     title = f"E-commerce Order Report - {start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}"
+
+#     # Add report title and headers
+#     pdf.setStyle(styles["Heading1"])
+#     pdf.drawString(200, 750, title)
+#     pdf.setFont("Helvetica", 12)
+#     pdf.drawString(50, 720, "Date Generated:")
+#     pdf.drawString(180, 720, str(datetime.now()))
+
+#     # Add order summary data
+#     y_pos = 680
+#     pdf.drawString(50, y_pos, "Total Orders:")
+#     pdf.drawString(180, y_pos, str(total_orders))
+#     y_pos -= 20
+#     pdf.drawString(50, y_pos, "Total Revenue:")
+#     pdf.drawString(180, y_pos, f"{total_revenue:.2f}")
+#     y_pos -= 20
+#     pdf.drawString(50, y_pos, "Average Order Value:")
+#     pdf.drawString(180, y_pos, f"{average_order_value:.2f}")
+
+#     # Add top selling products table
+#     y_pos -= 40
+#     pdf.drawString(50, y_pos, "Top 5 Selling Products")
+#     styles = getSampleStyleSheet()
+#     table = styles["Normal"]
+#     table.alignment = 0  # Left alignment
+#     data = [["Product Name", "Quantity"]]
+#     data.extend([(p['product__product_name'], p['quantity']) for p in top_selling_products])
+#     width, height = letter
+#     table.splitLongWords = True
+#     table.drawOn(pdf, 50, y_pos - 50, colWidths=[width * 0.6, width * 0.4])
+
+#     pdf.save()
+#     response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+#     response['Content-Disposition'] = 'attachment; filename=order_report.pdf'
+#     return response
+
+#   # Context data for the template (if not downloading PDF)
+#   context = {
+#       'start_date': start_date.strftime('%Y-%m-%d'),
+#       'end_date': end_date.strftime('%Y-%m-%d'),
+#       'total_orders': total_orders,
+#       'total_revenue': total_revenue,
+#       'average_order_value': average_order_value,
+#       'top_selling_products': top_selling_products,
+#   }
+#   return render(request, 'order_report.html', context)
+
+
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.utils.text import slugify
+from django.conf import settings
+from django.db.models import Count, Sum, Avg
+from .models import Order, OrderItem
+import datetime
+from django.utils import timezone
 from reportlab.pdfgen import canvas
 from io import BytesIO
-from django.utils import timezone
-import matplotlib.pyplot as plt
-from reportlab.lib.utils import ImageReader
+
 
 def financial_report_pdf(request):
     # Retrieve orders data or any other financial data you need, ordered by creation date in descending order
@@ -2003,6 +2126,7 @@ def financial_report_pdf(request):
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     
     return response
+
 
 def return_order(request):
     if request.method == 'POST':

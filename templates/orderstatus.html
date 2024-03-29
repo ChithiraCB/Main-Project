@@ -24,18 +24,15 @@
           <option value="" selected disabled>Select a reason</option>
           <option value="Changed Mind">Changed Mind</option>
           <option value="Found Better Deal">Found Better Deal</option>
-          <option value="Wrong Size/Color">Wrong Size/Color</option>
-          <option value="Delayed Delivery">Delayed Delivery</option>
-          <option value="Financial Issues">Financial Issues</option>
-          <option value="Quality Concerns">Quality Concerns</option>
-          <option value="other">Other</option>
+          <!-- Add more options as needed -->
         </select><br><br>
-        <label for="comments">Comments :</label><br>
+        <label for="comments">Comments:</label><br>
         <textarea id="comments" name="comments" rows="4" placeholder="Max 25 words" required></textarea><br><br>
         <label for="refundAmount">Total Amount for Refund:</label><br>
         <input type="text" id="refundAmount" name="refundAmount" value="{{ total_amount }}" readonly><br><br>
-        <button type="submit" class="btn cancel-btn">Submit</button>
+        <button type="button" class="btn cancel-btn">Submit</button>
       </form>
+       
     </div>
   </div>
 </div>
@@ -63,7 +60,7 @@
         <span>Status:</span>
         {{ status }}
     </div>
-    <a href="{% url 'download_invoice' order_id %}" class="btn">Download Invoice</a>
+    {% comment %} <a href="{% url 'download_invoice' order_id %}" class="btn">Download Invoice</a> {% endcomment %}
   </div>
   <a href="#" class="btn">Track Order</a>
  
@@ -109,216 +106,66 @@
 
 {% endblock %}
 
-
 {% block scripts %}
 <script>
-  // Function to show custom pop-up message
-  function showPopupMessage(message) {
-    var popup = document.createElement('div');
-    popup.classList.add('popup-message'); // Add the CSS class to set text color to green
-    popup.textContent = message;
+  document.addEventListener("DOMContentLoaded", function() {
+    // Get the button that opens the modal or serves as the cancel button
+    var btn = document.getElementById("cancelBtn-{{ order_id }}");
 
-    document.getElementById('popupMessageContainer').appendChild(popup);
+    // Get the order status from the button's data attribute
+    var orderStatus = btn.getAttribute('data-status');
 
-    // Remove the pop-up after 3 seconds
-    setTimeout(function() {
-      popup.remove();
-    }, 3000);
-  }
-
-  document.getElementById("returnForm").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent form submission
-    
-    // Validate return reason and comments fields
-    var returnReason = document.getElementById("returnReason").value;
-    var returnComments = document.getElementById("returnComments").value;
-  
-    if (!returnReason || !returnComments) {
-      showPopupMessage("Both reason and comments are required.");
-      return;
-    }
-  
-    // Send AJAX request to submit return order
-    var url = "/return-order/";
-    var data = {
-      'returnReason': returnReason,
-      'returnComments': returnComments
-    };
-  
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token
-      },
-      body: JSON.stringify(data)
-    })
-    .then(response => {
-      if (response.ok) {
-        document.getElementById("returnMessage").style.display = "block"; // Show success message
-        document.getElementById("returnModal").style.display = "none"; // Close modal after submission
-      } else {
-        document.getElementById("errorMessage").style.display = "block"; // Show error message
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      document.getElementById("errorMessage").style.display = "block"; // Show error message
-    });
-  });
-  
-  // Function to get CSRF token from cookies
-  function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      var cookies = document.cookie.split(';');
-      for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i].trim();
-        // Does this cookie string begin with the name we want?
-        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-  }
-
-  
-
-document.addEventListener("DOMContentLoaded", function() {
-  // Get the button that opens the modal or serves as the cancel button
-  var btn = document.getElementById("cancelBtn-{{ order_id }}");
-
-  // Get the order status from the button's data attribute
-  var orderStatus = btn.getAttribute('data-status');
-
-  // When the user clicks the button, open the modal if the order status allows cancellation
-  btn.onclick = function() {
-    if (orderStatus === "Order confirmed" || orderStatus === "Processing") {
-      document.getElementById("myModal").style.display = "block";
-    } else if (orderStatus === "Delivered") {
-      // Open return modal
-      document.getElementById("returnModal").style.display = "block";
-    } else {
-      showPopupMessage("This order cannot be cancelled.");
-    }
-  }
-
-  // Change button text and behavior if the order is delivered
-  if (orderStatus === "Delivered") {
-    btn.innerText = "Return Order";
+    // When the user clicks the button, open the modal if the order status allows cancellation
     btn.onclick = function() {
-      // Open return modal
-      document.getElementById("returnModal").style.display = "block";
-    };
-  }
-
-  // Get the <span> element that closes the cancel modal
-  var cancelSpan = document.getElementsByClassName("close")[0];
-
-  // When the user clicks on <span> (x), close the cancel modal
-  cancelSpan.onclick = function() {
-    document.getElementById("myModal").style.display = "none";
-  }
-
-  // When the user clicks anywhere outside of the cancel modal, close it
-  window.onclick = function(event) {
-    var cancelModal = document.getElementById("myModal");
-    if (event.target == cancelModal) {
-      cancelModal.style.display = "none";
-    }
-  }
-
-  // Get the <span> element that closes the return modal
-  var returnSpan = document.getElementsByClassName("return-close")[0];
-
-  // When the user clicks on <span> (x), close the return modal
-  returnSpan.onclick = function() {
-    document.getElementById("returnModal").style.display = "none";
-  }
-
-  // When the user clicks anywhere outside of the return modal, close it
-  window.onclick = function(event) {
-    var returnModal = document.getElementById("returnModal");
-    if (event.target == returnModal) {
-      returnModal.style.display = "none";
-    }
-  }
-
-  // Handle form submission for cancelling an order
-  document.getElementById("cancelForm").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent form submission
-    
-    // Validate reason and comments fields
-    var reason = document.getElementById("reason").value;
-    var comments = document.getElementById("comments").value;
-
-    if (!reason || !comments) {
-      showPopupMessage("Both reason and comments are required.");
-      return;
-    }
-
-    // Send AJAX request to cancel order
-    var orderId = "{{ order_id }}";  // Replace with actual order ID
-    var url = "/ordercancellation/" + orderId + "/";
-    var data = {
-      'reason': reason,
-      'comments': comments
-    };
-
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token
-      },
-      body: JSON.stringify(data)
-    })
-    .then(response => {
-      if (response.ok) {
-        document.getElementById("refundMessage").style.display = "block"; // Show refund message
-        sessionStorage.setItem('orderCancelled', true); // Store order cancelled flag
-        btn.disabled = true; // Disable Cancel Order button
-        document.getElementById("myModal").style.display = "none"; // Close cancel modal after submission
+      if (orderStatus === "Order confirmed" || orderStatus === "Processing") {
+        document.getElementById("myModal").style.display = "block";
+      } else if (orderStatus === "Delivered") {
+        // Open return modal
+        document.getElementById("returnModal").style.display = "block";
       } else {
-        showPopupMessage("Failed to cancel order.");
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      showPopupMessage("An error occurred while cancelling the order.");
-    });
-  });
-
-  // Validate comments field for maximum word count
-  document.getElementById("comments").addEventListener("input", function() {
-    var comments = this.value.trim();
-    var words = comments.split(/\s+/).length;
-    
-    if (words > 25) {
-      this.setCustomValidity("Maximum 25 words allowed.");
-    } else {
-      this.setCustomValidity("");
-    }
-  });
-
-  // Function to get CSRF token from cookies
-  function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      var cookies = document.cookie.split(';');
-      for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i].trim();
-        // Does this cookie string begin with the name we want?
-        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
+        showPopupMessage("This order cannot be cancelled.");
       }
     }
-    return cookieValue;
-  }
-});
-</script>
-{% endblock %}
+
+    // Change button text and behavior if the order is delivered
+    if (orderStatus === "Delivered") {
+      btn.innerText = "Return Order";
+      btn.onclick = function() {
+        // Open return modal
+        document.getElementById("returnModal").style.display = "block";
+      };
+    }
+
+    // Get the <span> element that closes the cancel modal
+    var cancelSpan = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on <span> (x), close the cancel modal
+    cancelSpan.onclick = function() {
+      document.getElementById("myModal").style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the cancel modal, close it
+    window.onclick = function(event) {
+      var cancelModal = document.getElementById("myModal");
+      if (event.target == cancelModal) {
+        cancelModal.style.display = "none";
+      }
+    }
+
+    // Get the <span> element that closes the return modal
+    var returnSpan = document.getElementsByClassName("return-close")[0];
+
+    // When the user clicks on <span> (x), close the return modal
+    returnSpan.onclick = function() {
+      document.getElementById("returnModal").style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the return modal, close it
+    window.onclick = function(event) {
+      var returnModal = document.getElementById("returnModal");
+      if (event.target == returnModal) {
+        returnModal.style.display = "none";
+      }
+    }
+  </script>
+  {% endblock %}

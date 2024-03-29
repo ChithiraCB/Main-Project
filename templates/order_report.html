@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>E-commerce Order Report - {{ start_date }} to {{ end_date }}</title>
+</head>
+<body>
+    <h1>E-commerce Order Report - {{ start_date }} to {{ end_date }}</h1>
+
+    <h2>1. Order Summary:</h2>
+    <p>Total Orders: {{ total_orders }}</p>
+    <p>Total Revenue: ${{ total_revenue }}</p>
+    <p>Average Order Value (AOV): ${{ avg_order_value }}</p>
+    <p>New Customers: {{ new_customers }}</p>
+    <p>Returning Customers: {{ returning_customers }}</p>
+
+    <h2>2. Product Performance:</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Product Name</th>
+                <th>Quantity Sold</th>
+                <th>Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in top_selling_products %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ product.product__product_name }}</td>
+                <td>{{ product.quantity_sold }}</td>
+                <td>${{ product.revenue }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

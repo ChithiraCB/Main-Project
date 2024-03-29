@@ -71,6 +71,7 @@ urlpatterns = [
     path('rental_order_complete/', views.rental_order_complete, name='rental_order_complete'),
     path('rate_rentalproduct/<int:id>/', views.rate_rentalproduct, name='rate_rentalproduct'),
     path('orderstatus/<int:id>/', views.order_status, name='orderstatus'),
+    # path('set-order-id/', views.set_order_id, name='set_order_id'),
     path('ordercancellation/<int:id>/', views.order_cancellation, name='ordercancellation'),
     path('order_details/<int:order_id>/', views.order_details, name='order_details'),
     path('rate_product/<int:id>/', views.rate_product, name='rate_product'),
@@ -83,6 +84,9 @@ urlpatterns = [
     path('financial_report_pdf/', views.financial_report_pdf, name='financial_report_pdf'),
     path('return-order/',views.return_order, name='return_order'),
     path('download-invoice/<int:order_id>/', views.download_invoice, name='download_invoice'),
+    # path('test-session/', views.test_session, name='test_session'),
+
+
  
     
      path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),

@@ -31,7 +31,9 @@
                       <ul class="list-group">
                         {% for item in order.orderitem_set.all %}
                         <li class="list-group-item">
-                          <a href="{% url 'orderstatus' order.id %}">
+                         <a href="{% url 'orderstatus' order.id %}">
+                            {% comment %} <a href="{% url 'orderstatus' %}" onclick="setOrderID({{ order_id }})" > {% endcomment %}
+
                             <div>
                               <img src="{{ item.product.product_image.url }}" alt="{{ item.product.product_name }}" style="max-width: 100px; height:100px;border: 2px solid #ddd;">
                               {{ item.product.product_name }}<br>
