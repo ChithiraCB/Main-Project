@@ -85,6 +85,9 @@ urlpatterns = [
     path('return-order/',views.return_order, name='return_order'),
     path('download-invoice/<int:order_id>/', views.download_invoice, name='download_invoice'),
     # path('test-session/', views.test_session, name='test_session'),
+    path('deliveryregister/',views.deliveryregister, name='deliveryregister'),
+    path('deliveryrequestview/',views.deliveryrequestview, name='deliveryrequestview'),
+
 
 
  

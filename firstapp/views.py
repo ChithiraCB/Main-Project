@@ -1,4 +1,5 @@
 
+from django.db import IntegrityError
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate ,login as auth_login,logout
 from django.contrib import messages
@@ -2153,3 +2154,91 @@ def download_invoice(request, order_id):
     response['Content-Disposition'] = f'attachment; filename="invoice_{order_id}.pdf"'
     
     return response
+
+def deliveryregister(request):
+    if request.method == 'POST':
+        full_name = request.POST.get('full_name')
+        email = request.POST.get('email')
+        phone_number = request.POST.get('phone_number')
+        date_of_birth = request.POST.get('date_of_birth')
+        address = request.POST.get('address')
+        city = request.POST.get('city')
+        pincode = request.POST.get('pincode')
+        id_proof_image = request.FILES.get('id_proof_image')
+
+        # Create a new DeliveryBoy instance
+        delivery_boy = Deliveryboy.objects.create(
+            full_name=full_name,
+            email=email,
+            phone_number=phone_number,
+            date_of_birth=date_of_birth,
+            address=address,
+            city=city,
+            pincode=pincode,
+            id_proof_image=id_proof_image
+        )
+
+        # Optionally, you can perform additional actions such as sending confirmation emails, etc.
+
+        return render(request, 'index.html', {'success': True})
+
+    return render(request, 'deliveryregister.html')  # Replace 'registration.html' with your actual registration form template
+
+from django.shortcuts import render
+from django.contrib.auth.hashers import make_password
+from django.core.mail import send_mail
+from django.conf import settings
+from django.db.utils import IntegrityError  # Import IntegrityError for database integrity errors
+from .models import CustomUser, Deliveryboy  # Assuming you have a CustomUser model
+
+import random
+import string
+import logging
+
+logger = logging.getLogger(__name__)
+
+def deliveryrequestview(request):
+    delivery_boys = Deliveryboy.objects.all()
+
+    if request.method == 'POST' and 'send_email' in request.POST:
+        delivery_boy_id = request.POST.get('delivery_boy_id')
+
+        # Generate a random password
+        password = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+
+        # Get the corresponding delivery boy object
+        delivery_boy = Deliveryboy.objects.get(pk=delivery_boy_id)
+
+        # Create a new user with the email as the username and the generated password
+        username = delivery_boy.email  # Use email as username
+        email = delivery_boy.email
+        encrypted_password = make_password(password)
+        
+        try:
+            # Attempt to create a new user
+            user = CustomUser.objects.create(username=username, email=email, password=encrypted_password)
+        except IntegrityError:
+            # Handle the case where the username/email is not unique
+            # You can log an error, display a message to the user, etc.
+            logger.error('Error creating user: username/email not unique')
+            # You may want to add a message to inform the user about the error
+            return render(request, 'deliveryrequestview.html', {'delivery_boys': delivery_boys, 'error_message': 'Username or email already exists.'})
+        else:
+            # Send an email with the username and password
+            subject = 'Delivery Boy Account Details'
+            message = f'Your username: {username}\nYour password: {password}'
+            from_email = settings.EMAIL_HOST_USER
+            recipient_list = [email]
+            try:
+                send_mail(subject, message, from_email, recipient_list)
+                logger.info('Email sent successfully to %s', email)
+            except Exception as e:
+                logger.error('Error sending email: %s', str(e))
+                # You may want to inform the user that the email could not be sent
+                return render(request, 'deliveryrequestview.html', {'delivery_boys': delivery_boys, 'error_message': 'Failed to send email.'})
+
+            # Redirect or render a success message after email is sent
+            return render(request, 'adminpanel.html', {'username': username})
+    
+    # Render the form initially or after successful submission
+    return render(request, 'deliveryrequestview.html', {'delivery_boys': delivery_boys})

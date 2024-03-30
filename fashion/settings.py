@@ -155,6 +155,10 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'chithiracb2024a@mca.ajce.in'  
 EMAIL_HOST_PASSWORD = 'Chithira#098'  
 #DEFAULT_FROM_EMAIL = 'chithiracb@gmail.com'
+EMAIL_DEBUG = True
+
+
+
 
 RAZOR_KEY_ID = 'rzp_test_4aTzV8dhXyLyaT'
 RAZOR_KEY_SECRET = 'f1I52lKptNQEvRqnBM7TuuGZ'

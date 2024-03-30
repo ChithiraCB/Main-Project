@@ -55,7 +55,7 @@ class CustomUser(AbstractUser):
     fullName = models.CharField(max_length=50)
     #last_name = models.CharField(max_length=50)
     #USERNAME_FIELD = 'email'
-    email = models.EmailField(max_length=100, unique=True)
+    email = models.EmailField(max_length=100)
     phone = models.CharField(max_length=12, blank=True)
     password = models.CharField(max_length=128)
    # confirmPassword = models.CharField(max_length=128)
@@ -557,6 +557,31 @@ class ReturnOrder(models.Model):
     
     def __str__(self):
         return f"Return Order {self.id}"
+
+class Deliveryboy(models.Model):
+    ADMIN = 1
+    CUSTOMER = 2
+    DELIVERYTEAM = 3
+    #ADMIN = 4
+
+    USER_TYPES = (
+        (ADMIN, 'Admin'),
+        (CUSTOMER, 'Customer'),
+        (DELIVERYTEAM, 'Deliveryteam')
+        #(ADMIN,'Admin'),
+    )
+    user_types = models.PositiveSmallIntegerField(choices=USER_TYPES,default='3')
+    full_name = models.CharField(max_length=100)
+    address = models.TextField()
+    phone_number = models.CharField(max_length=15)
+    email = models.EmailField(max_length=100)
+    date_of_birth = models.DateField()
+    city = models.CharField(max_length=50)
+    pincode = models.CharField(max_length=10)
+    id_proof_image = models.ImageField(upload_to='id_proofs/')
+
+    def __str__(self):
+        return self.user.full_name
 
     
 
