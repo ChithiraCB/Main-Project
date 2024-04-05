@@ -94,9 +94,9 @@ def login_user(request):
                 if request.user.user_types==CustomUser.CUSTOMER:
                     request.session["username"]=user.username
                     return redirect('userhome')
-                # elif request.user.user_typ == CustomUser.VENDOR:
-                #     print("user is therapist")
-                #     return redirect(reverse('therapist'))
+                elif request.user.user_types == CustomUser.DELIVERYTEAM:
+                     print("user is deliveryboy")
+                     return redirect('deliveryboydashboard')
        
                 
                 elif request.user.user_types == CustomUser.ADMIN:
@@ -2242,3 +2242,32 @@ def deliveryrequestview(request):
     
     # Render the form initially or after successful submission
     return render(request, 'deliveryrequestview.html', {'delivery_boys': delivery_boys})
+
+def assign_delivery(request, order_id):
+    order = get_object_or_404(Order, pk=order_id)
+    
+    delivery_boy = CustomUser.objects.filter(user_types=CustomUser.DELIVERYTEAM).first()
+    
+    if delivery_boy:
+        assignment = DeliveryAssignment.objects.create(order=order, delivery_boy=delivery_boy)
+        return JsonResponse({'success': True, 'message': 'Delivery assigned successfully.'})
+    else:
+        return JsonResponse({'success': False, 'message': 'No delivery boy available.'})
+    
+# def deliveryorder_details(request, delivery_boy_id):
+#     # Assuming delivery_boy_id is passed in the URL or retrieved from the request
+#     assignments = DeliveryAssignment.objects.filter(delivery_boy_id=delivery_boy_id)
+#     orders = [assignment.order for assignment in assignments]
+#     context = {
+#         'orders': orders
+#     }
+#     return render(request, 'deliveryorderdetails.html', context)
+
+def assigned_orders(request):
+    # Fetch all DeliveryAssignments
+    assigned_orders = DeliveryAssignment.objects.all()
+    user_address = ProfileUser.objects.filter(user=request.user).first()
+
+    # Pass the assigned orders to the template
+    context = {'assigned_orders': assigned_orders,'user_address': user_address}
+    return render(request, 'assigned_orders.html', context)

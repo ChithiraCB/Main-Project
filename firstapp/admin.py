@@ -18,6 +18,7 @@ from .models import UserProfile1
 from .models import ProfileUser,RentalProduct,RentalAddToCart
 from .models import Thread
 from .models import Deliveryboy
+from .models import DeliveryAssignment
 #from .models import Payment2
 
 
@@ -51,3 +52,4 @@ admin.site.register(RentalProduct)
 admin.site.register(RentalAddToCart)
 admin.site.register(Thread)
 admin.site.register(Deliveryboy)
+admin.site.register(DeliveryAssignment)

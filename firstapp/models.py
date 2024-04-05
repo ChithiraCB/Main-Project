@@ -583,6 +583,12 @@ class Deliveryboy(models.Model):
     def __str__(self):
         return self.user.full_name
 
+
+class DeliveryAssignment(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    delivery_boy = models.ForeignKey(CustomUser, on_delete=models.CASCADE, limit_choices_to={'user_types': CustomUser.DELIVERYTEAM})
+    assigned_at = models.DateTimeField(auto_now_add=True)
+    is_completed = models.BooleanField(default=False)
     
 
     

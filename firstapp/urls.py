@@ -87,12 +87,16 @@ urlpatterns = [
     # path('test-session/', views.test_session, name='test_session'),
     path('deliveryregister/',views.deliveryregister, name='deliveryregister'),
     path('deliveryrequestview/',views.deliveryrequestview, name='deliveryrequestview'),
+    path('assign_delivery/<int:order_id>/', views.assign_delivery, name='assign_delivery'),
+     #path('deliveryorders_details/<int:delivery_boy_id>', views.deliveryorder_details, name='deliveryorder_details'),
+    path('assigned_orders/', views.assigned_orders, name='assigned_orders'),
+
 
 
 
  
     
-     path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),
+    path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),
      path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),
      path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
      path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(), name="password_reset_complete"),

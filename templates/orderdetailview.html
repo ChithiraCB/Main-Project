@@ -55,8 +55,39 @@
         <p><strong>Reason:</strong> {{ return_order.returnReason }}</p>
         <p><strong>Comments:</strong> {{ return_order.returnComments }}</p>
         {% endif %}
+        <form method="post" action="{% url 'assign_delivery' order.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary mt-3" id="assignDeliveryBtn">Assign Delivery</button>
+        </form>
       </div>
     </div>
   </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#assignDeliveryBtn').on('click', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        $.ajax({
+          url: $(this).closest('form').attr('action'),  // Get the form action URL
+          type: 'POST',
+          data: $(this).closest('form').serialize(),  // Serialize form data
+          dataType: 'json',
+          success: function(response) {
+            if (response.success) {
+              alert('Delivery assigned successfully.');
+              $('#assignDeliveryBtn').prop('disabled', true); // Disable the button
+            } else {
+              alert('Error assigning delivery: ' + response.message);
+            }
+          },
+          error: function(xhr, status, error) {
+            console.error('Error:', error);
+            alert('An error occurred while assigning delivery. Please try again later.');
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>

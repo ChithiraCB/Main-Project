@@ -1,8 +1,8 @@
 
-from django.test import TestCase
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-import unittest
+# from django.test import TestCase
+# from selenium import webdriver
+# from selenium.webdriver.common.by import By
+# import unittest
 
 # class LoginTestCase(TestCase):
 #     def setUp(self):
@@ -35,59 +35,59 @@ import unittest
 #     unittest.main()
 
 
-from django.test import TestCase
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-class SeleniumTest(TestCase):
-    def setUp(self):
-        # Set up the WebDriver in the setUp method
-        self.driver = webdriver.Chrome()
-    def tearDown(self):
-        # Close the WebDriver in the tearDown method
-        self.driver.quit()
-    def test_selenium_example(self):
-        # Navigate to the login page
-        self.driver.get('http://127.0.0.1:3000/login/')  # Update the URL as needed
-        # Fill out the login form with sample data
-        username_input = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.NAME, "username"))
-        )
-        password_input = self.driver.find_element(By.NAME, "password")
-        username_input.send_keys("athiracb@gmail.com")  # Replace with actual username
-        password_input.send_keys("athira#098")  # Replace with actual password
-         # Submit the login form
-        login_button = self.driver.find_element(By.ID, "login")
-        login_button.click()
-        # Wait for the userhome page to load
-        ornaments_dropdown = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.ID, 'ornamentsDropdown'))
-        )
-        ornaments_dropdown.click()
-        earrings_link = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.LINK_TEXT, 'Earrings'))
-        )
-        print("Found Earrings link")
-        earrings_link.click()
-        print("Clicked on Earrings link")
-        # Wait for the 'Add to Cart' button on the product page
-        add_to_cart_button = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, '//button[@class="cart-button"]'))
-        )
-        print("Found 'Add to Cart' button")
-        # Click on the "Add to Cart" button
-        add_to_cart_button.click()
-        print("Clicked on 'Add to Cart' button")
-      # Wait for the 'Add to Cart' button on the product page
-        add_to_cart_button = WebDriverWait(self.driver, 10).until(
-        EC.element_to_be_clickable((By.CLASS_NAME, 'quantity-btn.increase-quantity'))
-)
-        print("Found 'Add to Cart' button")
-        add_to_cart_button.click()
-        print("Clicked on 'Add to Cart' button")
-        print("Product added to the cart successfully")
-        self.driver.get('http://127.0.0.1:3000/view_cart/')  # Update the URL as needed
+# from django.test import TestCase
+# from selenium import webdriver
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
+# class SeleniumTest(TestCase):
+#     def setUp(self):
+#         # Set up the WebDriver in the setUp method
+#         self.driver = webdriver.Chrome()
+#     def tearDown(self):
+#         # Close the WebDriver in the tearDown method
+#         self.driver.quit()
+#     def test_selenium_example(self):
+#         # Navigate to the login page
+#         self.driver.get('http://127.0.0.1:3000/login/')  # Update the URL as needed
+#         # Fill out the login form with sample data
+#         username_input = WebDriverWait(self.driver, 10).until(
+#             EC.presence_of_element_located((By.NAME, "username"))
+#         )
+#         password_input = self.driver.find_element(By.NAME, "password")
+#         username_input.send_keys("athiracb@gmail.com")  # Replace with actual username
+#         password_input.send_keys("athira#098")  # Replace with actual password
+#          # Submit the login form
+#         login_button = self.driver.find_element(By.ID, "login")
+#         login_button.click()
+#         # Wait for the userhome page to load
+#         ornaments_dropdown = WebDriverWait(self.driver, 10).until(
+#             EC.element_to_be_clickable((By.ID, 'ornamentsDropdown'))
+#         )
+#         ornaments_dropdown.click()
+#         earrings_link = WebDriverWait(self.driver, 10).until(
+#             EC.element_to_be_clickable((By.LINK_TEXT, 'Earrings'))
+#         )
+#         print("Found Earrings link")
+#         earrings_link.click()
+#         print("Clicked on Earrings link")
+#         # Wait for the 'Add to Cart' button on the product page
+#         add_to_cart_button = WebDriverWait(self.driver, 10).until(
+#             EC.element_to_be_clickable((By.XPATH, '//button[@class="cart-button"]'))
+#         )
+#         print("Found 'Add to Cart' button")
+#         # Click on the "Add to Cart" button
+#         add_to_cart_button.click()
+#         print("Clicked on 'Add to Cart' button")
+#       # Wait for the 'Add to Cart' button on the product page
+#         add_to_cart_button = WebDriverWait(self.driver, 10).until(
+#         EC.element_to_be_clickable((By.CLASS_NAME, 'quantity-btn.increase-quantity'))
+# )
+#         print("Found 'Add to Cart' button")
+#         add_to_cart_button.click()
+#         print("Clicked on 'Add to Cart' button")
+#         print("Product added to the cart successfully")
+#         self.driver.get('http://127.0.0.1:3000/view_cart/')  # Update the URL as needed
 
 # from selenium import webdriver
 # from selenium.webdriver.common.keys import Keys
@@ -218,3 +218,91 @@ class SeleniumTest(TestCase):
 
 # if __name__ == "__main__":
 #     unittest.main()
+
+
+import unittest
+from django.test import TestCase
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+class CancellationTestCase(TestCase):
+    def setUp(self):
+        self.driver = webdriver.Chrome()
+        self.driver.implicitly_wait(10)
+
+    def tearDown(self):
+        self.driver.quit()
+
+class CancellationTestCase(TestCase):
+    def setUp(self):
+        self.driver = webdriver.Chrome()
+        self.driver.implicitly_wait(10)
+
+    def tearDown(self):
+        self.driver.quit()
+
+    def test_cancel_order(self):
+        # Login process (if needed)
+        self.driver.get('http://127.0.0.1:3000/login/')  # Update the URL as needed
+
+        # Login form input fields
+        username_input = self.driver.find_element(By.NAME, 'username')
+        password_input = self.driver.find_element(By.NAME, 'password')
+
+        username_input.send_keys('athiracb@gmail.com')
+        password_input.send_keys('athira#098')
+
+        # Submit the login form
+        login_form = self.driver.find_element(By.CSS_SELECTOR, 'form')
+        login_form.submit()
+
+        # Wait for the user home page to load
+        WebDriverWait(self.driver, 10).until(
+            EC.url_to_be('http://127.0.0.1:3000/userhome/')  # Update the expected URL if needed
+        )
+
+        # Navigate to My Orders page
+        my_orders_link = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.LINK_TEXT, 'MY ORDERS'))
+        )
+        my_orders_link.click()
+
+        # Wait for the My Orders page to load
+        WebDriverWait(self.driver, 10).until(
+            EC.url_to_be('http://127.0.0.1:3000/myorders/')  # Update the URL if needed
+        )
+
+        # Debug output to verify the current URL
+        print("Current URL:", self.driver.current_url)
+
+        # Find and click on the container in myorders.html
+        container_link = WebDriverWait(self.driver, 30).until(
+            EC.element_to_be_clickable((By.XPATH, "//div[@class='list-group-item list-group-item-action']"))
+        )
+        container_link.click()
+
+        # Debug output to verify the order status page URL
+        print("Order Status Page URL:", self.driver.current_url)
+
+        # Wait for the order status page to load
+        WebDriverWait(self.driver, 30).until(
+            EC.url_to_be('http://127.0.0.1:3000/orderstatus/268/')  # Update the URL if needed
+        )
+
+        # Find and click on the cancel button in the modal
+        cancel_button = WebDriverWait(self.driver, 30).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[@class='btn cancel-btn']"))
+        )
+        cancel_button.click()
+
+        # Debug output to verify the cancel button click
+        print("Cancel button clicked successfully.")
+
+        # Fill in the form fields in the modal and submit
+
+        # Add debug statements or assertions as needed
+
+if __name__ == '__main__':
+    unittest.main()
