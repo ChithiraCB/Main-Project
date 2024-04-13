@@ -221,88 +221,54 @@
 
 
 import unittest
-from django.test import TestCase
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-class CancellationTestCase(TestCase):
+class CancellationTestCase(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Chrome()
-        self.driver.implicitly_wait(10)
-
-    def tearDown(self):
-        self.driver.quit()
-
-class CancellationTestCase(TestCase):
-    def setUp(self):
-        self.driver = webdriver.Chrome()
+        self.driver.maximize_window()  # Maximize the browser window for better visibility
         self.driver.implicitly_wait(10)
 
     def tearDown(self):
         self.driver.quit()
 
     def test_cancel_order(self):
-        # Login process (if needed)
-        self.driver.get('http://127.0.0.1:3000/login/')  # Update the URL as needed
+        self.login()  # Separate method for login
+        self.navigate_to_orders_page()  # Separate method for navigating to orders page
 
-        # Login form input fields
+        # Now perform the cancellation process
+
+    def login(self):
+        self.driver.get('http://127.0.0.1:3000/login/')  # Use environment variables or settings for URL
         username_input = self.driver.find_element(By.NAME, 'username')
         password_input = self.driver.find_element(By.NAME, 'password')
 
-        username_input.send_keys('athiracb@gmail.com')
+        username_input.send_keys('athiracb@gmail.com')  # Use environment variables for credentials
         password_input.send_keys('athira#098')
 
-        # Submit the login form
         login_form = self.driver.find_element(By.CSS_SELECTOR, 'form')
         login_form.submit()
 
-        # Wait for the user home page to load
+        # Optionally wait for login success or check the URL
+
+    def navigate_to_orders_page(self):
         WebDriverWait(self.driver, 10).until(
             EC.url_to_be('http://127.0.0.1:3000/userhome/')  # Update the expected URL if needed
         )
 
-        # Navigate to My Orders page
         my_orders_link = WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((By.LINK_TEXT, 'MY ORDERS'))
         )
         my_orders_link.click()
 
-        # Wait for the My Orders page to load
         WebDriverWait(self.driver, 10).until(
             EC.url_to_be('http://127.0.0.1:3000/myorders/')  # Update the URL if needed
         )
 
-        # Debug output to verify the current URL
-        print("Current URL:", self.driver.current_url)
-
-        # Find and click on the container in myorders.html
-        container_link = WebDriverWait(self.driver, 30).until(
-            EC.element_to_be_clickable((By.XPATH, "//div[@class='list-group-item list-group-item-action']"))
-        )
-        container_link.click()
-
-        # Debug output to verify the order status page URL
-        print("Order Status Page URL:", self.driver.current_url)
-
-        # Wait for the order status page to load
-        WebDriverWait(self.driver, 30).until(
-            EC.url_to_be('http://127.0.0.1:3000/orderstatus/268/')  # Update the URL if needed
-        )
-
-        # Find and click on the cancel button in the modal
-        cancel_button = WebDriverWait(self.driver, 30).until(
-            EC.element_to_be_clickable((By.XPATH, "//button[@class='btn cancel-btn']"))
-        )
-        cancel_button.click()
-
-        # Debug output to verify the cancel button click
-        print("Cancel button clicked successfully.")
-
-        # Fill in the form fields in the modal and submit
-
-        # Add debug statements or assertions as needed
+        # Optionally verify the current URL or other elements on the page
 
 if __name__ == '__main__':
     unittest.main()

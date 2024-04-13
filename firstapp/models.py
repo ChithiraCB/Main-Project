@@ -354,6 +354,11 @@ class Order(models.Model):
         ('Cancelled', 'Cancelled'),
 
     )
+     DELIVERY_STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('OUT_FOR_DELIVERY', 'Out for Delivery'),
+        ('DELIVERED', 'Delivered'),
+    ]
      
      user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
      products = models.ManyToManyField(Product1, through='OrderItem')
@@ -363,7 +368,8 @@ class Order(models.Model):
      payment_status= models.BooleanField(default=False)
      status = models.CharField(max_length=20, choices=STATUS, default='Order Confirmed')
      created_at = models.DateTimeField(auto_now_add=True)
-    
+     delivery_status = models.CharField(max_length=20, choices=DELIVERY_STATUS_CHOICES, default='PENDING')
+
      def __str__(self):
         return f"Order {self.id} by {self.user.fullName}"
     

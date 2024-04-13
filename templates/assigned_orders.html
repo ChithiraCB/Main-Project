@@ -116,17 +116,24 @@
                 <p><strong>Customer Address:</strong>  {{ user_address.address }}, {{ user_address.pincode }}</p>
                 <p><strong>Customer Phone:</strong>  {{ user_address.phone_number }}</p>
                 <p><strong>Assigned At:</strong> {{ assignment.assigned_at }}</p>
-                <p><strong>Status:</strong> 
+                {% comment %} <p><strong>Status:</strong> 
                     <select name="status">
                         <option value="Pending Pickup" {% if assignment.status == 'Pending Pickup' %}selected{% endif %}>Pending Pickup</option>
                         <option value="Pickedup" {% if assignment.status == 'Picked up' %}selected{% endif %}>Picked up</option>
                         <option value="outofdelivery" {% if assignment.status == 'Out of delivery' %}selected{% endif %}>Out of Delivery</option>
                         <option value="delivered" {% if assignment.status == 'delivered' %}selected{% endif %}>Delivered</option>
                     </select>
-                </p>
+                </p> {% endcomment %}
+                
+                <form action="{% url 'delivery_update_status' order_id=assignment.order.id %}" method="GET">
+                  <button type="submit">Update Status</button>
+              </form>
+              
+              
             </div>
             {% endfor %}
         </div>
+    
     </div>
 </body>
 </html>

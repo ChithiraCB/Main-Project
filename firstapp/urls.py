@@ -86,10 +86,15 @@ urlpatterns = [
     path('download-invoice/<int:order_id>/', views.download_invoice, name='download_invoice'),
     # path('test-session/', views.test_session, name='test_session'),
     path('deliveryregister/',views.deliveryregister, name='deliveryregister'),
-    path('deliveryrequestview/',views.deliveryrequestview, name='deliveryrequestview'),
+    #path('deliveryrequestview/',views.deliveryrequestview, name='deliveryrequestview'),
     path('assign_delivery/<int:order_id>/', views.assign_delivery, name='assign_delivery'),
      #path('deliveryorders_details/<int:delivery_boy_id>', views.deliveryorder_details, name='deliveryorder_details'),
     path('assigned_orders/', views.assigned_orders, name='assigned_orders'),
+     path('adddeliveryboy/', views.add_deliveryboy, name='adddeliveryboy'),
+     path('availableorders/', views.available_orders, name='availableorders'),
+     path('deliveryupdatestatus/<int:order_id>/', views.delivery_update_status, name='delivery_update_status'),
+    path('otp-verification/<int:order_id>/', views.otp_verification, name='otp_verification'),
+
 
 
 

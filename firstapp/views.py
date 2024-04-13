@@ -2184,64 +2184,64 @@ def deliveryregister(request):
 
     return render(request, 'deliveryregister.html')  # Replace 'registration.html' with your actual registration form template
 
-from django.shortcuts import render
-from django.contrib.auth.hashers import make_password
-from django.core.mail import send_mail
-from django.conf import settings
-from django.db.utils import IntegrityError  # Import IntegrityError for database integrity errors
-from .models import CustomUser, Deliveryboy  # Assuming you have a CustomUser model
+# from django.shortcuts import render
+# from django.contrib.auth.hashers import make_password
+# from django.core.mail import send_mail
+# from django.conf import settings
+# from django.db.utils import IntegrityError  # Import IntegrityError for database integrity errors
+# from .models import CustomUser, Deliveryboy  # Assuming you have a CustomUser model
 
-import random
-import string
-import logging
+# import random
+# import string
+# import logging
 
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
 
-def deliveryrequestview(request):
-    delivery_boys = Deliveryboy.objects.all()
+# def deliveryrequestview(request):
+#     delivery_boys = Deliveryboy.objects.all()
 
-    if request.method == 'POST' and 'send_email' in request.POST:
-        delivery_boy_id = request.POST.get('delivery_boy_id')
+#     if request.method == 'POST' and 'send_email' in request.POST:
+#         delivery_boy_id = request.POST.get('delivery_boy_id')
 
-        # Generate a random password
-        password = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+#         # Generate a random password
+#         password = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
 
-        # Get the corresponding delivery boy object
-        delivery_boy = Deliveryboy.objects.get(pk=delivery_boy_id)
+#         # Get the corresponding delivery boy object
+#         delivery_boy = Deliveryboy.objects.get(pk=delivery_boy_id)
 
-        # Create a new user with the email as the username and the generated password
-        username = delivery_boy.email  # Use email as username
-        email = delivery_boy.email
-        encrypted_password = make_password(password)
+#         # Create a new user with the email as the username and the generated password
+#         username = delivery_boy.email  # Use email as username
+#         email = delivery_boy.email
+#         encrypted_password = make_password(password)
         
-        try:
-            # Attempt to create a new user
-            user = CustomUser.objects.create(username=username, email=email, password=encrypted_password)
-        except IntegrityError:
-            # Handle the case where the username/email is not unique
-            # You can log an error, display a message to the user, etc.
-            logger.error('Error creating user: username/email not unique')
-            # You may want to add a message to inform the user about the error
-            return render(request, 'deliveryrequestview.html', {'delivery_boys': delivery_boys, 'error_message': 'Username or email already exists.'})
-        else:
-            # Send an email with the username and password
-            subject = 'Delivery Boy Account Details'
-            message = f'Your username: {username}\nYour password: {password}'
-            from_email = settings.EMAIL_HOST_USER
-            recipient_list = [email]
-            try:
-                send_mail(subject, message, from_email, recipient_list)
-                logger.info('Email sent successfully to %s', email)
-            except Exception as e:
-                logger.error('Error sending email: %s', str(e))
-                # You may want to inform the user that the email could not be sent
-                return render(request, 'deliveryrequestview.html', {'delivery_boys': delivery_boys, 'error_message': 'Failed to send email.'})
+#         try:
+#             # Attempt to create a new user
+#             user = CustomUser.objects.create(username=username, email=email, password=encrypted_password)
+#         except IntegrityError:
+#             # Handle the case where the username/email is not unique
+#             # You can log an error, display a message to the user, etc.
+#             logger.error('Error creating user: username/email not unique')
+#             # You may want to add a message to inform the user about the error
+#             return render(request, 'deliveryrequestview.html', {'delivery_boys': delivery_boys, 'error_message': 'Username or email already exists.'})
+#         else:
+#             # Send an email with the username and password
+#             subject = 'Delivery Boy Account Details'
+#             message = f'Your username: {username}\nYour password: {password}'
+#             from_email = settings.EMAIL_HOST_USER
+#             recipient_list = [email]
+#             try:
+#                 send_mail(subject, message, from_email, recipient_list)
+#                 logger.info('Email sent successfully to %s', email)
+#             except Exception as e:
+#                 logger.error('Error sending email: %s', str(e))
+#                 # You may want to inform the user that the email could not be sent
+#                 return render(request, 'deliveryrequestview.html', {'delivery_boys': delivery_boys, 'error_message': 'Failed to send email.'})
 
-            # Redirect or render a success message after email is sent
-            return render(request, 'adminpanel.html', {'username': username})
+#             # Redirect or render a success message after email is sent
+#             return render(request, 'adminpanel.html', {'username': username})
     
-    # Render the form initially or after successful submission
-    return render(request, 'deliveryrequestview.html', {'delivery_boys': delivery_boys})
+#     # Render the form initially or after successful submission
+#     return render(request, 'deliveryrequestview.html', {'delivery_boys': delivery_boys})
 
 def assign_delivery(request, order_id):
     order = get_object_or_404(Order, pk=order_id)
@@ -2271,3 +2271,111 @@ def assigned_orders(request):
     # Pass the assigned orders to the template
     context = {'assigned_orders': assigned_orders,'user_address': user_address}
     return render(request, 'assigned_orders.html', context)
+
+def add_deliveryboy(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        email = request.POST['email']
+        first_name = request.POST.get('first_name', '')  # Ensure to use 'first_name' in the template
+
+    
+        user = CustomUser(username=username, email=email)
+        user.set_password(password)
+        user.user_type=CustomUser.DELIVERYTEAM
+        user.is_staff=True
+        user.save()
+
+        # Log in the new delivery boy
+        send_mail(
+            'Welcome to Fashion Finds Hub',
+            f'Dear {first_name},\n\nYou have been added as a delivery boy. Your username is {username} and your password is {password}.\n\nPlease keep your credentials secure.',
+            'your_email@example.com',  # Replace with your email address
+            [email],  # Use the delivery boy's email address
+            fail_silently=False,
+        )
+
+        messages.success(request, "Delivery boy is added successfully.")
+        return redirect('adminpanel')  # Redirect to the admin dashboard
+
+    return render(request,'adddeliveryboy.html')
+
+def available_orders(request):
+    # Query the database for all orders
+    all_orders = Order.objects.all()
+
+    # Pass all_orders data to the template
+    return render(request, 'availableorders.html', {'available_orders': all_orders})
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
+from .models import Order
+import random
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+
+# @never_cache
+# @login_required(login_url='login')
+def delivery_update_status(request, order_id):
+    order = get_object_or_404(Order, pk=order_id)
+
+    if request.method == 'POST':
+        delivery_status = request.POST.get('delivery_status')
+
+        if delivery_status == 'Delivered':
+            otp = ''.join([str(random.randint(0, 9)) for _ in range(6)])
+            send_mail(
+                'Delivery Confirmation OTP',
+                f'Your OTP for order {order.id} is: {otp}',
+                settings.EMAIL_HOST_USER,
+                [order.user.email],
+                fail_silently=False,
+            )
+
+            # Store OTP and order ID in session for later verification
+            request.session['delivery_status_otp'] = otp
+            request.session['otp_order_id'] = str(order_id)
+
+            messages.info(request, 'OTP has been sent to the customer for delivery confirmation.')
+            return redirect('otp_verification', order_id=order_id)  # Redirect to OTP verification page with order_id
+
+        else:
+            order.delivery_status = delivery_status
+            order.save()
+            messages.success(request, 'Delivery status updated successfully.')
+            return redirect('assigned_orders')  # Redirect to the delivery boy dashboard
+
+    return render(request, "deliveryupdatestatus.html", {'order': order})
+
+#@login_required(login_url='login')
+def otp_verification(request, order_id):
+    order = get_object_or_404(Order, pk=order_id)
+
+    if request.method == 'POST':
+        submitted_otp = request.POST.get('otp')
+        session_order_id = request.session.get('otp_order_id')
+
+        if str(order_id) == session_order_id and submitted_otp == request.session.get('delivery_status_otp'):
+            # OTP is correct, update the delivery status
+            order.delivery_status = 'Delivered'
+            order.save()
+
+            # Clear OTP and order ID from session
+            del request.session['delivery_status_otp']
+            del request.session['otp_order_id']
+
+            # Redirect to a success page or the delivery details page
+            messages.success(request, 'Order marked as delivered successfully.')
+            return redirect('available_orders')
+        else:
+            # OTP is incorrect, render the OTP verification page with error message
+            messages.error(request, 'Incorrect OTP. Please try again.')
+            return render(request, 'otp_verification.html', {'order': order, 'error_message': 'Incorrect OTP. Please try again.'})
+
+    else:
+        return render(request, 'otp_verification.html', {'order': order})
