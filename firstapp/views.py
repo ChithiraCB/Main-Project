@@ -2274,22 +2274,27 @@ def assigned_orders(request):
 
 def add_deliveryboy(request):
     if request.method == 'POST':
-        username = request.POST['username']
+        username = request.POST['email']
         password = request.POST['password']
         email = request.POST['email']
-        first_name = request.POST.get('first_name', '')  # Ensure to use 'first_name' in the template
+        full_name = request.POST.get('fullName', '')  # Ensure to use 'fullName' in the template
 
-    
-        user = CustomUser(username=username, email=email)
+        # Check if username/email is already in use
+        if CustomUser.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists. Please choose a different username.")
+            return redirect('adddeliveryboy')  # Redirect back to the add delivery boy form
+
+        user = CustomUser(username=username, email=email, full_name=full_name)
         user.set_password(password)
-        user.user_type=CustomUser.DELIVERYTEAM
-        user.is_staff=True
+        user.user_types = CustomUser.DELIVERYTEAM  # Corrected field name
+        user.is_staff = True
+
         user.save()
 
         # Log in the new delivery boy
         send_mail(
             'Welcome to Fashion Finds Hub',
-            f'Dear {first_name},\n\nYou have been added as a delivery boy. Your username is {username} and your password is {password}.\n\nPlease keep your credentials secure.',
+            f'Dear {full_name},\n\nYou have been added as a delivery boy. Your username is {username} and your password is {password}.\n\nPlease keep your credentials secure.',
             'your_email@example.com',  # Replace with your email address
             [email],  # Use the delivery boy's email address
             fail_silently=False,
@@ -2298,7 +2303,7 @@ def add_deliveryboy(request):
         messages.success(request, "Delivery boy is added successfully.")
         return redirect('adminpanel')  # Redirect to the admin dashboard
 
-    return render(request,'adddeliveryboy.html')
+    return render(request, 'adddeliveryboy.html')
 
 def available_orders(request):
     # Query the database for all orders
@@ -2371,7 +2376,7 @@ def otp_verification(request, order_id):
 
             # Redirect to a success page or the delivery details page
             messages.success(request, 'Order marked as delivered successfully.')
-            return redirect('available_orders')
+            return redirect('assigned_orders')
         else:
             # OTP is incorrect, render the OTP verification page with error message
             messages.error(request, 'Incorrect OTP. Please try again.')

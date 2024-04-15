@@ -153,7 +153,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'chithiracb2024a@mca.ajce.in'  
-EMAIL_HOST_PASSWORD = 'Chithira#098'  
+EMAIL_HOST_PASSWORD ='orfo ruwi knpl hwkf'  
 #DEFAULT_FROM_EMAIL = 'chithiracb@gmail.com'
 EMAIL_DEBUG = True
 

@@ -116,6 +116,7 @@
                 <p><strong>Customer Address:</strong>  {{ user_address.address }}, {{ user_address.pincode }}</p>
                 <p><strong>Customer Phone:</strong>  {{ user_address.phone_number }}</p>
                 <p><strong>Assigned At:</strong> {{ assignment.assigned_at }}</p>
+                <p><strong>Status:</strong>{{ assignment.order.delivery_status }}</p>
                 {% comment %} <p><strong>Status:</strong> 
                     <select name="status">
                         <option value="Pending Pickup" {% if assignment.status == 'Pending Pickup' %}selected{% endif %}>Pending Pickup</option>
